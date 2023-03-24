@@ -14,11 +14,11 @@ from datetime import datetime,timedelta
 import pytz
 import json
 
-
 class Coordinates : 
     _location = None
     _time = None
     _duration = 1
+    _timezone = 'Europe/Paris'
 
     def __init__(self):
         self._time = None
@@ -40,18 +40,20 @@ class Coordinates :
               
         return value
 
+    def change_time_zone(self, value):
+        self._timezone = value
 
     def to_json(self,value):
-        print(self._to_json(value))
         return json.dumps(self._to_json(value))
 
 
     def set_location_site(self, location):
         self._location = EarthLocation.of_site(location)
+
     
     def set_location_coord (self, ulat, ulon, uheight):
         self._location = EarthLocation(lat = ulat * u.deg, lon = ulon * u.deg, height = uheight * u.m)
-        self._observer = Observer(location=self._location,timezone='Europe/Paris')
+        self._observer = Observer(location=self._location,timezone=self._timezone)
 
     def set_time(self, time):
         self._time = Time(time)
@@ -80,10 +82,10 @@ class Coordinates :
         return (moon_rise, moon_set, self._observer.moon_phase(self._time))
 
     def time_localize(self,date):
-        return pytz.utc.localize(date).astimezone(pytz.timezone('Europe/Paris'))
+        return pytz.utc.localize(date).astimezone(pytz.timezone(self._timezone))
 
     def time_local_to_utc(self, date):
-        tz = pytz.timezone('Europe/Paris')
+        tz = pytz.timezone(self._timezone)
         return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
 
     def set_constraints(self):
@@ -94,12 +96,11 @@ class Coordinates :
         targets = catalog._catalog
         time_range = [self._time, self._time+timedelta(hours=self._duration)]
         obs_table = observability_table(self._constraints, self._observer, targets, time_range=time_range)
-
-        return obs_table
+        
+        return obs_table.as_array()
     
     def _take_second(self,elem):
         return elem[1]
-
 
     def get_schedule(self, targets, catalog):
         schedule = []

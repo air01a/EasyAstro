@@ -27,9 +27,7 @@ class Load_Catalog:
 
     def open(self, filename, col_name='NAME', col_ra='RA', col_dec='DEC', parser=':'):
         columns_name=[]
-        #name_catalog = []
         coord_catalog = []
-        #dec_catalog = []
         with open(filename) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';')
             line_count = 0
@@ -47,17 +45,10 @@ class Load_Catalog:
                                 line[columns_name[i]] = row[i]
                         self.catalog[row[0]]= line
                         line_count += 1
-                        #name_catalog.append(line[col_name])
                         coord_catalog.append(FixedTarget(coord=SkyCoord(ra = line[col_ra] * u.deg, dec = line[col_dec]*u.deg),name=line[col_name]))
-                        #ra_catalog.append(line[col_ra])
-                        #dec_catalog.append(line[col_dec])
 
-                        #FixedTarget(coord=SkyCoord(ra=ra*u.deg, dec=dec*u.deg), name=name)
-                        #for name, ra, dec in target_table]
-        
-        #self._catalog = QTable([coord_catalog],names=('coord'),meta={'name': 'Catalog'})
         self._catalog = coord_catalog
-        #print(self._catalog)
+
 
 
     
