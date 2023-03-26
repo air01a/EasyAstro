@@ -12,8 +12,18 @@ from astroplan import observability_table
 
 from datetime import datetime,timedelta  
 import pytz
+from numpy import ndarray
 import json
 
+from pydantic import BaseModel
+
+# Coord type 
+class Coord(BaseModel):
+    lon: float
+    lat: float
+    height : float
+
+# Main Class
 class Coordinates : 
     _location = None
     _time = None
@@ -94,10 +104,15 @@ class Coordinates :
 
     def get_catalog_visibility(self, catalog):
         targets = catalog._catalog
+        ret = []
         time_range = [self._time, self._time+timedelta(hours=self._duration)]
         obs_table = observability_table(self._constraints, self._observer, targets, time_range=time_range)
         
-        return obs_table.as_array()
+        table = obs_table.as_array().tolist()
+        for l in table : 
+            if l[1]:
+                ret.append(l)
+        return ret
     
     def _take_second(self,elem):
         return elem[1]

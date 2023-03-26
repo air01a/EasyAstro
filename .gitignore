@@ -2,34 +2,34 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.whl
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
-bin/
-lib64
-pyvenv.cfg
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
+back/bin/
+back/lib64
+back/pyvenv.cfg
+back/build/
+back/develop-eggs/
+back/dist/
+back/downloads/
+back/eggs/
+back/.eggs/
+back/lib/
+back/lib64/
+back/parts/
+back/sdist/
+back/var/
+back/wheels/
+back/pip-wheel-metadata/
+back/share/python-wheels/
+back/*.egg-info/
+back/.installed.cfg
+back/*.egg
+back/MANIFEST
+back/share/*
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -130,3 +130,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.whl

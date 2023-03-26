@@ -1,0 +1,408 @@
+:root {
+  --color-highlight: #bb0000;
+  --color-midlight: rgb(92, 62, 99);
+  --color-darklight: #442e49;
+  --wrapper-border: #ccc;
+  /*dark blue is: rgba(2, 5, 43, 0.4)*/
+}
+
+/*************************/
+/** ICON THEME COLORING **/
+
+
+.theme-sun {
+  --fa-primary-color: orange;
+  --fa-secondary-color: yellow;
+}
+
+.theme-sun-cloud {
+  --fa-primary-color: lightsteelblue;
+  --fa-secondary-color: gold;  
+}
+
+.theme-moon {
+  --fa-primary-color: lightskyblue;
+  --fa-secondary-color: deepskyblue;
+}
+
+.theme-moon-cloud {
+  --fa-primary-color: grey;
+  --fa-secondary-color: aqua;  
+}
+
+.theme-cloud {
+  --fa-primary-color: lightsteelblue;
+  --fa-secondary-color: lightgrey;
+}
+
+.theme-overcast {
+  --fa-primary-color: grey;
+  --fa-secondary-color: darkgrey;
+}
+
+.theme-rain-snow {
+  --fa-primary-color: lightgrey;
+  --fa-secondary-color: lightskyblue;  
+}
+
+.theme-sunrise {
+  --fa-primary-color: goldenrod;
+  --fa-secondary-color: yellow; 
+}
+
+.theme-sunset {
+  --fa-primary-color: darkgoldenrod;
+  --fa-secondary-color: yellow; 
+}
+
+.theme-moonrise {
+  --fa-primary-color: lightskyblue;
+  --fa-secondary-color: yellow; 
+}
+
+.theme-moonset {
+  --fa-primary-color: yellow;
+  --fa-secondary-color: yellow; 
+}
+
+/*******************/
+/** GLOBAL STYLES **/
+body {
+  color: #fff;
+  font-family: 'Livvic', Arial, sans-serif;
+  font-size: 16px;
+  min-height: 100vh;
+  /* background-color is in case the image does not load, user still gets a dark background*/
+  background-color: #330867; 
+
+  /** Background Option 1: **/
+  background: url("../img/m42.jpg") center no-repeat #333;
+  background-size: cover;
+  height: 90vh;
+}
+
+#background-shader {
+/* second color in linear gradient is in #RGBA format*/
+  background-image: linear-gradient(#222, #4444);
+  height: 97vh;
+} 
+
+.container-wrapper {
+  margin: 0 auto;
+
+}
+
+h2,
+h1,
+h3,
+h4,
+h5 {
+  text-transform: uppercase;  
+  font-family: 'Montserrat Alternates', sans-serif;
+  margin: 0px;
+}
+
+h2,
+h1,
+h3,
+h4 {
+  display: inline-block;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 32px; 
+  text-align: center;
+}
+
+h2 {
+  font-size: 20px;
+  padding: 2px 0 8px;
+}
+
+span {
+  color: #fff;
+}
+
+h5 {
+  font-size: 22px;
+}
+
+.large-icon,
+#moon-phase {
+  font-size: 50px;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+.small-icon {
+  font-size: 30px;
+  margin: 0 auto;
+  padding-top: 10%;
+}
+
+.intro-emphasis {
+  font-weight: bold;
+  font-size: 22px; 
+}
+
+a {
+  text-decoration: none;
+}
+
+/*********************/
+/** TAB LINK STYLES **/
+
+#tab-buttons {
+  margin: 0 0 20px 10px;
+}
+
+/* Style tab links */
+.tab-link {
+  background-color: #777;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 23%;
+  margin: 0px 2px;
+}
+
+.tab-link:hover {
+  background-color: #999;
+}
+
+/* Style the tab content */
+.tab-content {
+  display: none;
+  padding: 60px 5px;
+}
+
+/*******************/
+/** HEADER STYLES **/
+header {
+  padding: 10px;
+  margin: 0;
+}
+
+
+#location-name,
+span {
+  color: var(--color-highlight);
+}
+
+#location-name {
+  font-size: 19px;
+}
+
+.search {
+  justify-self: flex-end;
+}
+
+.search input {
+  border: 3px solid white;
+  background-color: #bbb;
+  border-radius: 5px;
+  padding: 4px;
+  font-weight: bold;
+  margin-right: 3px;
+}
+
+#search-bar{
+  display: inline-block;
+}
+
+input:focus {
+  outline-color: var(--color-highlight);
+  border: 3px solid var(--color-highlight);
+}
+
+#search-button {
+  border: 3px solid #ccc;
+  border-radius: 5px;
+  background-color: #ccc;
+}
+
+#search-button:hover {
+  border: 3px solid #fff;
+  background-color: var(--color-midlight);
+}
+
+#icon-glossary {
+  border-radius: 9px;
+  border: 3px solid var(--color-midlight);
+  cursor: pointer;
+  color: #fff;
+  background-color: transparent;
+  outline-color: rgb(70, 48, 75);
+}
+
+#icon-glossary:hover {
+  border: 3px solid #fff;
+  background-color: var(--color-midlight);
+}
+
+/************************/
+/** GENERAL TAB STYLES **/
+.general-wrapper {
+  color: white;
+  margin-bottom: 30px;
+  border: 3px solid var(--color-highlight);
+  border-radius: 10px;
+  background: rgba(2, 5, 43, 0.4);
+}
+
+#welcome {
+  background: rgba(2, 5, 43, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 19.5px;
+  height: 90%;
+}
+
+#welcome p:first-child {
+  margin-top: 0;
+}
+
+#welcome p:last-child {
+  margin-bottom: 0;
+}
+
+.blur {
+  position: absolute;
+  bottom: 25px;
+  right: 162px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(5px);
+}
+
+/********************/
+/** WEATHER STYLES **/
+#weather-header,
+#sky-header {
+  padding: 10px 0 5px;
+}
+
+#weather-icon,
+#evening-icon,
+#night-icon {
+  padding-top: 10px;
+}
+
+/*******************************/
+/** CLOUD & VISIBILITY STYLES **/
+#visibility-title {
+  padding: 10px 0 5px;
+}
+
+#cloudiness-title {
+  padding: 10px 0 15px;
+}
+
+#visibility-label {
+  padding: 5px 0 10px;
+}
+
+#visibility-desc,
+#cloudiness-desc {
+  padding: 3px 0;
+  margin: 3px 0;
+}
+
+/***********************/
+/** SUN & MOON STYLES **/
+#sun-wrapper,
+#moon-wrapper,
+#weather-wrapper {
+  text-align: center;
+}
+
+.title {
+  padding-top: 10px;
+  color: var(--color-highlight);
+}
+
+#sunrise-time,
+#moonrise-time,
+#evening-time,
+#sunset-time,
+#moonset-time,
+#night-time {
+  font-size: 18px;
+}
+
+/***********************/
+/** MOON PHASE STYLES **/
+#moon-phase-title {
+  padding: 10px 0 5px;
+}
+
+#moon-phase-label {
+  padding: 10px 0;
+  font-size: 16px;
+}
+
+#moon-phase-icon {
+  height: 70px;
+}
+
+/*********************/
+/** STAR MAP STYLES **/
+
+#star-map {
+  margin: 60px 0 0 0;
+  padding: 2px;
+}
+
+iframe {
+  margin: 0;
+  padding: 0;
+  width: 99%;
+  height: 88%;
+  border: 3px solid #333;
+  border-radius: 10px;
+}
+
+#map-header {
+  margin-bottom: 20px;
+}
+#map-div {
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(2, 5, 43, 0.4);
+
+}
+
+/*******************/
+/** FOOTER STYLES **/
+footer a {
+  color: #777;
+  display: block;
+  text-align: center;
+  font-size: 12px;
+}
+
+/****************************/
+/* Previous Searches */
+#previousSearches {
+  position: absolute;
+  background-color: white;
+  height: fit-content;
+  width: 200px;
+  z-index: 1;
+}
+
+#previousSearches p {
+  color: black;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.searchItem:hover {
+  background-color: gray;
+}
