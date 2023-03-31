@@ -5,7 +5,7 @@ from astropy.table import QTable
 from astropy.coordinates import SkyCoord
 
 
-class Load_Catalog:
+class LoadCatalog:
     catalog = {}
     _catalog=[]
 
