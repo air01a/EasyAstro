@@ -54,9 +54,10 @@ class PlateSolve(object):
             '-r', str(self.SEARCH_RADIUS),
             '-s', str(self.MAX_STARS),
             '-z', str(self.DOWNSAMPLE_FACTOR),
-             '-d', '/mnt/c/Program Files/astap/',
+             '-d', self.CATALOG,
              '-update'
         ]
+        print(astap_cmd)
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
         if result.returncode != 0:
             return (1,None, None)
