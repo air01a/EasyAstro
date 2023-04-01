@@ -3,6 +3,8 @@ import time
 import sys
 import threading
 from queue import Queue
+from ..platesolve import platesolver
+
 
 blobEvent = None
 class IndiClient(PyIndi.BaseClient):
@@ -23,6 +25,7 @@ class IndiPilot():
         self.queue_out = queue_out
         self.moving = False
         self.shooting = False
+        self.platesolver = platesolver.PlateSolve()
 
 
     def connect(self):
