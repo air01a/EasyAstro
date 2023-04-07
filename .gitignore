@@ -131,3 +131,53 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.whl
+
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+front/front_test/.dart_tool/
+front/front_test/.flutter-plugins
+front/front_test/.flutter-plugins-dependencies
+front/front_test/.packages
+front/front_test/.pub-cache/
+front/front_test/.pub/
+front/front_test/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+front/front_test/android/app/debug
+front/front_test/android/app/profile
+front/front_test/android/app/release
+front/front_test/android
+front/front_test/ios
+front/front_test/macos
+front/front_test/windows

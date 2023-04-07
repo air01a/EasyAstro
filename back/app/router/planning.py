@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from ..lib import Coordinates
 from ..lib import LoadCatalog
 from ..dependencies import error
 from datetime import datetime
-
+from typing import List
 
 router = APIRouter()
 catalog = LoadCatalog.LoadCatalog()
@@ -25,3 +25,9 @@ def visible():
     coordinates.set_constraints();
     coordinates.get_catalog_visibility(catalog)
     return coordinates.get_catalog_visibility(catalog)
+
+@router.get("/objects/{obj_list}")
+async def get_objects(obj_list : str):
+    objects = obj_list.split(",")
+    ret = coordinates.get_catalogs_objects(objects, catalog.catalog)
+    return ret

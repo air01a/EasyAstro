@@ -46,7 +46,7 @@ class PlateSolve(object):
     def _return(self, error, ra, dec):
         return {'error':error,'ra':ra,'dec':dec}
 
-    def resolve(self, fits):
+    def resolve(self, fits, ra=None, dec= None):
         astap_cmd = [
             self.ASTAP_PATH,
             '-f',
@@ -57,7 +57,6 @@ class PlateSolve(object):
              '-d', self.CATALOG,
              '-update'
         ]
-        print(astap_cmd)
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
         if result.returncode != 0:
             return (1,None, None)

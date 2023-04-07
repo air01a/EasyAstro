@@ -1,0 +1,2 @@
+#!/bin/sh
+indiserver -p 7624 indi_simulator_telescope indi_simulator_gps indi_simulator_ccd

@@ -114,6 +114,13 @@ class Coordinates :
                 ret.append(l)
         return ret
     
+    def get_catalogs_objects(self, objects, catalog): 
+        ret = []
+        for obj in objects:
+            if obj in catalog.keys():
+                 ret.append(catalog[obj])
+        return ret
+    
     def _take_second(self,elem):
         return elem[1]
 

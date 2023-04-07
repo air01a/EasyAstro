@@ -4,6 +4,12 @@ import sys
 import threading
 from queue import Queue
 from ..platesolve import platesolver
+from math import sqrt
+from ..dependencies import error
+import logging
+
+MAX_PLATESOLVE_ERROR=1
+logger = logging.getLogger(__name__)
 
 
 blobEvent = None
@@ -14,18 +20,24 @@ class IndiClient(PyIndi.BaseClient):
     def updateProperty(self, prop):
         global blobEvent
         if prop.getType() == PyIndi.INDI_BLOB:
-            print("new BLOB ", prop.getName())
             blobEvent.set()
 
-class IndiPilot():
 
+class IndiPilot():
+    SLEW_MODE_SLEW = 0
+    SLEW_MODE_TRACK = 1
+    SLEW_MODE_SYNC = 2
+
+    COORD_EOD = "EQUATORIAL_EOD_COORD"
+    COORD_J2000 = "EQUATORIAL_COORD"
+    TARGET_EOD = "TARGET_EOD_COORD"
 
     def __init__(self, queue_in : Queue, queue_out:Queue ):
         self.queue_in = queue_in
         self.queue_out = queue_out
         self.moving = False
         self.shooting = False
-        self.platesolver = platesolver.PlateSolve()
+
 
 
     def connect(self):
@@ -34,14 +46,12 @@ class IndiPilot():
         self.indiclient.setServer("localhost", 7624)
 
         if not self.indiclient.connectServer():
-            print(
+            logger.error(
                 "No indiserver running on "
                 + self.indiclient.getHost()
                 + ":"
                 + str(self.indiclient.getPort())
-                + " - Try to run"
             )
-            print("  indiserver indi_simulator_telescope indi_simulator_ccd")
         return 0
 
     def telescope_connect(self):
@@ -68,15 +78,34 @@ class IndiPilot():
             # Hence we can access each element of the vector using Python indexing
             # each element of the "CONNECTION" vector is a ISwitch
             self.telescope_connect.reset()
-            self.telescope_connect[0].setState(PyIndi.ISS_ON)  # the "CONNECT" switch
+            self.telescope_connect[0].setState(PyIndi.ISS_ON)  # the "SYNC" switch
             self.indiclient.sendNewProperty(self.telescope_connect)  # send this new value to the device
 
+    def sync(self, ra, dec):
+        self.telescope_on_coord_set = self.device_telescope.getSwitch("ON_COORD_SET")
+        while not self.telescope_on_coord_set:
+            time.sleep(1)
+            self.telescope_on_coord_set = self.device_telescope.getSwitch("ON_COORD_SET")
+        self.telescope_on_coord_set.reset()
+        self.telescope_on_coord_set[2].setState(PyIndi.ISS_ON)  # index 0-TRACK, 1-SLEW, 2-SYNC
+        self.indiclient.sendNewProperty(self.telescope_on_coord_set)
+        # We set the desired coordinates
+        telescope_radec = self.device_telescope.getNumber(self.COORD_EOD)
+        while not telescope_radec:
+            time.sleep(0.5)
+            telescope_radec = self.device_telescope.getNumber(self.COORD_EOD)
+        telescope_radec[0].setValue(ra)
+        telescope_radec[1].setValue(dec)
+        self.indiclient.sendNewProperty(telescope_radec)    
+
+    def get_current_coordinates(self):
+        telescope_radec = self.device_telescope.getNumber("EQUATORIAL_EOD_COORD")
+        while not telescope_radec:
+            time.sleep(0.5)
+            telescope_radec = self.device_telescope.getNumber("EQUATORIAL_EOD_COORD")
+        return (telescope_radec[0].getValue(), telescope_radec[1].getValue())
 
     def goto(self, ra, dec):
-        self.thread = threading.Thread(target=self._goto, args=(ra,dec))
-        self.thread.start()
-
-    def _goto(self, ra, dec):
         self.moving = True
         # Now let's make a goto to vega
         # Beware that ra/dec are in decimal hours/degrees
@@ -106,18 +135,13 @@ class IndiPilot():
 
         # and wait for the scope has finished moving
         while telescope_radec.getState() == PyIndi.IPS_BUSY:
-            print("Scope Moving ", telescope_radec[0].value, telescope_radec[1].value)
-            self.queue_out.put("Scope Moving ", telescope_radec[0].value, telescope_radec[1].value)
+            self.queue_out.put("Scope Moving %f %f" % (telescope_radec[0].value, telescope_radec[1].value))
             time.sleep(2)
         self.moving = False
         self.queue_out.put('1.MOVING IS FINISHED')
 
-    def take_picture(self,filename : str, exposure : int, gain : int):
-        
-        self.thread = threading.Thread(target=self._take_picture, args=(filename, exposure  , gain))
-        self.thread.start()
 
-    def _take_picture(self, filename : str, exposure : int, gain : int, type : int = 0, binning : int = 0):
+    def take_picture(self, filename : str, exposure : int, gain : int, image_type : int = 0, binning : int = 0):
         global bobEvent
         self.shooting = True
 
@@ -203,23 +227,60 @@ class IndiOrchestrator:
         blobEvent.clear()
         self.indi = IndiPilot(self.qin, self.qout)
         self.indi.connect()
-
-
-    def move_to(self, ra, dec):
+        self._operating = False
+        self.platesolver = platesolver.PlateSolve()
+        self.last_error = 0
         self.indi.telescope_connect()
 
+        self.indi.sync(0,0)
+        (cra, cdec)=self.indi.get_current_coordinates()
+        logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
+
+    def get_qout(self):
+        return self.qout
+    
+    def take_picture(self, exposure: int, gain: int):
+        self.indi.take_picture('/tmp/exposure.fits', exposure, gain,)
+
+    def move_to(self, ra : float, dec: float):
+        self._operating = True
+        self.thread = threading.Thread(target=self._move_to, args=(ra, dec))
+        self.thread.start()
+        return error.no_error()
+
+    def _move_to(self, ra: float, dec : float):
+        
         retry = 0
-
+        (cra, cdec)=self.indi.get_current_coordinates()
+        logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
         while retry<5:
+            logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra,dec)
-            while True:
-                print(self.qout.get())
-                if self.indi.moving==False:
-                    break
+            logger.debug(' --- GOTO FINISHED')
             self.indi.take_picture('/tmp/platesolve.fits',1,100)
+            logger.debug(' --- PICTURE OK, SOLVING')
+            ps_return = self.platesolver.resolve('/tmp/platesolve.fits',ra,dec)
+            logger.debug(' SOLVER ERROR %i', ps_return['error'])
+            logger.debug(' SOLVER COORDINATES (RA,DEC) : (%f),(%f)', ps_return['ra'],ps_return['dec'])
+            if ps_return['error']==0:
+                logger.debug('Syncing telescope to new coordinates')
+                self.indi.sync(ps_return['ra'],ps_return['dec'] )
 
-            while True:
-                print(self.qout.get())
-                if self.indi.shooting==False:
-                    break
-            
+                error_rate = sqrt((ps_return['ra']*24/360-ra)*(ps_return['ra']*24/360-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
+                logger.debug(' SOLVER ERROR RATE %f', error_rate)
+                if error_rate<MAX_PLATESOLVE_ERROR:
+                    self.last_error = 0
+                    self._operating = False
+                    self.qout.put('3.GOTO FINISHED')
+                    logger.debug('++++ GOTO FINISHED')
+                    return 
+
+                
+
+            else:
+                    logger.error("Error during platesolve (error, ra, dec) (%i), (%f), (%f)", ps_return['error'], ra, dec)
+            retry += 1
+        logger.debug('GOTO FAILED DUE TO MAX RETRY REACHED')
+        self.last_error = error.ERROR_GOTO_FAILED
+        self._operating = False
+        self.qout.put('4.GOTO FAILED')

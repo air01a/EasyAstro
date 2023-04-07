@@ -19,3 +19,11 @@ curl -X 'POST' \
 curl -X 'GET' \
   'http://127.0.0.1:8000/planning/visible' \
   -H 'accept: application/json'
+
+curl -X 'PUT' \
+  'http://127.0.0.1:8000/telescope/goto/?ra=6.75&dec=16.7' \
+  -H 'accept: application/json'
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/planning/objects/M51%2CM52' \
+  -H 'accept: application/json'
