@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart'; 
 import 'package:front_test/components/rating.dart'; 
-import 'package:front_test/models/catalogs.dart'; 
 import 'package:front_test/services/globals.dart';
+import 'package:front_test/components/objectbox.dart';  
 
-class ObjectPage extends StatelessWidget {
-   const ObjectPage({super.key, required this.item, required this.onValueChanged}); 
-   final int item; 
-   final Function() onValueChanged;
-    
+
+
+class ObjectPage extends StatefulWidget { 
+  final int item; 
+ final RatingBox rating; 
+
+  const ObjectPage({super.key, required this.item, required this.rating});
+  @override 
+  State<ObjectPage> createState() => _ObjectPage(); 
+} 
+
+
+
+class _ObjectPage extends State<ObjectPage> {
+
+
+
   void _updateValue(bool newValue) {
-      ObjectSelection().selection[item].selected=newValue;
-   }
+      
+      setState(() {
+        ObjectSelection().selection[widget.item].selected=newValue;
+        ;
+        //widget.parent.();
+      });
+  }
 
    @override 
    Widget build(BuildContext context) {
       return Scaffold(
          appBar: AppBar(
-            title: Text(ObjectSelection().selection[item].name), 
+            title: Text(ObjectSelection().selection[widget.item].name), 
          ), 
          body: Center(
             child: Container( 
@@ -25,17 +42,17 @@ class ObjectPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start, 
                   crossAxisAlignment: CrossAxisAlignment.start, 
                   children: <Widget>[ 
-                     Image.network('http://'+ServerInfo().host+ObjectSelection().selection[item].image, width: 100),  
+                     Image.network('http://'+ServerInfo().host+ObjectSelection().selection[widget.item].image, width: 100),  
                      Expanded( 
                         child: Container( 
                            padding: const EdgeInsets.all(5), 
                            child: Column( 
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                               children: <Widget>[ 
-                                 Text(ObjectSelection().selection[item].name, style: const TextStyle(fontWeight: FontWeight.bold)), 
-                                 Text(ObjectSelection().selection[item].description,textAlign: TextAlign.left), 
-                                 Text("Magnitude : ${ObjectSelection().selection[item].magnitude.toString()}", textAlign: TextAlign.left), 
-                                 RatingBox(onValueChanged: _updateValue, initialValue: ObjectSelection().selection[item].selected),
+                                 Text(ObjectSelection().selection[widget.item].name, style: const TextStyle(fontWeight: FontWeight.bold)), 
+                                 Text(ObjectSelection().selection[widget.item].description,textAlign: TextAlign.left), 
+                                 Text("Magnitude : ${ObjectSelection().selection[widget.item].magnitude.toString()}", textAlign: TextAlign.left), 
+                                 widget.rating,
                               ], 
                            )
                         )

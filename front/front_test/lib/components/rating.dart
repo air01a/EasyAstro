@@ -2,24 +2,33 @@ import 'package:flutter/material.dart';
 
 
 class RatingBox extends StatefulWidget { 
-  final Function(bool) onValueChanged;
+  final Function(int, bool) onValueChanged;
   final bool initialValue; 
+  final int index; 
 
-  const RatingBox({super.key, required this.onValueChanged, required this.initialValue});
+  const RatingBox({super.key, required this.onValueChanged, required this.index, required this.initialValue});
    @override 
-   State<RatingBox> createState() => _RatingBoxState(selected: initialValue); 
+   State<RatingBox> createState() => _RatingBoxState(); 
 } 
 
 class _RatingBoxState extends State<RatingBox> { 
-   bool selected;
-  _RatingBoxState({required this.selected});
+  bool _selected = false;
+
+  _RatingBoxState();
 
    void _setSelected() {
       setState(() {
-         selected = selected == false; 
-          widget.onValueChanged(selected);
+         _selected = _selected == false; 
+          widget.onValueChanged(widget.index, _selected);
       }); 
    }
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialValue;
+  }  
+
 
    @override
    Widget build(BuildContext context) {
@@ -34,7 +43,7 @@ class _RatingBoxState extends State<RatingBox> {
                padding: const EdgeInsets.all(0), 
                child: IconButton(
                   icon: (
-                     selected == true ? Icon( 
+                     _selected == true ? Icon( 
                         Icons.star, 
                         size: size, 
                      ) 
