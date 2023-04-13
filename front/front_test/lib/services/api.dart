@@ -24,11 +24,13 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-Future<dynamic> post(String url, dynamic body) async {
-    print('Api Post, url $url');
-    var responseJson;
+  Future<dynamic> post(String url, dynamic body) async {
+    print('Api Post, url $url ${jsonEncode(body)}');
+    dynamic responseJson;
     try {
-      final response = await http.post(Uri.http(_baseUrl, url), body: body);
+      final response = await http.post(Uri.http(_baseUrl, url), headers: <String, String>{
+                                  'Content-Type': 'application/json',
+                                },body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');
@@ -42,7 +44,7 @@ Future<dynamic> post(String url, dynamic body) async {
     print('Api Put, url $url');
     var responseJson;
     try {
-      final response = await http.put(Uri.http(_baseUrl, url), body: body);
+      final response = await http.put(Uri.http(_baseUrl, url), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No net');

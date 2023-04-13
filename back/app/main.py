@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from fastapi.staticfiles import StaticFiles
@@ -32,6 +33,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def redirect():
+    response = RedirectResponse(url='/static/index.html')
+    return response
 
 
 app.include_router(planning.router, prefix='/planning')

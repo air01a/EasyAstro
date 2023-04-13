@@ -42,7 +42,7 @@ class _ObjectPage extends State<ObjectPage> {
                   mainAxisAlignment: MainAxisAlignment.start, 
                   crossAxisAlignment: CrossAxisAlignment.start, 
                   children: <Widget>[ 
-                     Image.network('http://'+ServerInfo().host+ObjectSelection().selection[widget.item].image, width: 100),  
+                     Image.network('http://'+ServerInfo().host+ObjectSelection().selection[widget.item].image),  
                      Expanded( 
                         child: Container( 
                            padding: const EdgeInsets.all(5), 

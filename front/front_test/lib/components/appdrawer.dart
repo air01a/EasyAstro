@@ -23,16 +23,16 @@ class AppDrawer extends Drawer{
                       title: const Text('Plan'),
                       onTap: () {
                         //Navigator.pop(context);
-                        Navigator.pushNamed(context, '/test');
+                        Navigator.pushNamed(context, '/home');
                       },
                       ),
                       ListTile(
                       leading: const Icon(
                         Icons.explore,
                       ),
-                      title: const Text('GoTo'),
+                      title: const Text('Selected'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushNamed(context, '/selection');
                       },
                       ),
                       ListTile(
@@ -41,7 +41,7 @@ class AppDrawer extends Drawer{
                       ),
                       title: const Text('Observe'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushNamed(context, '/capture');
                       },
                       )
                     ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/components/appdrawer.dart';
 import 'package:front_test/services/globals.dart';
-import 'package:front_test/screens/connection.dart';
+import 'package:front_test/screens/screenconnection.dart';
 
 class PageStructure extends StatelessWidget {
    final Widget body;
