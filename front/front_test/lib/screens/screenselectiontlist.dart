@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart'; 
 import 'package:front_test/components/pagestructure.dart';
-import 'package:front_test/repositories/ObservableRepositories.dart';
 import 'package:front_test/models/catalogs.dart';
 import 'package:front_test/components/objectlist.dart';
 import 'package:front_test/components/objectbox.dart';  
@@ -68,7 +67,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     return PageStructure(body: ListView.builder(
         itemCount: _catalog.length,
         itemBuilder: (context, index) {
-          RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: ObjectSelection().selection[index].selected);
+          RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: _catalog[index].selected);
           return GestureDetector(
             child: ObjectBox(item: index, rating : rating), //, onValueChanged: update),
             onTap: () {

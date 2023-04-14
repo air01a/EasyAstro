@@ -23,6 +23,11 @@ class Coord(BaseModel):
     lat: float
     height : float
 
+class StarCoord(BaseModel):
+    ra: float
+    dec: float
+
+
 # Main Class
 class Coordinates : 
     _location = None

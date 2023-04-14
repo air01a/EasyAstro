@@ -4,3 +4,4 @@ fastapi
 numpy
 pytz
 uvicorn
+pyjwt

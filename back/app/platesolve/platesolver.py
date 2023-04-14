@@ -59,9 +59,9 @@ class PlateSolve(object):
         ]
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
         if result.returncode != 0:
-            return (1,None, None)
+            return {'error':1,'ra': ra,'dec': dec}
         (ra,dec) = self._get_solution(fits)
-        return self._return(2*int(ra==None), ra, dec)
+        return self._return( {'error':2*int(ra==None),'ra': ra,'dec': dec})
         
 
 

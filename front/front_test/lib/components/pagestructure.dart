@@ -10,7 +10,7 @@ class PageStructure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
               if (ServerInfo().host=="") {
-                return ConnectionPage();
+                return const ConnectionPage();
               }
 
               return Scaffold(

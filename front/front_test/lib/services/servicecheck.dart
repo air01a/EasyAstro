@@ -1,3 +1,4 @@
+import 'package:front_test/models/catalogs.dart';
 import 'package:front_test/services/api.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -7,6 +8,9 @@ import 'package:front_test/services/globals.dart';
 class ServiceCheckHelper {
   LocationData? locationData; 
 
+  int getObjectIndex(String object){
+    return ObjectSelection().selection.indexWhere((element) =>  element.name == object);
+  }
 
   Future<void> updateAPILocation() async { 
     ApiBaseHelper helper = ApiBaseHelper();
@@ -17,7 +21,12 @@ class ServiceCheckHelper {
     
   }
 
+  Future<void> changeObject(String object) async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    ObservableObject obj = ObjectSelection().selection[getObjectIndex(object)];
+    await helper.post("/telescope/goto/", {"ra":obj.ra, "dec":obj.dec});
 
+  }
   Future<void> updateTime(String time) async {
     ApiBaseHelper helper = ApiBaseHelper();
     await helper.post("/planning/time",{"time": time});

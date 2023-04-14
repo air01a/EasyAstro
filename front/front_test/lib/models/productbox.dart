@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:front_test/models/products.dart'; 
-import 'package:front_test/components/rating.dart'; 
+
 class ProductBox extends StatelessWidget {
    const ProductBox({super.key,required this.item}); 
    final Product item; 

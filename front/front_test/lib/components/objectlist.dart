@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:front_test/components/rating.dart'; 
 import 'package:front_test/services/globals.dart';
-import 'package:front_test/components/objectbox.dart';  
-
 
 
 class ObjectPage extends StatefulWidget { 
@@ -19,16 +17,6 @@ class ObjectPage extends StatefulWidget {
 class _ObjectPage extends State<ObjectPage> {
 
 
-
-  void _updateValue(bool newValue) {
-      
-      setState(() {
-        ObjectSelection().selection[widget.item].selected=newValue;
-        ;
-        //widget.parent.();
-      });
-  }
-
    @override 
    Widget build(BuildContext context) {
       return Scaffold(
@@ -42,7 +30,7 @@ class _ObjectPage extends State<ObjectPage> {
                   mainAxisAlignment: MainAxisAlignment.start, 
                   crossAxisAlignment: CrossAxisAlignment.start, 
                   children: <Widget>[ 
-                     Image.network('http://'+ServerInfo().host+ObjectSelection().selection[widget.item].image),  
+                     Image.network("http://${ServerInfo().host}${ObjectSelection().selection[widget.item].image}"),  
                      Expanded( 
                         child: Container( 
                            padding: const EdgeInsets.all(5), 

@@ -3,32 +3,38 @@ from ..telescope import telescope
 from ..dependencies import error
 from ..lib import fitsutils
 from PIL import Image
-from astropy.io import fits
 from fastapi.responses import Response
-import numpy
-import math
 from io import BytesIO
-
+from ..lib import Coordinates
+import os
+import asyncio
 
 router = APIRouter()
 telescope = telescope.IndiOrchestrator()
 
-@router.put("/goto/")   
-async def goto(ra: float, dec : float):
-    return telescope.move_to(ra, dec)
+@router.post("/goto/")   
+def goto(coord : Coordinates.StarCoord):
+    return telescope.move_to(coord.ra, coord.dec)
 
 @router.get('/picture/')
 def goto(exposure: int, gain: int):
     return telescope.take_picture(exposure, gain)
 
-
-
+@router.get('/status')
+async def get_status():
+    return telescope.processing
 
 @router.get('/last_picture')
 def last_picture():
+    file_name, file_extension = os.path.splitext(telescope.last_image)
+    if (file_extension=='fits'):
+        img_bytes = fitsutils.fits_to_jpg()
+    else: 
+        img_bytes_io = BytesIO()
+        im = Image.open(telescope.last_image)
+        im.save(img_bytes_io,format='JPEG')
+        img_bytes = img_bytes_io.getvalue() 
     
-    img_bytes = fitsutils.fits_to_jpg('/tmp/test.fits')
-     
     headers = {
         "Content-Disposition": "inline",
         "filename": "image.jpg",
@@ -46,7 +52,7 @@ class ConnectionManager:
         await websocket.accept()
         self.connections.append(websocket)
 
-    async def broadcast(self, data: str):
+    async def awaitbroadcast(self, data: str):
         for connection in self.connections:
             await connection.send_text(data)
 
@@ -56,5 +62,6 @@ manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
     while True:
-        data = await websocket.receive_text()
+        data =  await asyncio.get_running_loop().run_in_executor(None, telescope.qout.get())()
+        print("ws OK")
         await manager.broadcast(f"Client {client_id}: {data}")

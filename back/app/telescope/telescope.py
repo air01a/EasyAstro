@@ -1,8 +1,8 @@
 import PyIndi
 import time
-import sys
+import asyncio
 import threading
-from queue import Queue
+from queue import SimpleQueue
 from ..platesolve import platesolver
 from math import sqrt
 from ..dependencies import error
@@ -32,7 +32,7 @@ class IndiPilot():
     COORD_J2000 = "EQUATORIAL_COORD"
     TARGET_EOD = "TARGET_EOD_COORD"
 
-    def __init__(self, queue_in : Queue, queue_out:Queue ):
+    def __init__(self, queue_in : SimpleQueue, queue_out:SimpleQueue ):
         self.queue_in = queue_in
         self.queue_out = queue_out
         self.moving = False
@@ -221,8 +221,8 @@ class IndiOrchestrator:
 
     def __init__(self):
         global blobEvent
-        self.qin = Queue()
-        self.qout = Queue()
+        self.qin = SimpleQueue()
+        self.qout = SimpleQueue()
         blobEvent = threading.Event()
         blobEvent.clear()
         self.indi = IndiPilot(self.qin, self.qout)
@@ -231,6 +231,9 @@ class IndiOrchestrator:
         self.platesolver = platesolver.PlateSolve()
         self.last_error = 0
         self.indi.telescope_connect()
+        self.processing = False
+        self.last_image='./static/noimage.jpg'
+        self.last_image_processed=None
 
         self.indi.sync(0,0)
         (cra, cdec)=self.indi.get_current_coordinates()
@@ -260,6 +263,7 @@ class IndiOrchestrator:
             self.indi.take_picture('/tmp/platesolve.fits',1,100)
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve.fits',ra,dec)
+            self.last_image = '/tmp/platesolve.fits'
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
             logger.debug(' SOLVER COORDINATES (RA,DEC) : (%f),(%f)', ps_return['ra'],ps_return['dec'])
             if ps_return['error']==0:

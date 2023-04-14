@@ -2,17 +2,24 @@ from fastapi import APIRouter, Query, Body
 from ..lib import Coordinates
 from ..lib import LoadCatalog
 from ..dependencies import error
-from datetime import datetime
+from datetime import datetime,date
 from typing import List
 from pydantic import BaseModel, Json, Field
+from ..dependencies import config
+
+
+class TimeObject(BaseModel):
+    time: str = Field(description="String time format Y-m-d H:M")
+
 
 router = APIRouter()
 catalog = LoadCatalog.LoadCatalog()
 catalog.open('data/deepsky.lst')
 coordinates = Coordinates.Coordinates()
+coordinates.set_location_coord(float(config.CONFIG["LOCATION"]["LAT"]),float(config.CONFIG["LOCATION"]["LON"]),float(config.CONFIG["LOCATION"]["HEIGHT"]))
+today = str(date.today())
+coordinates.set_time(coordinates.time_local_to_utc(datetime.strptime(today+" 23:59","%Y-%m-%d %H:%M")))
 
-class TimeObject(BaseModel):
-    time: str = Field(description="String time format Y-m-d H:M")
 
 @router.post("") 
 async def set_coord(coord : Coordinates.Coord):

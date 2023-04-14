@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front_test/models/catalogs.dart'; 
 import 'package:front_test/components/rating.dart'; 
 import 'package:front_test/services/globals.dart';
 
@@ -18,13 +17,6 @@ class ObjectBox extends StatefulWidget {
 class _ObjectBox extends State<ObjectBox> {
 
 
-   
-  void _updateValue(bool newValue) {
-    ObjectSelection().selection[widget.item].selected = newValue;
-
-   // onValueChanged();
-  }
-
    @override
    Widget build(BuildContext context) {
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
@@ -35,7 +27,7 @@ class _ObjectBox extends State<ObjectBox> {
             child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
-                  Image.network('http://'+ServerInfo().host+ObjectSelection().selection[widget.item].image, width: 100), 
+                  Image.network("http://${ServerInfo().host}${ObjectSelection().selection[widget.item].image}", width: 100), 
                   Expanded( 
                      child: Container( 
                         padding: const EdgeInsets.all(5), 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/components/pagestructure.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:http/http.dart' as http;
 import 'package:front_test/services/globals.dart';
+import 'package:front_test/services/servicecheck.dart';
+
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -12,6 +13,9 @@ class ScreenCapture extends StatefulWidget {
 class _ScreenCapture extends State<ScreenCapture> {
   String _imageUrl = '';
   String object ="";
+  final ServiceCheckHelper service = ServiceCheckHelper();
+
+
   final channel = WebSocketChannel .connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
   void fetchImage() async {
@@ -47,7 +51,11 @@ class _ScreenCapture extends State<ScreenCapture> {
     if (arguments != null) {
       final Map<String,dynamic> args = arguments as Map<String, String> ;
       if (args.containsKey('object')) {
-        object = args['object'] ;
+        String newObject = args['object'];
+        if (newObject!=object) {
+          object = args['object'] ;
+          service.changeObject(object);
+        }
       }
     }
 

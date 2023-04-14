@@ -41,8 +41,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> put(String url, dynamic body) async {
-    print('Api Put, url $url');
-    var responseJson;
+    print('Api Put, url $url ${jsonEncode(body)}');
+    dynamic responseJson;
     try {
       final response = await http.put(Uri.http(_baseUrl, url), body: jsonEncode(body));
       responseJson = _returnResponse(response);
