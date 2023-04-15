@@ -2,14 +2,20 @@ from fastapi import APIRouter, WebSocket
 from ..telescope import telescope
 from ..dependencies import error
 from ..lib import fitsutils
-from PIL import Image
+from PIL import Image, ImageFile
 from fastapi.responses import Response
 from io import BytesIO
 from ..lib import Coordinates
 import os
 import asyncio
+import logging
+
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+
 telescope = telescope.IndiOrchestrator()
 
 @router.post("/goto/")   
@@ -27,18 +33,20 @@ async def get_status():
 @router.get('/last_picture')
 def last_picture():
     file_name, file_extension = os.path.splitext(telescope.last_image)
-    if (file_extension=='fits'):
-        img_bytes = fitsutils.fits_to_jpg()
+    print(file_name, file_extension)
+    if (file_extension=='.fits'):
+        
+        img_bytes = fitsutils.fits_to_png(telescope.last_image)
     else: 
         img_bytes_io = BytesIO()
         im = Image.open(telescope.last_image)
-        im.save(img_bytes_io,format='JPEG')
+        im.save(img_bytes_io,format='PNG')
         img_bytes = img_bytes_io.getvalue() 
     
     headers = {
         "Content-Disposition": "inline",
-        "filename": "image.jpg",
-        "Content-Type": "image/jpeg",
+        "filename": "image.png",
+        "Content-Type": "image/png",
     }
     return Response(content=img_bytes, headers=headers)
     #return Response(content=img_bytes, media_type="image/jpeg")
@@ -52,9 +60,14 @@ class ConnectionManager:
         await websocket.accept()
         self.connections.append(websocket)
 
-    async def awaitbroadcast(self, data: str):
+    async def broadcast(self, data: str):
         for connection in self.connections:
-            await connection.send_text(data)
+            try : 
+                await connection.send_text(data)
+            except: 
+                logger.error("Error with Wss")
+
+
 
 manager = ConnectionManager()
 
@@ -62,6 +75,9 @@ manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
     while True:
-        data =  await asyncio.get_running_loop().run_in_executor(None, telescope.qout.get())()
-        print("ws OK")
-        await manager.broadcast(f"Client {client_id}: {data}")
+        if not telescope.qout.empty():
+            data = telescope.qout.get()
+        #data =  await asyncio.get_running_loop().run_in_executor(None, )()
+            print("ws OK")
+            await manager.broadcast(f"{data}")
+        await asyncio.sleep(1)

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:front_test/components/bottombar.dart'; 
 import 'package:front_test/components/pagestructure.dart';
 import 'package:front_test/models/catalogs.dart';
 import 'package:front_test/components/objectlist.dart';
@@ -19,6 +20,18 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   ServiceCheckHelper _checkHelper = ServiceCheckHelper();
+
+  void _filter(BuildContext context) {
+
+
+  }
+
+  void _search(BuildContext context) {
+
+
+  }
+
+
 
 
   Future<void> _selectDate(BuildContext context) async {
@@ -70,47 +83,48 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     setState(() {
       _catalog  = ObjectSelection().selection;
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
- 
-
+    final bbar = BottomBar();
+    bbar.addItem(const Icon(Icons.schedule), 'Change Date', _selectDate);
+    bbar.addItem(const Icon(Icons.filter_alt), 'Filter', _filter);
+    bbar.addItem(const Icon(Icons.search), 'Search', _filter);
     return PageStructure(
-        body: Container(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Column(
-                    children: [
-                    ElevatedButton(
-                                onPressed: () => _selectDate(context),
-                                child: Text('Sélectionner une date'),
-                              ),
-                    Expanded(
-                        child: ListView.builder(
-                              itemCount: _catalog.length,
-                              itemBuilder: (context, index) {
-                                RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: ObjectSelection().selection[index].selected);
-                                return GestureDetector(
-                                  child: ObjectBox(item: index, rating : rating), //, onValueChanged: update),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ObjectPage(item: index, rating: rating),
-                                      ),
-                                     );
-                                    },
-                                  onLongPress : () {
-                                      Navigator.pushNamed(context, '/capture', arguments: {'object':ObjectSelection().selection[index].name});
+            body: Container(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Column(
+                          children: [
+                          Expanded(
+                              child: ListView.builder(
+                                    itemCount: _catalog.length,
+                                    itemBuilder: (context, index) {
+                                      RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: ObjectSelection().selection[index].selected);
+                                      return GestureDetector(
+                                        child: ObjectBox(object: _catalog[index], item: index, rating : rating),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ObjectPage(item: index, rating: rating),
+                                            ),
+                                          );
+                                          },
+                                        onLongPress : () {
+                                            Navigator.pushNamed(context, '/capture', arguments: {'object':ObjectSelection().selection[index].name});
+                                          }
+                                        
+                                      );
+                              
                                     }
-                                  
-                                );
-                        
-                              }
-                            )
-                    )
-              ]
-      )));
+                                  )
+                          )
+                    ]
+            )),
+        bottom : bbar
+     
+     
+     );
   }
 }

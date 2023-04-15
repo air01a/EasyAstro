@@ -1,8 +1,11 @@
 import math
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageFile
 from astropy.io import fits
 import numpy
+import astropy.io.fits as pyfits
+import cv2
+#ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def sky_median_sig_clip(input_arr, sig_fract, percent_fract, max_iter=100):
 	"""Estimating sky value for a given number of iterations
@@ -199,7 +202,7 @@ def asinh(inputArray, scale_min=None, scale_max=None, non_linear=2.0):
 
 	return imageData
 
-def fits_to_jpg(filename):
+def fits_to_png(filename):
     image_data = fits.getdata(filename)
     if len(image_data.shape) == 2:
         sum_image = image_data
@@ -213,5 +216,31 @@ def fits_to_jpg(filename):
     if im.mode != 'RGB':
         im = im.convert('RGB')
     img_bytes = BytesIO()
-    im.save(img_bytes, format='JPEG')
+    im.save(img_bytes, format='PNG')
     return img_bytes.getvalue()
+
+def white_balance(img):
+    stack = []
+    for i in cv2.split(img):
+        hist, bins = numpy.histogram(i, 256, (0, 256))
+        # remove colors at each end of the histogram which are used by only by .05% 
+        tmp = numpy.where(hist > hist.sum() * 0.0005)[0]
+        i_min = tmp.min()
+        i_max = tmp.max()
+        # stretch history a bit
+        tmp = (i.astype(numpy.int32) - i_min) / (i_max - i_min) * 255
+        tmp = numpy.clip(tmp, 0, 255)
+        stack.append(tmp.astype(numpy.uint8))
+    return numpy.dstack(stack)
+
+
+def fits_to_png2(filename):
+	img_bytes = BytesIO()
+	hdul = pyfits.open(filename)
+	image_uint16=hdul[0].data
+	image_int8 = cv2.normalize(image_uint16, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+	image_rgb = cv2.cvtColor(image_int8, cv2.COLOR_BayerGB2RGB)
+	is_success, img_bytes = cv2.imencode(".png",  white_balance(image_rgb))
+	print("success"+str(is_success))
+	return img_bytes.getvalue()
+	#cv2.imwrite(img_bytes,)

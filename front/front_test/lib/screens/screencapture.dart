@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/components/pagestructure.dart';
+import 'package:front_test/services/protocol.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/services/servicecheck.dart';
-
+import 'dart:math';
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -13,16 +14,19 @@ class ScreenCapture extends StatefulWidget {
 class _ScreenCapture extends State<ScreenCapture> {
   String _imageUrl = '';
   String object ="";
+  int i=0;
+  final protocol = CommunicationProtocol();
+
   final ServiceCheckHelper service = ServiceCheckHelper();
 
 
   final channel = WebSocketChannel .connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
   void fetchImage() async {
-    //print("${ServerInfo().host}/telescope/last_picture");
-    //final response = await http.get(Uri.parse("${ServerInfo().host}/telescope/last_picture"));
     setState(() {
-      _imageUrl = "http://${ServerInfo().host}/telescope/last_picture";
+      var rng = Random().nextInt(999999999);
+      _imageUrl = "http://${ServerInfo().host}/telescope/last_picture?v=$i.$rng";
+      i+=1;
     });
   }
 
@@ -38,8 +42,10 @@ class _ScreenCapture extends State<ScreenCapture> {
     super.initState();
     channel.stream.listen((message) {
       // Mettre à jour l'image en allant la chercher sur l'API
-      print("wss recveived");
-      fetchImage();
+      final info = protocol.analyseMessage(message);
+      if (info['refreshImage']) {
+        fetchImage();
+      }
     });
     // Récupérer l'image initiale depuis l'API
     fetchImage();
@@ -63,7 +69,11 @@ class _ScreenCapture extends State<ScreenCapture> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children:<Widget>[
                             Center(child: Text("Object $object")),
-                            Center(child: Image.network(_imageUrl)),
+                            Expanded(                               
+                                      child: Center(child : Image.network(_imageUrl, gaplessPlayback: true,))
+                            )
+            
+                            
     ]));
   }
-}
+} 

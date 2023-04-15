@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:front_test/components/rating.dart'; 
+import 'package:front_test/components/rating.dart';
+import 'package:front_test/models/catalogs.dart'; 
 import 'package:front_test/services/globals.dart';
 
 class ObjectBox extends StatefulWidget {
   final int item; 
   // final Function() onValueChanged;
    final RatingBox rating; 
-  const ObjectBox({super.key,required this.item, required this.rating}); 
+  final ObservableObject object;
+  const ObjectBox({super.key,required this.object, required this.item, required this.rating}); 
 
-    @override 
+  @override 
   State<ObjectBox> createState() => _ObjectBox(); 
 
 }
@@ -34,9 +36,9 @@ class _ObjectBox extends State<ObjectBox> {
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                            children: <Widget>[ 
-                              Text(ObjectSelection().selection[widget.item].name, style: const TextStyle(fontWeight: FontWeight.bold)), Text(ObjectSelection().selection[widget.item].description), 
-                              Text("Type: ${ObjectSelection().selection[widget.item].type}"), 
-                              Text("Magnitude: ${ObjectSelection().selection[widget.item].magnitude.toString()}"), 
+                              Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)), Text(widget.object.description), 
+                              Text("Type: ${widget.object.type}"), 
+                              Text("Magnitude: ${widget.object.magnitude.toString()}"), 
                               widget.rating , 
                            ], 
                         )

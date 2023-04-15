@@ -61,7 +61,7 @@ class PlateSolve(object):
         if result.returncode != 0:
             return {'error':1,'ra': ra,'dec': dec}
         (ra,dec) = self._get_solution(fits)
-        return self._return( {'error':2*int(ra==None),'ra': ra,'dec': dec})
+        return self._return( 2*int(ra==None),ra,dec)
         
 
 

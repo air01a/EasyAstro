@@ -3,6 +3,7 @@ import 'package:front_test/repositories/observablerepositories.dart';
 import 'package:front_test/services/servicecheck.dart';
 import 'package:location/location.dart';
 import 'package:front_test/services/globals.dart';
+import 'package:front_test/components/pagestructure.dart';
 
 
 class CheckScreen extends StatefulWidget {
@@ -52,21 +53,26 @@ class _CheckScreen extends State<CheckScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:<Widget>[
+    return PageStructure(
+            body: 
+              Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:<Widget>[
+                            const Center(child: CircularProgressIndicator()),
+
                             Center(
                                       child: _locationData != null && _locationData?.latitude!=null && _locationData?.longitude!=null
                                   ? Text('Position : ${_locationData?.latitude}, ${_locationData?.longitude}, ${_locationData?.altitude}')
-                                  : Text('Attente de la position GPS...')),
+                                  : const Text('Attente de la position GPS...')),
                             Center(child: _apiUpdated == false
-                                   ? Text('Waiting to update position')
-                                   : Text('API Updated')
+                                   ? const Text('Waiting to update position')
+                                   : const Text('API Updated')
                             ),
                             Center(child: _apiUpdated == false
-                                   ? Text('Waiting to update catalog')
-                                   : Text('catalog Updated')
-                            )
-    ]);
+                                   ? const Text('Waiting to update catalog')
+                                   : const Text('catalog Updated')
+                            ),
+                            
+          ]));
   }
 }

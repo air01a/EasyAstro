@@ -256,21 +256,22 @@ class IndiOrchestrator:
         retry = 0
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
+        logger.debug(' --- going to '+str(ra)+" ; "+str(dec))
+
         while retry<5:
             logger.debug(' --- GOTO STARTED')
-            self.indi.goto(ra,dec)
+            self.indi.goto(ra*24/360,dec)
             logger.debug(' --- GOTO FINISHED')
-            self.indi.take_picture('/tmp/platesolve.fits',1,100)
+            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',1,100)
             logger.debug(' --- PICTURE OK, SOLVING')
-            ps_return = self.platesolver.resolve('/tmp/platesolve.fits',ra,dec)
-            self.last_image = '/tmp/platesolve.fits'
+            ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
+            self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
             logger.debug(' SOLVER COORDINATES (RA,DEC) : (%f),(%f)', ps_return['ra'],ps_return['dec'])
             if ps_return['error']==0:
                 logger.debug('Syncing telescope to new coordinates')
                 self.indi.sync(ps_return['ra'],ps_return['dec'] )
-
-                error_rate = sqrt((ps_return['ra']*24/360-ra)*(ps_return['ra']*24/360-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
+                error_rate = sqrt((ps_return['ra']-ra)*(ps_return['ra']-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
                 logger.debug(' SOLVER ERROR RATE %f', error_rate)
                 if error_rate<MAX_PLATESOLVE_ERROR:
                     self.last_error = 0
