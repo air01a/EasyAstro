@@ -245,7 +245,9 @@ def apply_transformation( image: Image, transformation: SimilarityTransform, _la
                                                     results_dict,
                                                     channel)
             for channel, data in results_dict.items():
-                image.data[channel] = data
+                print(channel)
+                print(data)
+                image.data[channel] = data[0]
 
     else:
         result_dict = dict()
@@ -258,7 +260,7 @@ def apply_transformation( image: Image, transformation: SimilarityTransform, _la
         )
 
         image.data = result_dict[0]
-
+    #numpy.float32(aa.apply_transform(transformation, image, _last_stacking_result))
 
 def apply_single_channel_transformation(image, reference, transformation, results_dict, channel=None):
     """
@@ -277,6 +279,7 @@ def apply_single_channel_transformation(image, reference, transformation, result
     """
 
     if channel is not None:
+        print("not none")
         target_index = channel
         source_data = image.data[channel]
         reference_data = reference.data[channel]
@@ -290,6 +293,7 @@ def apply_single_channel_transformation(image, reference, transformation, result
 
 
 def find_transformation( image: Image, align_reference : Image):
+
    # for ratio in ratios:
     top, bottom, left, right = get_image_subset_boundaries(1.,align_reference)
         # pick green channel if image has color
@@ -315,7 +319,7 @@ def find_transformation( image: Image, align_reference : Image):
         print('alignement error')
 
             
-def stack_image(image: Image, old : Image, stacking_method : int = 0):
+def stack_image(image: Image, old : Image, num : int, stacking_method : int = 0):
         """
         Compute stacking according to user defined stacking mode
         the image data is modified in place by this function
@@ -324,9 +328,9 @@ def stack_image(image: Image, old : Image, stacking_method : int = 0):
         """
 
         if stacking_method == 0:
-            image.data = image.data + old.data
+            old.data = image.data + old.data
         elif stacking_method == 1:
-            image.data = (2 * old.data + image.data) / (1 + 1)
+            old.data = (num * old.data + image.data) / (1 + num)
 
 def get_image_subset_boundaries(ratio: float, last_stacking_result):
     """
@@ -389,6 +393,32 @@ def debayer(image: Image):
 
     image.data = debayered_data
 
+def color_balance(image : Image, red : float, green : float, blue: float):
+    image.data[0] = image.data[0] * red
+    image.data[1] = image.data[1] * green
+    image.data[2] = image.data[2] * blue
+    image.data = numpy.clip(image.data, 0, 2**16 - 1)
+
+def levels(image : Image, black: float, midtones: float, white: float):
+    # pylint: disable=R0914
+
+    # mids : 0-2
+    # black : int 0-max(int)
+    # white : int 0-max(int)
+    _16_BITS_MAX_VALUE = 2**16 - 1
+    image.data = _16_BITS_MAX_VALUE * image.data ** (1 / midtones) / _16_BITS_MAX_VALUE ** (1 / midtones)
+
+    # black / white levels
+    image.data = numpy.clip(image.data, black, white)
+
+    # final interpolation if we touched the image
+
+    image.data = numpy.float32(numpy.interp(image.data,
+                                            (image.data.min(), image.data.max()),
+                                            (0, _16_BITS_MAX_VALUE)))
+
+    return image
+
 def open_fits(filename):
     with fits.open(filename) as fit:
         # pylint: disable=E1101
@@ -423,13 +453,29 @@ def save_jpeg(image, filename):
                         [int(cv2.IMWRITE_JPEG_QUALITY), 100]), ''
 
 
-im1 = open_fits('./image_test/Light_001.fits')
-im2 = open_fits('./image_test/Light_002.fits')
+import os
 
-transformation = find_transformation(im2, im1)
-apply_transformation(im2, transformation, im1)
-#stack_image(im2,im1,0)
-save_jpeg(im2,'test.jpg')
+path = './image_test/'
+dirs = os.listdir( path )
+fits_list = []
+for file in dirs:
+    filename, file_extension = os.path.splitext(file)
+    if file_extension=='.fits':
+        fits_list.append(path+file)
+print(fits_list)
+i=0
+ref = open_fits(fits_list[0])
+stacked = ref.clone()
+
+while i<len(fits_list):
+    im2 = open_fits(fits_list[i])
+
+    transformation = find_transformation(im2, ref)
+    apply_transformation(im2, transformation, ref)
+    stack_image(im2,stacked,i, 0)
+    i+=1
+levels(stacked, 0, 1,65536)
+save_jpeg(stacked,'result.jpg')
 
 #registered, footprint = aa.register(im1, im2  , min_area=9)
 #transformation, matches = aa.find_transform(im2, im1)
