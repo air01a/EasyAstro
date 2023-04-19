@@ -6,10 +6,8 @@ from datetime import datetime,date
 from typing import List
 from pydantic import BaseModel, Json, Field
 from ..dependencies import config
+from ..models.coordinates import TimeObject
 
-
-class TimeObject(BaseModel):
-    time: str = Field(description="String time format Y-m-d H:M")
 
 
 router = APIRouter()

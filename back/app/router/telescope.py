@@ -33,7 +33,6 @@ async def get_status():
 @router.get('/last_picture')
 def last_picture():
     file_name, file_extension = os.path.splitext(telescope.last_image)
-    print(file_name, file_extension)
     if (file_extension=='.fits'):
         
         img_bytes = fitsutils.fits_to_png(telescope.last_image)
@@ -51,6 +50,10 @@ def last_picture():
     return Response(content=img_bytes, headers=headers)
     #return Response(content=img_bytes, media_type="image/jpeg")
 
+
+@router.post('/stacking')
+def stacking(coord : Coordinates.StarCoord):
+    telescope.stacking(coord.ra, coord.dec)
 
 class ConnectionManager:
     def __init__(self):

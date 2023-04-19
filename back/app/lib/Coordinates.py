@@ -14,18 +14,9 @@ from datetime import datetime,timedelta
 import pytz
 from numpy import ndarray
 import json
+from ..models.coordinates import Coord, StarCoord
 
 from pydantic import BaseModel
-
-# Coord type 
-class Coord(BaseModel):
-    lon: float
-    lat: float
-    height : float
-
-class StarCoord(BaseModel):
-    ra: float
-    dec: float
 
 
 # Main Class

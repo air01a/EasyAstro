@@ -5,8 +5,15 @@ import threading
 from queue import SimpleQueue
 from ..platesolve import platesolver
 from math import sqrt
-from ..dependencies import error
+from ..dependencies import error, config
 import logging
+from ..models.image import Image
+import os
+from ..imageprocessor.utils import open_fits, save_jpeg, adapt, normalize, debayer
+from ..imageprocessor.filters import stretch, hot_pixel_remover
+from ..imageprocessor.align import find_transformation, apply_transformation
+from ..imageprocessor.stack import stack_image
+from datetime import datetime
 
 MAX_PLATESOLVE_ERROR=1
 logger = logging.getLogger(__name__)
@@ -37,7 +44,7 @@ class IndiPilot():
         self.queue_out = queue_out
         self.moving = False
         self.shooting = False
-
+        self.lock = threading.Lock()
 
 
     def connect(self):
@@ -142,7 +149,9 @@ class IndiPilot():
 
 
     def take_picture(self, filename : str, exposure : int, gain : int, image_type : int = 0, binning : int = 0):
+        
         global bobEvent
+        self.lock.acquire()
         self.shooting = True
 
         # Let's take some pictures
@@ -215,6 +224,7 @@ class IndiPilot():
         # and perform some computations while the ccd is exposing
         # but this is outside the scope of this tutorial
         self.shooting = False
+        self.lock.release()
         self.queue_out.put('2.SHOOTING IS FINISHED')
 
 class IndiOrchestrator:
@@ -232,12 +242,15 @@ class IndiOrchestrator:
         self.last_error = 0
         self.indi.telescope_connect()
         self.processing = False
+        self.stacking = False
         self.last_image='./static/noimage.jpg'
         self.last_image_processed=None
 
         self.indi.sync(0,0)
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
+
+
 
     def get_qout(self):
         return self.qout
@@ -279,9 +292,6 @@ class IndiOrchestrator:
                     self.qout.put('3.GOTO FINISHED')
                     logger.debug('++++ GOTO FINISHED')
                     return 
-
-                
-
             else:
                     logger.error("Error during platesolve (error, ra, dec) (%i), (%f), (%f)", ps_return['error'], ra, dec)
             retry += 1
@@ -289,3 +299,52 @@ class IndiOrchestrator:
         self.last_error = error.ERROR_GOTO_FAILED
         self._operating = False
         self.qout.put('4.GOTO FAILED')
+
+    def stop_stacking(self):
+        self.stacking = False
+
+    def start_stacking(self, ra : float, dec : float):
+        logger.debug(' --- START STACKING')
+        picture = 0
+        today = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        
+        working_dir = config.CONFIG["WORKFLOW"]["STORAGE_DIR"] + "/"+today+"/"
+        logger.debug(' --- WORKING DIR %s' % working_dir)
+        os.mkdir(working_dir)
+        
+
+        logger.debug(' --- TAKE REFERENCE')
+        self.indi.take_picture(working_dir+str(picture)+'.fits',1,100)
+        ref = open_fits(working_dir+str(picture)+'.fits')
+        stacked = ref.clone()
+        stack = 0
+        logger.debug(' --- STACKING LOOP')
+        while self.stacking:
+            logger.debug(' --- SHOOTING')
+            self.indi.take_picture(working_dir+str(picture)+'.fits', 1,100)
+            logger.debug(' --- TREATING FITS')
+            image = open_fits(working_dir+str(picture)+'.fits')
+            hot_pixel_remover(image)
+            debayer(image)
+            adapt(image)
+            logger.debug(' --- TRANSFORMING')
+            transformation = find_transformation(image, ref)
+            if transformation==None:
+                logger.error("... No alignment point, skipping image %s ..." % (working_dir+str(picture)+'.fits'))
+            else:
+                logger.debug(' --- STACKING')
+                apply_transformation(image, transformation, ref)
+                stack_image(image, stacked, stack, 1)
+                stack += 1
+                stacked = image.clone()
+                stretch(image)
+                normalize(image)
+                logger.debug(' --- SAVING')
+                save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
+                logger.debug(' --- UPDATING STATUS FOR CLIENT')
+                self.last_image=working_dir+str(picture)+str(picture)+'.jpg'
+                self.queue_out.put('2.SHOOTING IS FINISHED')
+                picture += 1
+                if picture % 8 == 0 : 
+                    logger.debug(' --- MOVE TO FOR REALIGN')
+                    self._move(ra, dec)

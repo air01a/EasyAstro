@@ -202,7 +202,7 @@ def asinh(inputArray, scale_min=None, scale_max=None, non_linear=2.0):
 
 	return imageData
 
-def fits_to_png(filename):
+def fits_to_png3(filename):
     image_data = fits.getdata(filename)
     if len(image_data.shape) == 2:
         sum_image = image_data
@@ -244,3 +244,17 @@ def fits_to_png2(filename):
 	print("success"+str(is_success))
 	return img_bytes.getvalue()
 	#cv2.imwrite(img_bytes,)
+
+from ..imageprocessor.utils import open_fits, debayer, save_to_bytes, adapt
+from ..imageprocessor.filters import hot_pixel_remover, stretch
+
+def fits_to_png(filename):
+    img = open_fits(filename)
+    print(img)
+    hot_pixel_remover(img)
+    debayer(img)
+    adapt(img)
+    #stretch(img,0.18)
+
+    img_bytes = save_to_bytes(img,'PNG')
+    return img_bytes.getvalue()
