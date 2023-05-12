@@ -47,3 +47,9 @@ async def get_objects(obj_name : str):
     ra = ret.ra.hour
     dec = ret.dec.deg
     return [ra,dec]
+
+@router.get("/scheduled/{obj_list}")
+async def get_schedule(obj_list : str):
+    objects = obj_list.split(",")
+    ret = coordinates.get_schedule(objects, catalog)
+    return ret

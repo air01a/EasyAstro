@@ -43,7 +43,16 @@ class AppDrawer extends Drawer{
                       onTap: () {
                         Navigator.pushNamed(context, '/capture');
                       },
-                      )
+                      ),
+                      ListTile(
+                      leading: const Icon(
+                        Icons.logout,
+                      ),
+                      title: const Text('Logout'),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/');
+                      },
+                      ),
                     ],
                     ),
                   );

@@ -53,7 +53,7 @@ def last_picture():
 
 @router.post('/stacking')
 def stacking(coord : Coordinates.StarCoord):
-    telescope.stacking(coord.ra, coord.dec)
+    telescope.start_stacking(coord.ra, coord.dec)
 
 class ConnectionManager:
     def __init__(self):

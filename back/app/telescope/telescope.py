@@ -245,6 +245,8 @@ class IndiOrchestrator:
         self.stacking = False
         self.last_image='./static/noimage.jpg'
         self.last_image_processed=None
+        self.lock = threading.Lock()
+
 
         self.indi.sync(0,0)
         (cra, cdec)=self.indi.get_current_coordinates()
@@ -258,20 +260,20 @@ class IndiOrchestrator:
     def take_picture(self, exposure: int, gain: int):
         self.indi.take_picture('/tmp/exposure.fits', exposure, gain,)
 
-    def move_to(self, ra : float, dec: float):
+    def move_to(self, ra : float, dec: float, continue_picture : bool = True):
         self._operating = True
-        self.thread = threading.Thread(target=self._move_to, args=(ra, dec))
+        self.thread = threading.Thread(target=self._move_to, args=(ra, dec, continue_picture))
         self.thread.start()
         return error.no_error()
 
-    def _move_to(self, ra: float, dec : float):
-        
+    def _move_to(self, ra: float, dec : float, continue_picture : bool):
+        self.lock.acquire()
         retry = 0
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
         logger.debug(' --- going to '+str(ra)+" ; "+str(dec))
 
-        while retry<5:
+        while retry<10 and self._operating:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra*24/360,dec)
             logger.debug(' --- GOTO FINISHED')
@@ -281,7 +283,9 @@ class IndiOrchestrator:
             self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
             logger.debug(' SOLVER COORDINATES (RA,DEC) : (%f),(%f)', ps_return['ra'],ps_return['dec'])
+      
             if ps_return['error']==0:
+                self.qout.put('   Solving solution %f,%f' % (ps_return['ra'],ps_return['dec']))
                 logger.debug('Syncing telescope to new coordinates')
                 self.indi.sync(ps_return['ra'],ps_return['dec'] )
                 error_rate = sqrt((ps_return['ra']-ra)*(ps_return['ra']-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
@@ -291,19 +295,32 @@ class IndiOrchestrator:
                     self._operating = False
                     self.qout.put('3.GOTO FINISHED')
                     logger.debug('++++ GOTO FINISHED')
+                    if continue_picture:
+                        while self._operating:
+                            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',1,100)
+                            self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+
+                    self.lock.release()
                     return 
             else:
                     logger.error("Error during platesolve (error, ra, dec) (%i), (%f), (%f)", ps_return['error'], ra, dec)
+                    self.qout.put('   Solving failed') 
             retry += 1
         logger.debug('GOTO FAILED DUE TO MAX RETRY REACHED')
         self.last_error = error.ERROR_GOTO_FAILED
         self._operating = False
         self.qout.put('4.GOTO FAILED')
+        self.lock.release()
+
 
     def stop_stacking(self):
         self.stacking = False
 
     def start_stacking(self, ra : float, dec : float):
+        if self._operating:
+            self._operating = False
+        self.lock.acquire()
+        self.stacking = True
         logger.debug(' --- START STACKING')
         picture = 0
         today = datetime.now().strftime("%Y-%m-%d_%H%M%S")
@@ -337,14 +354,17 @@ class IndiOrchestrator:
                 stack_image(image, stacked, stack, 1)
                 stack += 1
                 stacked = image.clone()
-                stretch(image)
+                stretch(image, 0.18)
                 normalize(image)
                 logger.debug(' --- SAVING')
                 save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
                 self.last_image=working_dir+str(picture)+str(picture)+'.jpg'
-                self.queue_out.put('2.SHOOTING IS FINISHED')
+                self.qout.put('2.SHOOTING IS FINISHED')
                 picture += 1
                 if picture % 8 == 0 : 
                     logger.debug(' --- MOVE TO FOR REALIGN')
-                    self._move(ra, dec)
+                    self.lock.release()
+                    self._move_to(ra, dec,False)
+                    self.lock.acquire()
+        self.lock.release()

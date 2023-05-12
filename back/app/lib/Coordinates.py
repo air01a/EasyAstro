@@ -103,7 +103,6 @@ class Coordinates :
         ret = []
         time_range = [self._time, self._time+timedelta(hours=self._duration)]
         obs_table = observability_table(self._constraints, self._observer, targets, time_range=time_range)
-        
         table = obs_table.as_array().tolist()
         for l in table : 
             if l[1]:
@@ -112,9 +111,13 @@ class Coordinates :
     
     def get_catalogs_objects(self, objects, catalog): 
         ret = []
+        sideral_time = self.get_sidereal_time().hour
         for obj in objects:
             if obj in catalog.keys():
-                 ret.append(catalog[obj])
+                 tmp = catalog[obj]
+                 # Add delay before the object reach the meridian
+                 tmp['meridian_time'] = self.get_meridian_time(tmp['RA']/15,sideral_time)
+                 ret.append(tmp)
         return ret
     
     def _take_second(self,elem):
@@ -126,8 +129,13 @@ class Coordinates :
         sidereal_time = self.get_sidereal_time()
         for object in catalog._catalog:
             if object.name in targets:
-                schedule.append((object.name,((object.coord.ra-sidereal_time)*sidereal_convertion)))
+                schedule.append((object.name,((object.coord.ra-sidereal_time)*sidereal_convertion).hour))
         
         schedule.sort(key=self._take_second)
         return schedule
-        
+
+    def get_meridian_time(self, ra, sidereal_time=None):
+        sidereal_convertion = 366.25/365.25/15
+        if sidereal_time == None:
+            sidereal_time = self.get_sidereal_time().hour
+        return ((ra-sidereal_time)*sidereal_convertion)

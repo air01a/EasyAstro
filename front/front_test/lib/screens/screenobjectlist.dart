@@ -8,7 +8,7 @@ import 'package:front_test/services/globals.dart';
 import 'package:front_test/components/rating.dart'; 
 import 'package:intl/intl.dart';
 import 'package:front_test/services/servicecheck.dart';
-
+import 'package:front_test/components/searchbar.dart';
 
 class ScreenObjectList extends StatefulWidget {
   @override
@@ -20,14 +20,29 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   ServiceCheckHelper _checkHelper = ServiceCheckHelper();
+  String searchValue = '';
+  SearchField sf = SearchField();
+
+  void filter(String value) {
+    searchValue = value;
+     setState(() {
+      if (sf.isSearchActive) {
+        _catalog = ObjectSelection().selection.where((object)=>object.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
+      } 
+     });
+  }
 
   void _filter(BuildContext context) {
-
-
+    sf.filterActivate();
+     setState(() {
+      if (!sf.isSearchActive) {
+        _catalog  = ObjectSelection().selection.toList();
+      }
+     });
   }
 
   void _search(BuildContext context) {
-
+    
 
   }
 
@@ -65,7 +80,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     _checkHelper.updateTime(newDate);
 
     setState(() {
-      _catalog = ObjectSelection().selection;
+      _catalog = ObjectSelection().selection.toList();
     });
   }
     
@@ -73,21 +88,24 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     ObjectSelection().selection[index].selected = value;
 
     setState(() {
-      _catalog  = ObjectSelection().selection;
+      _catalog  = ObjectSelection().selection.toList();
     });
   }
 
   @override
   void initState() {
     super.initState();
+    sf.setCallBack(filter);
     setState(() {
-      _catalog  = ObjectSelection().selection;
+      _catalog  = ObjectSelection().selection.toList();
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     final bbar = BottomBar();
+
     bbar.addItem(const Icon(Icons.schedule), 'Change Date', _selectDate);
     bbar.addItem(const Icon(Icons.filter_alt), 'Filter', _filter);
     bbar.addItem(const Icon(Icons.search), 'Search', _filter);
@@ -96,29 +114,30 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                     padding: EdgeInsets.only(left: 8.0),
                     child: Column(
                           children: [
+                          sf.buildSearchTextField(),
                           Expanded(
                               child: ListView.builder(
                                     itemCount: _catalog.length,
                                     itemBuilder: (context, index) {
                                       RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: ObjectSelection().selection[index].selected);
+                                     
+
                                       return GestureDetector(
-                                        child: ObjectBox(object: _catalog[index], item: index, rating : rating),
+                                        child: ObjectBox(object: _catalog[index], rating : rating),
                                         onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => ObjectPage(item: index, rating: rating),
+                                              builder: (context) => ObjectPage(item: _catalog[index], rating: rating),
                                             ),
                                           );
                                           },
                                         onLongPress : () {
-                                            Navigator.pushNamed(context, '/capture', arguments: {'object':ObjectSelection().selection[index].name});
+                                            Navigator.pushNamed(context, '/capture', arguments: {'object':_catalog[index].name});
                                           }
                                         
                                       );
-                              
-                                    }
-                                  )
+                                    })
                           )
                     ]
             )),

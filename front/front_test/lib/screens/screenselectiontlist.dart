@@ -23,6 +23,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
 
     setState(() {
       _catalog  = ObjectSelection().selection.where((line) => line.selected == true).toList();
+      _catalog.sort((a, b) => a.meridian.compareTo(b.meridian));
 
     });
   }
@@ -32,6 +33,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     super.initState();
     setState(() {
        _catalog = ObjectSelection().selection.where((line) => line.selected == true).toList();
+       _catalog.sort((a, b) => a.meridian.compareTo(b.meridian));
     });
   }
 
@@ -44,12 +46,12 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
         itemBuilder: (context, index) {
           RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: _catalog[index].selected);
           return GestureDetector(
-            child: ObjectBox(object : _catalog[index], item: index, rating : rating), //, onValueChanged: update),
+            child: ObjectBox(object : _catalog[index],  rating : rating), //, onValueChanged: update),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ObjectPage(item: index, rating: rating),
+                  builder: (context) => ObjectPage(item: _catalog[index], rating: rating),
                 ),
               );
             },

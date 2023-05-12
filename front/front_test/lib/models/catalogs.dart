@@ -32,7 +32,7 @@ class ObservableObject {
   String description='';
   String image='';
   bool selected = false;
-
+  double meridian = 0;
   ObservableObject({required this.name, required this.ngc, required this.type, required this.season, required this.magnitude, required this.ra, required this.dec, required this.description, required this.image});
 
   ObservableObject.fromJson(Map<String, dynamic> json ) {
@@ -44,7 +44,7 @@ class ObservableObject {
     image = json['Image'] ?? '';
     magnitude = int.parse(json['Magnitude']);
     type = json['Object type'];
-
+    meridian = json['meridian_time'];
 
   }
 

@@ -46,6 +46,8 @@ app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
+"""
 from .imageprocessor.utils import open_fits, debayer, adapt, save_to_bytes, normalize
 from .imageprocessor.filters import hot_pixel_remover
 from .models.image import Image
@@ -65,3 +67,4 @@ normalize(image)
 data = save_to_bytes(image,'jpg').getvalue()
 
 open('filename.jpg', 'wb').write(data)
+"""

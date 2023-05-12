@@ -49,6 +49,7 @@ class LoadCatalog:
                         coord_catalog.append(FixedTarget(coord=SkyCoord(ra = line[col_ra] * u.deg, dec = line[col_dec]*u.deg),name=line[col_name]))
 
         self._catalog = coord_catalog
+        print(self._catalog)
 
 
 

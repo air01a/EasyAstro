@@ -21,12 +21,23 @@ class ServiceCheckHelper {
     
   }
 
+  
+
   Future<void> changeObject(String object) async {
     ApiBaseHelper helper = ApiBaseHelper();
     ObservableObject obj = ObjectSelection().selection[getObjectIndex(object)];
     await helper.post("/telescope/goto/", {"ra":obj.ra, "dec":obj.dec});
 
   }
+
+  Future<void> stackImage(String object) async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    ObservableObject obj = ObjectSelection().selection[getObjectIndex(object)];
+    await helper.post("/telescope/stacking/", {"ra":obj.ra, "dec":obj.dec});
+
+  }
+
+
   Future<void> updateTime(String time) async {
     ApiBaseHelper helper = ApiBaseHelper();
     await helper.post("/planning/time",{"time": time});

@@ -4,11 +4,10 @@ import 'package:front_test/models/catalogs.dart';
 import 'package:front_test/services/globals.dart';
 
 class ObjectBox extends StatefulWidget {
-  final int item; 
-  // final Function() onValueChanged;
+    // final Function() onValueChanged;
    final RatingBox rating; 
   final ObservableObject object;
-  const ObjectBox({super.key,required this.object, required this.item, required this.rating}); 
+  const ObjectBox({super.key,required this.object, required this.rating}); 
 
   @override 
   State<ObjectBox> createState() => _ObjectBox(); 
@@ -29,7 +28,7 @@ class _ObjectBox extends State<ObjectBox> {
             child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
-                  Image.network("http://${ServerInfo().host}${ObjectSelection().selection[widget.item].image}", width: 100), 
+                  Image.network("http://${ServerInfo().host}${widget.object.image}", width: 100), 
                   Expanded( 
                      child: Container( 
                         padding: const EdgeInsets.all(5), 
@@ -40,6 +39,7 @@ class _ObjectBox extends State<ObjectBox> {
                               Text("Type: ${widget.object.type}"), 
                               Text("Magnitude: ${widget.object.magnitude.toString()}"), 
                               widget.rating , 
+                              
                            ], 
                         )
                      )
