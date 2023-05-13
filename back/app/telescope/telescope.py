@@ -46,7 +46,6 @@ class IndiPilot():
         self.shooting = False
         self.lock = threading.Lock()
 
-
     def connect(self):
         # connect the server
         self.indiclient = IndiClient()
@@ -63,7 +62,7 @@ class IndiPilot():
 
     def telescope_connect(self):
         # connect the scope
-        self.telescope = "Telescope Simulator"
+        self.telescope = config.CONFIG['DEVICE']['TELESCOPE']
         self.device_telescope = None
         self.telescope_connect = None
 
@@ -155,7 +154,7 @@ class IndiPilot():
         self.shooting = True
 
         # Let's take some pictures
-        ccd = "CCD Simulator"
+        ccd = config.CONFIG['DEVICE']['CCD']
         device_ccd = self.indiclient.getDevice(ccd)
         while not (device_ccd):
             time.sleep(0.5)
