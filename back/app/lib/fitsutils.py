@@ -245,7 +245,7 @@ def fits_to_png2(filename):
 	return img_bytes.getvalue()
 	#cv2.imwrite(img_bytes,)
 
-from ..imageprocessor.utils import open_fits, debayer, save_to_bytes, adapt
+from ..imageprocessor.utils import normalize, open_fits, debayer, save_to_bytes, adapt
 from ..imageprocessor.filters import hot_pixel_remover, stretch
 
 def fits_to_png(filename):
@@ -254,7 +254,7 @@ def fits_to_png(filename):
     hot_pixel_remover(img)
     debayer(img)
     adapt(img)
-    #stretch(img,0.18)
-
+    stretch(img,0.18)
+    normalize(img)
     img_bytes = save_to_bytes(img,'PNG')
     return img_bytes.getvalue()
