@@ -1,3 +1,4 @@
+uvicorn[standard]
 astroplan
 astropy
 fastapi
@@ -5,3 +6,10 @@ numpy
 pytz
 uvicorn
 pyjwt
+pyindi-client
+cv2
+opencv-python
+scipy
+skimage
+scikit-image
+astroalign

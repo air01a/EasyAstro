@@ -20,9 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 blobEvent = None
-class IndiClient(PyIndi.BaseClient):
-    def __init__(self):
-        super(IndiClient, self).__init__()
 
 
 
@@ -44,9 +41,6 @@ class IndiClient(PyIndi.BaseClient):
         '''Emmited when a new property is created for an INDI driver.'''
         self.logger.info(f"new property {p.getName()} as {p.getTypeAsString()} for device {p.getDeviceName()}")
 
-    def updateProperty(self, p):
-        '''Emmited when a new property value arrives from INDI server.'''
-        self.logger.info(f"update property {p.getName()} as {p.getTypeAsString()} for device {p.getDeviceName()}")
 
     def removeProperty(self, p):
         '''Emmited when a property is deleted for an INDI driver.'''
@@ -191,20 +185,26 @@ class IndiPilot():
     def take_picture(self, filename : str, exposure : int, gain : int, image_type : int = 0, binning : int = 0):
         
         global bobEvent
+
+        logger.debug(' --- Taking picture ')
+
         self.lock.acquire()
         self.shooting = True
 
         # Let's take some pictures
         ccd = config.CONFIG['DEVICE']['CCD']
         device_ccd = self.indiclient.getDevice(ccd)
+        logger.debug(' --- Taking picture : get device ')
         while not (device_ccd):
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(ccd)
 
+        logger.debug(' --- Taking picture : COnnection ')
         ccd_connect = device_ccd.getSwitch("CONNECTION")
         while not (ccd_connect):
             time.sleep(0.5)
             ccd_connect = device_ccd.getSwitch("CONNECTION")
+        logger.debug(' --- Taking picture : processing ')
         if not (device_ccd.isConnected()):
             ccd_connect.reset()
             ccd_connect[0].setState(PyIndi.ISS_ON)  # the "CONNECT" switch
@@ -221,7 +221,7 @@ class IndiPilot():
         while not (ccd_active_devices):
             time.sleep(0.5)
             ccd_active_devices = device_ccd.getText("ACTIVE_DEVICES")
-        ccd_active_devices[0].setText("Telescope Simulator")
+        ccd_active_devices[0].setText(self.telescope)
         self.indiclient.sendNewProperty(ccd_active_devices)
 
         # we should inform the indi server that we want to receive the
@@ -266,6 +266,7 @@ class IndiPilot():
         self.shooting = False
         self.lock.release()
         self.queue_out.put('2.SHOOTING IS FINISHED')
+        logger.debug(' ---2. Shooting is FINISHED')
 
 class IndiOrchestrator:
 
