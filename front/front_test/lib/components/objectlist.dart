@@ -22,40 +22,44 @@ class _ObjectPage extends State<ObjectPage> {
             title: Text(widget.item.name), 
          ), 
          body: Center(
-            child: Container( 
-               padding: const EdgeInsets.all(0), 
-               child: Column( 
-                  mainAxisAlignment: MainAxisAlignment.start, 
-                  crossAxisAlignment: CrossAxisAlignment.start, 
-                  children: <Widget>[ 
-                     Center(child : Image.network("http://${ServerInfo().host}${widget.item.image}")),  
-                     Expanded( 
-                        child: Container( 
-                           padding: const EdgeInsets.all(5), 
-                           child: Column( 
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-                              children: <Widget>[ 
-                                 Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold)), 
-                                 Text(widget.item.description,textAlign: TextAlign.left), 
-                                 Text("Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
-                                 widget.rating,
-                                 ElevatedButton(
-                                onPressed: () { 
-                                  Navigator.pushNamed(context, '/capture', arguments: {'object':widget.item.name});
-                                }, 
-                                child: const Icon(
-                                                  Icons.mode_standby  ,
-                                                  size: 48.0
-                                                )
+            child: SingleChildScrollView(
+              child: IntrinsicHeight(
+            
+                child: Container( 
+                  padding: const EdgeInsets.all(0), 
+                  child: Column( 
+                      mainAxisAlignment: MainAxisAlignment.start, 
+                      crossAxisAlignment: CrossAxisAlignment.start, 
+                      children: <Widget>[ 
+                        Center(child : Image.network("http://${ServerInfo().host}${widget.item.image}")),  
+                        Expanded( 
+                            child: Container( 
+                              padding: const EdgeInsets.all(5), 
+                              child: Column( 
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                                  children: <Widget>[ 
+                                    Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold)), 
+                                    Text(widget.item.description,textAlign: TextAlign.left), 
+                                    Text("Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
+                                    widget.rating,
+                                    ElevatedButton(
+                                    onPressed: () { 
+                                      Navigator.pushNamed(context, '/capture', arguments: {'object':widget.item.name});
+                                    }, 
+                                    child: const Icon(
+                                                      Icons.mode_standby  ,
+                                                      size: 48.0
+                                                    )
+                                  )
+                                  ], 
                               )
-                              ], 
-                           )
-                        )
-                     ) 
-                  ]
-               ), 
-            ), 
-         ), 
-      ); 
+                            )
+                        ) 
+                      ]
+                  ), 
+                ), 
+         ),
+        ) 
+      )); 
    } 
 }

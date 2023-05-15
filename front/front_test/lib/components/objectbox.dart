@@ -16,8 +16,6 @@ class ObjectBox extends StatefulWidget {
 
 
 class _ObjectBox extends State<ObjectBox> {
-
-
    @override
    Widget build(BuildContext context) {
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
@@ -38,12 +36,21 @@ class _ObjectBox extends State<ObjectBox> {
                               Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)), Text(widget.object.description), 
                               Text("Type: ${widget.object.type}"), 
                               Text("Magnitude: ${widget.object.magnitude.toString()}"), 
-                              widget.rating , 
-                              
                            ], 
                         )
                      )
-                  ) 
+                  ),
+                  widget.rating,
+                  ElevatedButton(
+                                    onPressed: () { 
+                                      Navigator.pushNamed(context, '/capture', arguments: {'object':widget.object.name});
+                                    }, 
+                                    child: const Icon(
+                                                      Icons.mode_standby  ,
+                                                      size: 48.0
+                                                    )
+                                  )
+                               
                ]
             ), 
          )

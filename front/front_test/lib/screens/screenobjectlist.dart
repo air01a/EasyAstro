@@ -9,6 +9,7 @@ import 'package:front_test/components/rating.dart';
 import 'package:intl/intl.dart';
 import 'package:front_test/services/servicecheck.dart';
 import 'package:front_test/components/searchbar.dart';
+import 'package:front_test/components/filterbar.dart';
 
 class ScreenObjectList extends StatefulWidget {
   @override
@@ -21,32 +22,51 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   ServiceCheckHelper _checkHelper = ServiceCheckHelper();
   String searchValue = '';
+  String filterValue = '';
   SearchField sf = SearchField();
+  FilterField ff = FilterField();
+
+
+  void _getNewCatalog() {
+    
+    List<ObservableObject> temp = ObjectSelection().selection;
+    if (sf.isSearchActive) {
+      temp = temp.where((object)=>object.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
+    } 
+
+    if (ff.isFilterActive) {
+      temp = temp.where((object)=>object.type.toLowerCase().contains(filterValue.toLowerCase())).toList();
+    }
+
+    setState(() {
+      _catalog = temp;
+    });
+
+  }
+
+
+  void search(String value) {
+    searchValue = value;
+    _getNewCatalog();
+  }
+
 
   void filter(String value) {
-    searchValue = value;
-     setState(() {
-      if (sf.isSearchActive) {
-        _catalog = ObjectSelection().selection.where((object)=>object.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
-      } 
-     });
+    filterValue = value;
+    _getNewCatalog();
+  }
+
+
+
+  void _search(BuildContext context) {
+    sf.filterActivate();
+    _getNewCatalog();
   }
 
   void _filter(BuildContext context) {
-    sf.filterActivate();
-     setState(() {
-      if (!sf.isSearchActive) {
-        _catalog  = ObjectSelection().selection.toList();
-      }
-     });
+    ff.filterActivate();
+    _getNewCatalog();
   }
-
-  void _search(BuildContext context) {
-    
-
-  }
-
-
 
 
   Future<void> _selectDate(BuildContext context) async {
@@ -95,7 +115,8 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   @override
   void initState() {
     super.initState();
-    sf.setCallBack(filter);
+    sf.setCallBack(search);
+    ff.setCallBack(filter);
     setState(() {
       _catalog  = ObjectSelection().selection.toList();
     });
@@ -108,13 +129,14 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
     bbar.addItem(const Icon(Icons.schedule), 'Change Date', _selectDate);
     bbar.addItem(const Icon(Icons.filter_alt), 'Filter', _filter);
-    bbar.addItem(const Icon(Icons.search), 'Search', _filter);
+    bbar.addItem(const Icon(Icons.search), 'Search', _search);
     return PageStructure(
             body: Container(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Column(
                           children: [
                           sf.buildSearchTextField(),
+                          ff.buildFilterTextField(),
                           Expanded(
                               child: ListView.builder(
                                     itemCount: _catalog.length,

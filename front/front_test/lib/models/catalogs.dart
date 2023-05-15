@@ -15,8 +15,6 @@ class ObservableObjects {
   List<ObservableObject> get catalog {
     return results;
   }
-
-
 }
 
 
