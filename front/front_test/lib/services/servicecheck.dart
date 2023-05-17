@@ -30,6 +30,13 @@ class ServiceCheckHelper {
 
   }
 
+
+  Future<void> changeExposition(String exposition) async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    await helper.post("/telescope/exposition", {"exposition":exposition});
+
+  }
+
   Future<void> stackImage(String object) async {
     ApiBaseHelper helper = ApiBaseHelper();
     ObservableObject obj = ObjectSelection().selection[getObjectIndex(object)];

@@ -6,6 +6,8 @@ import 'package:front_test/services/globals.dart';
 import 'package:front_test/services/servicecheck.dart';
 import 'package:front_test/components/scrollabletextfield.dart';
 import 'dart:math';
+import 'package:front_test/components/selectexposition.dart';
+
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -19,6 +21,8 @@ class _ScreenCapture extends State<ScreenCapture> {
   final protocol = CommunicationProtocol();
   final TextEditingController _textController = TextEditingController();
   final ServiceCheckHelper service = ServiceCheckHelper();
+  final ExpositionSelector expoSelector = ExpositionSelector();
+
   bool _isConfigVisible = false;
   bool _isStackable = false;
   final channel = WebSocketChannel .connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
@@ -64,6 +68,47 @@ class _ScreenCapture extends State<ScreenCapture> {
       _isStackable = stackable;
     });
 
+  }
+
+  Widget controlButton(bool visible, IconData? icon, double ?left, double ?bottom, double ?right, double ?top, Function(dynamic) ?callback, dynamic ?param) {
+    if (visible) {
+        return Positioned(
+        
+        left: left, // Position horizontale du bouton par rapport à la gauche de l'écran
+        right : right,
+        bottom : bottom,
+        top : top,
+        child: ElevatedButton(
+          onPressed: () {
+            // Action à effectuer lors du clic sur le bouton
+            if (callback!=null) {
+              callback(param);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
+          ),
+          child: Opacity(
+                opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
+                child: Icon(
+                                icon,
+                                size: 48.0
+                )
+          )
+          
+        ),
+      );
+    }
+    return Container(width: 0, height: 0);                              
+  }
+
+  void stack(dynamic object) {
+    _setStackable(false);
+    service.stackImage(object.toString());
+  }
+
+  void selectExposition(dynamic context) {
+    expoSelector.showExpositionSelector(context, service.changeExposition);
   }
 
   @override
@@ -113,118 +158,13 @@ class _ScreenCapture extends State<ScreenCapture> {
                                         
                                       ),
                                     ),
-                                    if (_isConfigVisible)
-                                        Positioned(
-                                        
-                                        left: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // Action à effectuer lors du clic sur le bouton
-                                            print('Bouton 1 cliqué!');
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                          ),
-                                          child: Opacity(
-                                                opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                                child: const Icon(
-                                                                Icons.chevron_left,
-                                                                size: 48.0
-                                                )
-                                          )
-                                          
-                                        ),
-                                      ),
-                                       if (_isConfigVisible) 
-                                        Positioned(
-                                          top:0,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              // Action à effectuer lors du clic sur le bouton
-                                              print('Bouton 1 cliqué!');
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                            ),
-                                            child: Opacity(
-                                                  opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                                  child: const Icon(
-                                                                  Icons.expand_less,
-                                                                  size: 48.0
-                                                  )
-                                            )
-                                            
-                                          ),
-                                        ),
-                                       if (_isConfigVisible)
-                                        Positioned(
-                                        
-                                        right: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // Action à effectuer lors du clic sur le bouton
-                                            print('Bouton 1 cliqué!');
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                          ),
-                                          child: Opacity(
-                                                opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                                child: const Icon(
-                                                                Icons.navigate_next,
-                                                                size: 48.0
-                                                )
-                                          )
-                                          
-                                        ),
-                                      ),
-                                       if (_isConfigVisible)
-                                        Positioned(
-                                        
-                                        bottom: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // Action à effectuer lors du clic sur le bouton
-                                            print('Bouton 1 cliqué!');
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                          ),
-                                          child: Opacity(
-                                                opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                                child: const Icon(
-                                                                Icons.keyboard_arrow_down,
-                                                                size: 48.0
-                                                )
-                                          )
-                                          
-                                        ),
-                                      )
-                                  ,
-                                  if (_isStackable) 
-                                     Positioned(
-                                        bottom: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
-                                        right : 0,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // Action à effectuer lors du clic sur le bouton
-                                            print('Bouton stack cliqué!');
-                                            _setStackable(false);
-                                            service.stackImage(object);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                          ),
-                                          child: Opacity(
-                                                opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                                child: const Icon(
-                                                                Icons.library_add,
-                                                                size: 100.0
-                                                )
-                                          )
-                                          
-                                        ),
-                                      )
+                                    controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, null,null),
+                                    controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, null,null),
+                                    controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, null,null),
+                                    controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, null,null),
+                                    controlButton(_isStackable,Icons.library_add, null, 0, 0, null, stack, object),
+                                    controlButton(_isConfigVisible,Icons.timer, 0, 0, null, null, selectExposition,context),
+                                    
                                 ])
                         )
               ),

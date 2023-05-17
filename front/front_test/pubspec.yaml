@@ -43,6 +43,8 @@ dependencies:
     sdk: flutter
   intl: any
   web_socket_channel: ^2.4.0
+  flutter_picker: 
+    git: http://github.com/yangyxd/flutter_picker.git
 dev_dependencies:
   flutter_test:
     sdk: flutter

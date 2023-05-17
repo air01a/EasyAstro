@@ -182,11 +182,11 @@ class IndiPilot():
         self.queue_out.put('1.MOVING IS FINISHED')
 
 
-    def take_picture(self, filename : str, exposure : int, gain : int, image_type : int = 0, binning : int = 0):
+    def take_picture(self, filename : str, exposure : float, gain : int, image_type : int = 0, binning : int = 0):
         
         global bobEvent
 
-        logger.debug(' --- Taking picture ')
+        logger.debug(' --- Taking picture with exposure %f' % exposure)
 
         self.lock.acquire()
         self.shooting = True
@@ -287,13 +287,17 @@ class IndiOrchestrator:
         self.last_image='./static/noimage.jpg'
         self.last_image_processed=None
         self.lock = threading.Lock()
-
+        self.exposition = None
 
         self.indi.sync(0,0)
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
 
-
+    def set_exposition_auto(self):
+        self.exposition = None
+    
+    def change_exposition(self, exposition : float):
+        self.exposition = exposition
 
     def get_qout(self):
         return self.qout
@@ -306,6 +310,12 @@ class IndiOrchestrator:
         self.thread = threading.Thread(target=self._move_to, args=(ra, dec, continue_picture))
         self.thread.start()
         return error.no_error()
+    
+    def get_exposition(self,ra=None, dec = None):
+        if self.exposition==None:
+            exposition = self.get_expo_auto(ra, dec)
+        else:
+            exposition = self.exposition
 
     def _move_to(self, ra: float, dec : float, continue_picture : bool):
         self.lock.acquire()
@@ -313,12 +323,13 @@ class IndiOrchestrator:
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
         logger.debug(' --- going to '+str(ra)+" ; "+str(dec))
+        
 
         while retry<10 and self._operating:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra*24/360,dec)
             logger.debug(' --- GOTO FINISHED')
-            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',1,100)
+            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',self.get_exposition(ra,dec),100)
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
             self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
@@ -338,7 +349,7 @@ class IndiOrchestrator:
                     logger.debug('++++ GOTO FINISHED')
                     if continue_picture:
                         while self._operating:
-                            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',1,100)
+                            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',self.get_exposition(ra, dec),100)
                             self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
 
                     self.lock.release()
@@ -372,14 +383,14 @@ class IndiOrchestrator:
         
 
         logger.debug(' --- TAKE REFERENCE')
-        self.indi.take_picture(working_dir+str(picture)+'.fits',1,100)
+        self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),100)
         ref = open_fits(working_dir+str(picture)+'.fits')
         stacked = ref.clone()
         stack = 0
         logger.debug(' --- STACKING LOOP')
         while self.stacking:
             logger.debug(' --- SHOOTING')
-            self.indi.take_picture(working_dir+str(picture)+'.fits', 1,100)
+            self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),100)
             logger.debug(' --- TREATING FITS')
             image = open_fits(working_dir+str(picture)+'.fits')
             hot_pixel_remover(image)

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket,  Body
 from ..telescope import telescope
 from ..dependencies import error
 from ..lib import fitsutils
@@ -9,7 +9,7 @@ from ..lib import Coordinates
 import os
 import asyncio
 import logging
-
+from ..models.coordinates import Exposition
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -54,6 +54,18 @@ def last_picture():
 @router.post('/stacking')
 def stacking(coord : Coordinates.StarCoord):
     telescope.start_stacking(coord.ra, coord.dec)
+
+@router.post('/exposition')
+def exposition(exposition : Exposition):
+    print(exposition.exposition)
+    if exposition.exposition=='AUTO':
+        telescope.set_exposition_auto()
+    else:
+        try:
+            telescope.change_exposition(float(exposition.exposition))
+        except:
+            telescope.set_exposition_auto()
+
 
 class ConnectionManager:
     def __init__(self):
