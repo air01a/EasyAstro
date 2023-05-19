@@ -29,6 +29,7 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   void fetchImage() async {
     setState(() {
+      print("Refresh image");
       var rng = Random().nextInt(999999999);
       _imageUrl = "http://${ServerInfo().host}/telescope/last_picture?v=$i.$rng";
       i+=1;

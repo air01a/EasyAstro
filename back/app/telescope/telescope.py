@@ -334,6 +334,7 @@ class IndiOrchestrator:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra*24/360,dec)
             logger.debug(' --- GOTO FINISHED')
+            self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',self.get_exposition(ra,dec),100)
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
