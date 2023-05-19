@@ -1,0 +1,28 @@
+#!/bin/bash
+
+mkdir ~/astrometry-venv/
+cd ~/astrometry-venv/
+python3 -m venv .
+source bin/activate
+pip3 install wheel
+pip3 install numpy==1.23.1
+pip3 install python-pyfits
+git clone https://github.com/dstndstn/astrometry.net.git
+
+sudo apt update
+sudo apt install -y libcairo2-dev
+sudo apt install -y libbz2-dev
+sudo apt install -y libjpeg-dev
+
+cd astrometry.net/
+make
+make py
+make extra
+
+sudo make install
+cd /usr/local/astrometry/
+sudo wget http://data.astrometry.net/4100/index-4107.fits
+sudo wget https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5204-07.fits
+sudo wget https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/index-5204-09.fits
+
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+cd ~/astrometry-venv
+export PATH=/usr/local/astrometry/bin/:$PATH
+source bin/activate
+solve-field --overwrite -p -S /tmp/platesolveok $1 > /tmp/astroresult 2>&1
+cat /tmp/astroresult | grep "Field center" | grep deg | cut -d'=' -f2 | sed -e "s/(//g" -e "s/)//g" -e "s/ deg.//g" -e s"/ //g" > /tmp/astro.result

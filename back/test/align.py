@@ -752,4 +752,12 @@ def test():
                         cv2.cvtColor(image.data, cv2.COLOR_RGB2BGR),
                         [int(cv2.IMWRITE_JPEG_QUALITY), 100]), ''
 
-test_all()
+#test_all()
+ref = open_fits('M_51_3_Light_001.fits')
+hot_pixel_remover(ref)
+#levels(ref, 1000, 1,65535)
+debayer(ref)
+stretch(ref, 0.18)
+color_balance(ref, 1, 1, 1)
+normalize(ref)
+save_jpeg(ref,'M_51_3_Light_001.jpg')

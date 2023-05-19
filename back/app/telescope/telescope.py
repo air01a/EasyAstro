@@ -311,11 +311,16 @@ class IndiOrchestrator:
         self.thread.start()
         return error.no_error()
     
+
+    def get_expo_auto(self, ra, dec):
+        return 1
+    
     def get_exposition(self,ra=None, dec = None):
         if self.exposition==None:
             exposition = self.get_expo_auto(ra, dec)
         else:
             exposition = self.exposition
+        return exposition
 
     def _move_to(self, ra: float, dec : float, continue_picture : bool):
         self.lock.acquire()
@@ -385,6 +390,9 @@ class IndiOrchestrator:
         logger.debug(' --- TAKE REFERENCE')
         self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),100)
         ref = open_fits(working_dir+str(picture)+'.fits')
+        hot_pixel_remover(ref)
+        debayer(ref)
+        adapt(ref)
         stacked = ref.clone()
         stack = 0
         logger.debug(' --- STACKING LOOP')

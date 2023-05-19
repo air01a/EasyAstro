@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/services/globals.dart';
+import 'package:front_test/services/persistentdata.dart';
 
 class ConnectionPage extends StatefulWidget {
 
@@ -10,11 +11,28 @@ class ConnectionPage extends StatefulWidget {
 
 class _ConnectionPage extends State<ConnectionPage> {
   final _formKey = GlobalKey<FormState>();
-  String? _server="";
+  PersistentData localData = PersistentData();
+  late String? _server ='';
+  final TextEditingController _controller = TextEditingController();
+
+Future<void> _loadSavedIpAddress() async {
+    String? savedIpAddress = await localData.getValue('host');
+    if (savedIpAddress != null) {
+      _controller.text = savedIpAddress;
+    }
+  }
 
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadSavedIpAddress();
+  }
+
+  @override
+  Widget build(BuildContext context)  {
+   print("build : $_server");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Connection'),  
@@ -39,6 +57,7 @@ class _ConnectionPage extends State<ConnectionPage> {
                 decoration: const InputDecoration(
                   labelText: 'Server',
                 ),
+                controller : _controller,
               ),
         
               Padding(
@@ -59,6 +78,7 @@ class _ConnectionPage extends State<ConnectionPage> {
                                 child: const Text('OK'),
                                 onPressed: () {
                                    ServerInfo().host = _server ?? '';
+                                   localData.saveValue('host', _server??'');
                                    Navigator.pushNamed(context, '/check');
                                 },
                               ),

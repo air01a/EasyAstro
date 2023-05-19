@@ -95,7 +95,7 @@ class Coordinates :
         return tz.normalize(tz.localize(date)).astimezone(pytz.utc)
 
     def set_constraints(self):
-        self._constraints = [AltitudeConstraint(10*u.deg, 80*u.deg),
+        self._constraints = [AltitudeConstraint(10*u.deg, 88*u.deg),
                AirmassConstraint(5), AtNightConstraint.twilight_civil()]
 
     def get_catalog_visibility(self, catalog):

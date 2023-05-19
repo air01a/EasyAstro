@@ -135,7 +135,13 @@ class _ScreenCapture extends State<ScreenCapture> {
                             child : Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                    Image.network(_imageUrl, gaplessPlayback: true,),
+
+                                     InteractiveViewer(
+                                          boundaryMargin: EdgeInsets.all(20.0), // Marge autour de l'image
+                                          minScale: 0.1, // Échelle minimale de zoom
+                                          maxScale: 4.0, // Échelle maximale de zoom
+                                          child: Image.network(_imageUrl, gaplessPlayback: true,), // Image à afficher
+                                    ),
                                     Positioned(
                                       top: 0, // Position verticale du bouton par rapport au haut de l'écran
                                       left: 0, // Position horizontale du bouton par rapport à la gauche de l'écran

@@ -46,6 +46,11 @@ app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+from .lib import fitsutils
+
+img_bytes = fitsutils.fits_to_png('./test/M_51_3_Light_001.fits')
+
+open('./test/M_51_3_Light_001.jpg', 'wb').write(img_bytes)
 
 #from .lib import fitsutils
 #fitsutils.fits_to_png('../../debug/platesolve1.fits')
