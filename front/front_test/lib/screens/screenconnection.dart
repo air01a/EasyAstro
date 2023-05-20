@@ -67,7 +67,11 @@ Future<void> _loadSavedIpAddress() async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       // Save the data to a database or process it in some other way
-                      showDialog(
+                      
+                      ServerInfo().host = _server ?? '';
+                      localData.saveValue('host', _server??'');
+                      Navigator.pushNamed(context, '/check');
+                      /*showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -77,15 +81,13 @@ Future<void> _loadSavedIpAddress() async {
                               TextButton(
                                 child: const Text('OK'),
                                 onPressed: () {
-                                   ServerInfo().host = _server ?? '';
-                                   localData.saveValue('host', _server??'');
-                                   Navigator.pushNamed(context, '/check');
+                                   
                                 },
                               ),
                             ],
                           );
                         },
-                      );
+                      );*/
                     }
                   },
                   child: const Text('Submit'),

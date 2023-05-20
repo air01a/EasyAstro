@@ -4,6 +4,8 @@ import numpy
 from ..models.constants import I16_BITS_MAX_VALUE
 from astropy.io import fits
 import io
+from ..imageprocessor.filters import stretch, hot_pixel_remover
+
 
 def debayer(image: Image):
 
@@ -63,9 +65,9 @@ def open_fits(filename):
     #if image.is_color():
     #        image.set_color_axis_as(0)
     
-    
-    
     return image
+
+
 
 def adapt(image):
     if image.is_color():
@@ -92,3 +94,9 @@ def save_to_bytes(image, format):
     io_buf = io.BytesIO(buffer)
     return io_buf
 
+def open_process_fits(filename):
+    image = open_fits(filename)
+    hot_pixel_remover(image)
+    debayer(image)
+    adapt(image)
+    return image

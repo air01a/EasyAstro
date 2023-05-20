@@ -46,7 +46,7 @@ class _CheckScreen extends State<CheckScreen> {
       _catalogUpdated = true;
     });
 
-    await Future.delayed(const Duration(seconds: 3)); // Attendre 3 secondes
+    await Future.delayed(const Duration(seconds: 0)); // Attendre 3 secondes
     Navigator.pushNamed(context, '/home');
     
   }

@@ -9,7 +9,7 @@ from ..dependencies import error, config
 import logging
 from ..models.image import Image
 import os
-from ..imageprocessor.utils import open_fits, save_jpeg, adapt, normalize, debayer
+from ..imageprocessor.utils import open_fits, open_process_fits, save_jpeg, adapt, normalize, debayer
 from ..imageprocessor.filters import stretch, hot_pixel_remover
 from ..imageprocessor.align import find_transformation, apply_transformation
 from ..imageprocessor.stack import stack_image
@@ -306,7 +306,6 @@ class IndiOrchestrator:
         self.indi.take_picture('/tmp/exposure.fits', exposure, gain,)
 
     def move_to(self, ra : float, dec: float, continue_picture : bool = True):
-        self._operating = True
         self.thread = threading.Thread(target=self._move_to, args=(ra, dec, continue_picture))
         self.thread.start()
         return error.no_error()
@@ -322,8 +321,10 @@ class IndiOrchestrator:
             exposition = self.exposition
         return exposition
 
+
     def _move_to(self, ra: float, dec : float, continue_picture : bool):
         self.lock.acquire()
+        self._operating=True
         retry = 0
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
@@ -350,14 +351,26 @@ class IndiOrchestrator:
                 logger.debug(' SOLVER ERROR RATE %f', error_rate)
                 if error_rate<MAX_PLATESOLVE_ERROR:
                     self.last_error = 0
-                    self._operating = False
                     self.qout.put('3.GOTO FINISHED')
                     logger.debug('++++ GOTO FINISHED')
+                    print("CONTINUE_PICTURE",continue_picture)
                     if continue_picture:
+                        ref = open_process_fits(self.last_image)
+
                         while self._operating:
                             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',self.get_exposition(ra, dec),100)
                             self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+                            image = open_process_fits(self.last_image)
 
+                            logger.debug(' --- FIND DRIFT')
+                            transformation = find_transformation(image, ref)
+                            if transformation==None:
+                                logger.error("... No alignment point, skipping image %s ..." % (self.last_image))
+                            else:
+                                print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
+                            if self.get_exposition(ra, dec) < 3:
+                                time.sleep(3)
+                    self._operating = False
                     self.lock.release()
                     return 
             else:
@@ -390,10 +403,8 @@ class IndiOrchestrator:
 
         logger.debug(' --- TAKE REFERENCE')
         self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),100)
-        ref = open_fits(working_dir+str(picture)+'.fits')
-        hot_pixel_remover(ref)
-        debayer(ref)
-        adapt(ref)
+        ref = open_process_fits(working_dir+str(picture)+'.fits')
+        
         stacked = ref.clone()
         stack = 0
         logger.debug(' --- STACKING LOOP')
@@ -401,12 +412,11 @@ class IndiOrchestrator:
             logger.debug(' --- SHOOTING')
             self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),100)
             logger.debug(' --- TREATING FITS')
-            image = open_fits(working_dir+str(picture)+'.fits')
-            hot_pixel_remover(image)
-            debayer(image)
-            adapt(image)
+            image = open_process_fits(working_dir+str(picture)+'.fits')
             logger.debug(' --- TRANSFORMING')
             transformation = find_transformation(image, ref)
+            print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
+
             if transformation==None:
                 logger.error("... No alignment point, skipping image %s ..." % (working_dir+str(picture)+'.fits'))
             else:
