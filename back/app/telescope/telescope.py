@@ -144,7 +144,20 @@ class IndiPilot():
         while not telescope_radec:
             time.sleep(0.5)
             telescope_radec = self.device_telescope.getNumber("EQUATORIAL_EOD_COORD")
+        print(telescope_radec)
         return (telescope_radec[0].getValue(), telescope_radec[1].getValue())
+
+    def move_ns(self,delta_ra, delta_dec):
+        '''test =  self.device_telescope.getSwitch("TELESCOPE_MOTION_NS")
+        while not self.telescope_on_coord_set:
+            time.sleep(1)
+            self.telescope_on_coord_set = self.device_telescope.getSwitch("ON_COORD_SET")
+        test.reset()
+        test[1].setState(PyIndi.ISS_ON)
+        self.indiclient.sendNewProperty(test)'''
+        (ra,dec) = self.get_current_coordinates()
+        self.goto(ra+delta_ra, dec+delta_dec)
+        self.sync(ra+delta_ra, dec+delta_dec)
 
     def goto(self, ra, dec):
         self.moving = True
