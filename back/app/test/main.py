@@ -8,7 +8,9 @@ from ..lib.fitsutils import sky_median_sig_clip
 from ..telescope.telescope import IndiOrchestrator
 import numpy as np
 import os
+import time
 
+indi = IndiOrchestrator(False)
 IMAGE_STACKING_PATH = 'image_test/'
 
 def test_stacking(messier='m51'):
@@ -47,21 +49,27 @@ def test_stacking(messier='m51'):
 
     save_jpeg(stacked,IMAGE_STACKING_PATH+'result/'+messier+'.jpg')
 
-def goto(ra, dec):
-    indi = IndiOrchestrator()
+def goto(ra, dec, solver):
     print("GOTO")
-    indi._move_to(ra,dec, False)
+    indi._move_to(ra,dec, solver)
 
 def move():
-    indi = IndiOrchestrator()
-    indi.indi.move_ns(1,0)
+    indi.indi.move_short(0 ,0.1)
 
 def take_picture(filename, exposure ):
-    indi = IndiOrchestrator()
+    
     indi.indi.take_picture(filename,exposure,100)
+
 
 
 if __name__ == "__main__":
     #test_stacking()
     #take_picture('/tmp/test.fits',1.0)
+    #move()
+    goto(168.771021, 55.037651, False)
+    take_picture('tmp/test1.fits',1)
+    time.sleep(2)
     move()
+    take_picture('tmp/test2.fits',1)
+    time.sleep(2)
+    indi.shutdown()

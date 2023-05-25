@@ -250,14 +250,13 @@ from ..imageprocessor.filters import hot_pixel_remover, stretch, levels
 
 def fits_to_png(filename):
     img = open_fits(filename)
-    print(img)
     hot_pixel_remover(img)
     debayer(img)
     adapt(img)
 
-    levels(img, 1,1,65535)
+    #levels(img, 1,1,65535)
     
-    stretch(img,0.18)
+    #stretch(img,0.18)
     normalize(img)
     img_bytes = save_to_bytes(img,'PNG')
     return img_bytes.getvalue()

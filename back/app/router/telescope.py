@@ -9,18 +9,23 @@ from ..lib import Coordinates
 import os
 import asyncio
 import logging
-from ..models.coordinates import Exposition
+from ..models.coordinates import Exposition, Movement
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-
-telescope = telescope.IndiOrchestrator()
+print("orchet")
+telescope = telescope.IndiOrchestrator(True)
+print("orchet fin")
 
 @router.post("/goto/")   
 def goto(coord : Coordinates.StarCoord):
     return telescope.move_to(coord.ra, coord.dec)
+
+@router.post("/move/")   
+def goto(coord : Movement):
+    return telescope.move_short(coord.axis1, coord.axis2)
 
 @router.get('/picture/')
 def goto(exposure: int, gain: int):
@@ -53,7 +58,7 @@ def last_picture():
 
 @router.post('/stacking')
 def stacking(coord : Coordinates.StarCoord):
-    telescope.start_stacking(coord.ra, coord.dec)
+    telescope.stack(coord.ra, coord.dec)
 
 @router.post('/exposition')
 def exposition(exposition : Exposition):
@@ -93,6 +98,5 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
         if not telescope.qout.empty():
             data = telescope.qout.get()
         #data =  await asyncio.get_running_loop().run_in_executor(None, )()
-            print("ws OK")
             await manager.broadcast(f"{data}")
         await asyncio.sleep(1)

@@ -46,8 +46,27 @@ class AppDrawer extends Drawer{
                       ),
                       ListTile(
                       leading: const Icon(
+                        Icons.settings,
+                      ),
+                      title: const Text('Config'),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/config');
+                      },
+                      ),
+                      ListTile(
+                      leading: const Icon(
+                        Icons.power_settings_new,
+                      ),
+                      title: const Text('Shutdown'),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/shutdown');
+                      },
+                      ),
+                      ListTile(
+                      leading: const Icon(
                         Icons.logout,
                       ),
+                      
                       title: const Text('Logout'),
                       onTap: () {
                         Navigator.pushNamed(context, '/');

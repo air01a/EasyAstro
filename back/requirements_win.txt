@@ -1,0 +1,15 @@
+uvicorn[standard]
+astroplan
+astropy
+fastapi
+numpy
+pytz
+uvicorn
+pyjwt
+pywin32
+cv2
+opencv-python
+scipy
+skimage
+scikit-image
+astroalign

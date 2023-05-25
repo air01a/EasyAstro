@@ -40,7 +40,6 @@ async def redirect():
     response = RedirectResponse(url='/static/index.html')
     return response
 
-
 app.include_router(planning.router, prefix='/planning')
 app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')

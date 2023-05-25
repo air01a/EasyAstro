@@ -37,6 +37,14 @@ class ServiceCheckHelper {
 
   }
 
+
+  Future<void> moveTelescope(double axis1, double axis2) async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    print("Move");
+    await helper.post("/telescope/move", {"axis1":axis1, "axis2":axis2});
+    print("End of move");
+  }
+
   Future<void> stackImage(String object) async {
     ApiBaseHelper helper = ApiBaseHelper();
     ObservableObject obj = ObjectSelection().selection[getObjectIndex(object)];

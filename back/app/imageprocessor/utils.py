@@ -9,11 +9,11 @@ from ..imageprocessor.filters import stretch, hot_pixel_remover
 
 def debayer(image: Image):
 
-    print(image.needs_debayering())
+    if image==None:
+        return
     preferred_bayer_pattern = "AUTO"
 
     if preferred_bayer_pattern == "AUTO" and not image.needs_debayering():
-        print("no debayer")
         return
 
     cv2_debayer_dict = {
@@ -48,24 +48,27 @@ def debayer(image: Image):
 
 
 def open_fits(filename):
-    with fits.open(filename) as fit:
-        # pylint: disable=E1101
-        data = fit[0].data
-        header = fit[0].header
+    try:
+        with fits.open(filename) as fit:
+            # pylint: disable=E1101
+            data = fit[0].data
+            header = fit[0].header
 
-    image = Image(data)
-    if 'BAYERPAT' in header:
-        image.bayer_pattern = header['BAYERPAT']
+        image = Image(data)
+        if 'BAYERPAT' in header:
+            image.bayer_pattern = header['BAYERPAT']
 
-    if 'EXPTIME' in header:
-        image.exposure_time = header['EXPTIME']
+        if 'EXPTIME' in header:
+            image.exposure_time = header['EXPTIME']
 
-    #hot_pixel_remover(image)
-    #debayer(image)
-    #if image.is_color():
-    #        image.set_color_axis_as(0)
-    
-    return image
+        #hot_pixel_remover(image)
+        #debayer(image)
+        #if image.is_color():
+        #        image.set_color_axis_as(0)
+        
+        return image
+    except Exception as e:
+        print(e)
 
 
 

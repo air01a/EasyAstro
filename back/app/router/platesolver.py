@@ -4,7 +4,7 @@ from ..dependencies import error
 
 
 router = APIRouter()
-plate_solver = platesolver.PlateSolve()
+plate_solver = platesolver.PlateSolveAstap()
 
 @router.get("/solve")
 def plate_solve(fits : str):

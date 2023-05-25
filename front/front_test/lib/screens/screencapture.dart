@@ -27,6 +27,19 @@ class _ScreenCapture extends State<ScreenCapture> {
   bool _isStackable = false;
   final channel = WebSocketChannel .connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
+  void moveTelescope(dynamic axis) {
+    switch(axis) {
+      case 0: service.moveTelescope(-1, 0);
+              break;
+      case 1: service.moveTelescope(0,-1);
+              break;
+      case 2: service.moveTelescope(1,0);
+              break;
+      case 3: service.moveTelescope(0,1);
+              break;
+    }
+  }
+
   void fetchImage() async {
     setState(() {
       print("Refresh image");
@@ -165,10 +178,10 @@ class _ScreenCapture extends State<ScreenCapture> {
                                         
                                       ),
                                     ),
-                                    controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, null,null),
-                                    controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, null,null),
-                                    controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, null,null),
-                                    controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, null,null),
+                                    controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, moveTelescope,0),
+                                    controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, moveTelescope,1),
+                                    controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, moveTelescope,2),
+                                    controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, moveTelescope,3),
                                     controlButton(_isStackable,Icons.library_add, null, 0, 0, null, stack, object),
                                     controlButton(_isConfigVisible,Icons.timer, 0, 0, null, null, selectExposition,context),
                                     

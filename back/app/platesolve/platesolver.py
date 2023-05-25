@@ -2,7 +2,7 @@ from os import (path, access, X_OK)
 import subprocess
 from ..dependencies import config
 
-class PlateSolve(object):
+class PlateSolveAstroSolver(object):
 
     PS_POSSIBLE_PATH = ['/usr/bin/astrosolver']
 
@@ -32,15 +32,17 @@ class PlateSolve(object):
         wcs_file = open("/tmp/astro.result", 'r')
         ra = None
         dec = None
+        orientation = None
 
         line = wcs_file.read()
         result = line.split(',')
-        ra = float(result[0])
+        ra = float(result[0])*24.0/360.0
         dec = float(result[1])
-        return (ra,dec)
+        orientation = float(result[2])
+        return (ra, dec, orientation)
 
-    def _return(self, error, ra, dec):
-        return {'error':error,'ra':ra,'dec':dec}
+    def _return(self, error, ra, dec, orientation):
+        return {'error':error,'ra':ra,'dec':dec, 'orientation': orientation}
 
     def resolve(self, fits, ra=None, dec= None):
         astap_cmd = [
@@ -49,17 +51,15 @@ class PlateSolve(object):
         ]
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
         if result.returncode != 0 or not path.isfile('/tmp/platesolveok'):
-            return {'error':1,'ra': ra,'dec': dec}
-        (ra,dec) = self._get_solution(fits)
-        return self._return( 2*int(ra==None),ra,dec)
+            return {'error':1,'ra': ra,'dec': dec, 'orientation': 0}
+        (ra,dec, orientation) = self._get_solution(fits)
+        return self._return( 2*int(ra==None),ra,dec,orientation)
         
-'''
-class PlateSolve(object):
+
+class PlateSolveAstap(object):
 
     ASTAP_POSSIBLE_PATHS =  [
-        '/usr/bin/astap_cli',
-        '/opt/astap/astap_cli',
-        '/usr/local/bin/astap_cli',
+        'C:/Program Files/astap/astap_cli.exe'
     ]
 
     def __init__(self, astap_path = ""):
@@ -68,7 +68,7 @@ class PlateSolve(object):
             self.ASTAP_PATH = astap_path
 
         for astap_path in self.ASTAP_POSSIBLE_PATHS:
-            if path.isfile(astap_path) and access(astap_path, X_OK):
+            if path.isfile(astap_path):
                 self.ASTAP_PATH = astap_path
                 break
         self.CONFIG = config.CONFIG['PLATESOLVER']
@@ -92,10 +92,12 @@ class PlateSolve(object):
                 ra = float((line.split('='))[1])
             if line.find('CRVAL2') != -1:
                 dec = float((line.split('='))[1])
-        return (ra,dec)
+            if line.find('CROTA1') != -1:
+                orientation = float((line.split('='))[1])
+        return (ra,dec, orientation)
 
     def _return(self, error, ra, dec):
-        return {'error':error,'ra':ra,'dec':dec}
+        return {'error':error,'ra':ra,'dec':dec, 'orientation':0}
 
     def resolve(self, fits, ra=None, dec= None):
         astap_cmd = [
@@ -110,13 +112,11 @@ class PlateSolve(object):
         ]
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
         if result.returncode != 0:
-            return {'error':1,'ra': ra,'dec': dec}
-        (ra,dec) = self._get_solution(fits)
-        return self._return( 2*int(ra==None),ra,dec)
+            return {'error':1,'ra': ra,'dec': dec, 'orientation':0}
+        (ra,dec, orientation) = self._get_solution(fits)
+        return self._return( 2*int(ra==None),ra,dec, orientation)
         
 
 
 #test = PlateSolve()
 #print(test.resolve("../../../../M_97_Light_012.fits"))
-
-'''

@@ -14,3 +14,8 @@ class StarCoord(BaseModel):
 
 class Exposition(BaseModel):
     exposition: str = Field(description="Exposure time in sec, str format : 0.01, 3, ...")
+
+
+class Movement(BaseModel):
+    axis1: float
+    axis2: float
