@@ -40,7 +40,10 @@ class IndiOrchestrator:
         else:
             self.indi = ASCOMPilot(self.qin, self.qout)
         self._operating = False
-        self.platesolver = platesolver.PlateSolveAstap()
+        if config.CONFIG['PLATESOLVER']['PROGRAM']=='ASTRO.NET':
+            self.platesolver = platesolver.PlateSolveAstroSolver()
+        else:
+            self.platesolver = platesolver.PlateSolveAstap()
         self.last_error = 0
 
         self.processing = False

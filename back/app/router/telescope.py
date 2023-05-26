@@ -15,9 +15,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-print("orchet")
 telescope = telescope.IndiOrchestrator(True)
-print("orchet fin")
 
 @router.post("/goto/")   
 def goto(coord : Coordinates.StarCoord):

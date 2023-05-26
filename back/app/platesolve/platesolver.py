@@ -89,15 +89,15 @@ class PlateSolveAstap(object):
 
         for line in wcs_file.readlines():
             if line.find('CRVAL1') != -1:
-                ra = float((line.split('='))[1])
+                ra = float((line.split('='))[1])*24.0/360.0
             if line.find('CRVAL2') != -1:
                 dec = float((line.split('='))[1])
             if line.find('CROTA1') != -1:
                 orientation = float((line.split('='))[1])
         return (ra,dec, orientation)
 
-    def _return(self, error, ra, dec):
-        return {'error':error,'ra':ra,'dec':dec, 'orientation':0}
+    def _return(self, error, ra, dec, orientation):
+        return {'error':error,'ra':ra,'dec':dec, 'orientation':orientation}
 
     def resolve(self, fits, ra=None, dec= None):
         astap_cmd = [
@@ -110,8 +110,15 @@ class PlateSolveAstap(object):
              '-d', self.CATALOG,
              '-update'
         ]
+        if ra!=None:
+            astap_cmd.append('-ra')
+            astap_cmd.append(str(ra))
+        if dec!=None:
+            astap_cmd.append('-spd')
+            astap_cmd.append(str(dec+90))
+        print(astap_cmd)
         result = subprocess.run(astap_cmd,capture_output=True, text=True)
-        if result.returncode != 0:
+        if result.returncode == 1:
             return {'error':1,'ra': ra,'dec': dec, 'orientation':0}
         (ra,dec, orientation) = self._get_solution(fits)
         return self._return( 2*int(ra==None),ra,dec, orientation)

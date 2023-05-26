@@ -5,6 +5,8 @@ from app.dependencies import config
 import logging
 import win32com.client
 from astropy.io import fits
+import numpy as np
+# import  pyfits
 
 class ASCOMPilot():
     SLEW_MODE_SLEW = 0
@@ -32,7 +34,7 @@ class ASCOMPilot():
         #engine.DeviceType = 'Telescope'
         #driver = engine.Choose("ASCOM.Simulator.Telescope")
         #self.telescope = win32com.client.Dispatch(driver)
-        self.telescope = win32com.client.Dispatch("ASCOM.Simulator.Telescope")
+        self.telescope = win32com.client.Dispatch(config.CONFIG['DEVICE']['TELESCOPE'])
         self.telescope.Connected = True
         self.telescope.Tracking = True
 
@@ -56,9 +58,10 @@ class ASCOMPilot():
         return
 
     def ccd_connect(self):
-        driver = "ASCOM.Simulator.Camera"
+        driver = config.CONFIG['DEVICE']['CCD']
         self.camera = win32com.client.Dispatch(driver)
         self.camera.connected = True
+        print(self.camera.CameraXSize, self.camera.CameraYSize)
         return 
 
     def take_picture(self, filename : str, exposure : float, gain : int, image_type : int = 0, binning : int = 0):
@@ -67,7 +70,23 @@ class ASCOMPilot():
         self.camera.StartExposure(exposure,openshutter)
         while not self.camera.ImageReady:
             time.sleep(0.1)
+        print(len(self.camera.ImageArray), len(self.camera.ImageArray[0]))
         image = self.camera.ImageArray
-        hdu = fits.PrimaryHDU(image)
-        hdu.writeto(filename, overwrite=True)
+        rotated_image = np.rot90(image, k=1)
+        
+        hdu = fits.PrimaryHDU(rotated_image.astype(np.uint16))
+        header = hdu.header
+
+        # Ajoutez ou modifiez les informations d'orientation dans l'en-tête
+        header['ORIENTAT'] = 0.0  # Spécifiez l'orientation souhaitée (en degrés)
+
+        hdul = fits.HDUList([hdu])
+
+        # Écrivez les données dans un fichier FITS
+        hdul.writeto(filename, overwrite=True)
+        #hdu.header['SIMPLE']='T'
+        #hdu.header['BITPIX']=16
+
+        #hdu.writeto(filename, overwrite=True)
+        #pyfits.writeto(filename, image)
         return
