@@ -1,0 +1,73 @@
+import time
+import threading
+from queue import SimpleQueue
+from app.dependencies import config
+import logging
+import win32com.client
+from astropy.io import fits
+
+class ASCOMPilot():
+    SLEW_MODE_SLEW = 0
+    SLEW_MODE_TRACK = 1
+    SLEW_MODE_SYNC = 2
+
+
+    def __init__(self, queue_in : SimpleQueue, queue_out:SimpleQueue ):
+        self.queue_in = queue_in
+        self.queue_out = queue_out
+        self.moving = False
+        self.shooting = False
+        self.lock = threading.Lock()
+        self.connect()
+        self.telescope_connect()
+        self.ccd_connect()
+
+
+    def connect(self):
+        
+        return 0
+
+    def telescope_connect(self):
+        #engine = win32com.client.Dispatch('ASCOM.Utilities.Chooser')
+        #engine.DeviceType = 'Telescope'
+        #driver = engine.Choose("ASCOM.Simulator.Telescope")
+        #self.telescope = win32com.client.Dispatch(driver)
+        self.telescope = win32com.client.Dispatch("ASCOM.Simulator.Telescope")
+        self.telescope.Connected = True
+        self.telescope.Tracking = True
+
+        return 
+    
+    def sync(self, ra, dec):
+        self.telescope.SyncToCoordinates(ra,dec)
+        
+
+
+    def get_current_coordinates(self):
+        return (self.telescope.RightAscension, self.telescope.Declination)
+        
+
+    def move_short(self, delta_ra, delta_dec):
+        return 
+        
+
+    def goto(self, ra, dec):
+        self.telescope.SlewToCoordinates(ra,dec) 
+        return
+
+    def ccd_connect(self):
+        driver = "ASCOM.Simulator.Camera"
+        self.camera = win32com.client.Dispatch(driver)
+        self.camera.connected = True
+        return 
+
+    def take_picture(self, filename : str, exposure : float, gain : int, image_type : int = 0, binning : int = 0):
+        
+        openshutter = True
+        self.camera.StartExposure(exposure,openshutter)
+        while not self.camera.ImageReady:
+            time.sleep(0.1)
+        image = self.camera.ImageArray
+        hdu = fits.PrimaryHDU(image)
+        hdu.writeto(filename, overwrite=True)
+        return
