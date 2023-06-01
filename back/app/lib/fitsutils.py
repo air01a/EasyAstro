@@ -254,9 +254,9 @@ def fits_to_png(filename):
     debayer(img)
     adapt(img)
 
-    #levels(img, 1,1,65535)
+    levels(img, 1,1,65535)
     
-    #stretch(img,0.18)
+    stretch(img,0.18)
     normalize(img)
     img_bytes = save_to_bytes(img,'PNG')
     return img_bytes.getvalue()
