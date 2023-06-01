@@ -8,9 +8,10 @@ import 'package:front_test/screens/screenselectiontlist.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
      
-      "/" : (BuildContext context) => const ConnectionPage(), 
+      "/" : (BuildContext context) => CheckScreen(), 
       "/check" : (BuildContext context) => CheckScreen(),
       "/home": (BuildContext context) => ScreenObjectList(),
       "/selection": (BuildContext context) => ScreenSelectionList(),
       "/capture": (BuildContext context) => ScreenCapture(),
+      "/connect": (BuildContext context) => ConnectionPage(),
 };

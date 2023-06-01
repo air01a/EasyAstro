@@ -6,7 +6,7 @@ import 'package:front_test/repositories/ObservableRepositories.dart';
 import 'package:front_test/services/globals.dart';
 
 class ServiceCheckHelper {
-  LocationData? locationData; 
+  static LocationData? locationData; 
 
   int getObjectIndex(String object){
     return ObjectSelection().selection.indexWhere((element) =>  element.name == object);
@@ -21,7 +21,6 @@ class ServiceCheckHelper {
     
   }
 
-  
 
   Future<void> changeObject(String object) async {
     ApiBaseHelper helper = ApiBaseHelper();
@@ -55,9 +54,9 @@ class ServiceCheckHelper {
 
   Future<void> updateTime(String time) async {
     ApiBaseHelper helper = ApiBaseHelper();
-    await helper.post("/planning/time",{"time": time});
+    //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();
-    ObjectSelection().selection = await catalog.fetchCatalogList();
+    ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().location?.longitude, CurrentLocation().location?.latitude, CurrentLocation().location?.altitude, time);
   }
 
   Future<LocationData?> getLocation() async {

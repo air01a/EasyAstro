@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front_test/components/rating.dart'; 
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/models/catalogs.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 class ObjectPage extends StatefulWidget { 
   final ObservableObject item; 
   final RatingBox rating; 
@@ -17,6 +17,14 @@ class ObjectPage extends StatefulWidget {
 class _ObjectPage extends State<ObjectPage> {
    @override 
    Widget build(BuildContext context) {
+      Image currentImage;
+      if (kIsWeb) {
+          currentImage = Image.network(widget.item.image);
+      } else {
+          currentImage = Image(image:AssetImage(widget.item.image));
+      }
+      
+
       return Scaffold(
          appBar: AppBar(
             title: Text(widget.item.name), 
@@ -31,7 +39,7 @@ class _ObjectPage extends State<ObjectPage> {
                       mainAxisAlignment: MainAxisAlignment.start, 
                       crossAxisAlignment: CrossAxisAlignment.start, 
                       children: <Widget>[ 
-                        Center(child : Image.network("http://${ServerInfo().host}${widget.item.image}")),  
+                        Center(child : currentImage),  
                         Expanded( 
                             child: Container( 
                               padding: const EdgeInsets.all(5), 
@@ -42,15 +50,17 @@ class _ObjectPage extends State<ObjectPage> {
                                     Text(widget.item.description,textAlign: TextAlign.left), 
                                     Text("Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
                                     widget.rating,
-                                    ElevatedButton(
-                                    onPressed: () { 
-                                      Navigator.pushNamed(context, '/capture', arguments: {'object':widget.item.name});
-                                    }, 
-                                    child: const Icon(
-                                                      Icons.mode_standby  ,
-                                                      size: 48.0
-                                                    )
-                                  )
+                                    ServerInfo().connected
+                                        ?ElevatedButton(
+                                        onPressed: () { 
+                                          Navigator.pushNamed(context, '/capture', arguments: {'object':widget.item.name});
+                                        }, 
+                                        child: const Icon(
+                                                          Icons.mode_standby  ,
+                                                          size: 48.0
+                                                        )
+                                      )
+                                      : Container(width: 0, height: 0)
                                   ], 
                               )
                             )

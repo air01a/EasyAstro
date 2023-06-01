@@ -5,9 +5,11 @@ import 'package:front_test/services/globals.dart';
 
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   ServerInfo(); 
   ObjectSelection();
+
   runApp(const MyApp());
 }
 

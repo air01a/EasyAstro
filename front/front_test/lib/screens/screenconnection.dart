@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/services/persistentdata.dart';
+import 'package:front_test/services/servicecheck.dart';
 
 class ConnectionPage extends StatefulWidget {
 
@@ -63,14 +64,17 @@ Future<void> _loadSavedIpAddress() async {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       // Save the data to a database or process it in some other way
                       
                       ServerInfo().host = _server ?? '';
                       localData.saveValue('host', _server??'');
-                      Navigator.pushNamed(context, '/check');
+                      ServiceCheckHelper checkHelper = ServiceCheckHelper();
+                      await checkHelper.updateAPILocation();
+                      ServerInfo().connected = true;
+                      Navigator.pushNamed(context, '/capture');
                       /*showDialog(
                         context: context,
                         builder: (BuildContext context) {

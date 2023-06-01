@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front_test/components/rating.dart';
 import 'package:front_test/models/catalogs.dart'; 
 import 'package:front_test/services/globals.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ObjectBox extends StatefulWidget {
     // final Function() onValueChanged;
@@ -18,6 +19,13 @@ class ObjectBox extends StatefulWidget {
 class _ObjectBox extends State<ObjectBox> {
    @override
    Widget build(BuildContext context) {
+      Image currentImage;
+      if (kIsWeb) {
+          currentImage = Image.network(widget.object.image, width: 100);
+      } else {
+          currentImage = Image(image:AssetImage(widget.object.image),width:100);
+      }
+      
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
       return Container(
          padding: const EdgeInsets.all(2), 
@@ -26,7 +34,7 @@ class _ObjectBox extends State<ObjectBox> {
             child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
-                  Image.network("http://${ServerInfo().host}${widget.object.image}", width: 100), 
+                  currentImage, 
                   Expanded( 
                      child: Container( 
                         padding: const EdgeInsets.all(5), 
@@ -41,7 +49,8 @@ class _ObjectBox extends State<ObjectBox> {
                      )
                   ),
                   widget.rating,
-                  ElevatedButton(
+                  ServerInfo().connected
+                   ? ElevatedButton(
                                     onPressed: () { 
                                       Navigator.pushNamed(context, '/capture', arguments: {'object':widget.object.name});
                                     }, 
@@ -50,6 +59,7 @@ class _ObjectBox extends State<ObjectBox> {
                                                       size: 48.0
                                                     )
                                   )
+                   : Container(width: 0, height: 0)
                                
                ]
             ), 

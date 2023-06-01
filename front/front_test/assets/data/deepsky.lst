@@ -1,0 +1,111 @@
+NAME;NGC;Object type;Season;Magnitude;Constellation (EN);Constellation (FR);Constellation (Latin);RA;DEC;Distance;Size;Image;Image ciel;Constellation
+M1;NGC 1952;Supernova remnant / Reste de Supernova;Winter / Hiver;8;Bull;Taureau;Taurus;05:34:31.97;+22:00:52.1;6500;6,0' x 4,0';assets/appimages/M1.jpg;http://www.lasam.ca/M001.JPG;Tau
+M2;NGC 7089;Globular Cluster / Amas Globulaire;Autumn / Automne;6;Water Bearer;Verseau;Aquarius;21:33:27.01;-00:49:23.9;55000;11,7';assets/appimages/M2.jpg;http://www.lasam.ca/M002.JPG;Aqr
+M3;NGC 5272;Globular Cluster / Amas Globulaire;Spring / Printemps;6;Hound Dogs;Les Chiens de chasse;Canes Venatici;13:42:11.23;+28:22:31.6;48500;18,6';assets/appimages/M3.jpg;http://www.lasam.ca/M003.JPG;CVn
+M4;NGC 6121;Globular Cluster / Amas Globulaire;Summer / Été;5;Scorpion;Scorpion;Scorpius;16:23:35.40;-26:31:31.9;9900;22,8';assets/appimages/M4.jpg;http://www.lasam.ca/M004.JPG;Sco
+M5;NGC 5904;Globular Cluster / Amas Globulaire;Spring / Printemps;5;;;;15:18:33.75;+02:04:57.7;24800;19,9';assets/appimages/M5.jpg;http://www.lasam.ca/M005.JPG;Se1
+M6;NGC 6504;Open Cluster / Amas Ouvert;Summer / Été;4;Scorpion;Scorpion;Scorpius;17:40:20.75;-32:15:15.0;1300;15,0';assets/appimages/M6.jpg;http://www.lasam.ca/M006.JPG;Sco
+M7;NGC 6475;Open Cluster / Amas Ouvert;Summer / Été;3;Scorpion;Scorpion;Scorpius;17:53:51.18;-34:47:34.2;780;30,0';assets/appimages/M7.jpg;http://www.lasam.ca/M007.JPG;Sco
+M8;NGC 6523;Emission Nebula / Nébuleuse à émission;Summer / Été;5;Archer;Sagittaire;Sagittarius;18:03:41.27;-24:22:48.6;4850;90,0' x 40,0';assets/appimages/M8.jpg;http://www.lasam.ca/M008.JPG;Sgr
+M9;NGC 6333;Globular Cluster / Amas Globulaire;Summer / Été;7;Serpent Holder;Ophiuchus;Ophiuchus;17:19:11.78;-18:30:58.5;25800;5,5';assets/appimages/M9.jpg;http://www.lasam.ca/M009.JPG;Oph
+M10;NGC 6254;Globular Cluster / Amas Globulaire;Summer / Été;6;Serpent Holder;Ophiuchus;Ophiuchus;16:57:08.99;-04:05:57.6;16300;12,2';assets/appimages/M10.jpg;http://www.lasam.ca/M010.JPG;Oph
+M11;NGC 6705;Open Cluster / Amas Ouvert;Summer / Été;5;Shield;L’Écu de Sobieski;Scutum;18:51:05.99;-06:16:12.1;5600;14,0';assets/appimages/M11.jpg;http://www.lasam.ca/M011.JPG;Sct
+M12;NGC 6218;Globular Cluster / Amas Globulaire;Summer / Été;6;Serpent Holder;Ophiuchus;Ophiuchus;16:47:14.52;-01:56:52.2;18900;12,2';assets/appimages/M12.jpg;http://www.lasam.ca/M012.JPG;Oph
+M13;NGC 6205;Globular Cluster / Amas Globulaire;Summer / Été;5;Hercules;Hercule;Hercules;16:41:41.63;+36:27:40.7;23500;23,2';assets/appimages/M13.jpg;http://www.lasam.ca/M013.JPG;Her
+M14;NGC 6402;Globular Cluster / Amas Globulaire;Summer / Été;7;Serpent Holder;Ophiuchus;Ophiuchus;17:37:36.16;-03:14:45.3;24000;6,7';assets/appimages/M14.jpg;http://www.lasam.ca/M014.JPG;Oph
+M15;NGC 7078;Globular Cluster / Amas Globulaire;Autumn / Automne;6;Winged Horse;Pégase;Pegasus;21:29:58.38;+12:10:00.6;49500;12,3';assets/appimages/M15.jpg;http://www.lasam.ca/M015.JPG;Peg
+M16;NGC 6611;Emission Nebula / Nébuleuse à émission;Summer / Été;6;;;;18:18:48.17;-13:48:26.0;5870;25,0';assets/appimages/M16.jpg;http://www.lasam.ca/M016.JPG;Se2
+M17;NGC 6618;Emission Nebula / Nébuleuse à émission;Summer / Été;6;Archer;Sagittaire;Sagittarius;18:20:47.11;-16:10:17.5;5870;45,0' x 35,0';assets/appimages/M17.jpg;http://www.lasam.ca/M017.JPG;Sgr
+M18;NGC 6613;Open Cluster / Amas Ouvert;Summer / Été;6;Archer;Sagittaire;Sagittarius;18:19:58.49;-17:06:07.1;4900;9,0';assets/appimages/M18.jpg;http://www.lasam.ca/M018.JPG;Sgr
+M19;NGC 6273;Globular Cluster / Amas Globulaire;Summer / Été;7;Serpent Holder;Ophiuchus;Ophiuchus;17:02:37.68;-26:16:04.6;22500;5,3';assets/appimages/M19.jpg;http://www.lasam.ca/M019.JPG;Oph
+M20;NGC 6514;Emission Nebula / Nébuleuse à émission;Summer / Été;6;Archer;Sagittaire;Sagittarius;18:02:42.11;-22:58:18.8;2300;29,0' x 27,0';assets/appimages/M20.jpg;http://www.lasam.ca/M020.JPG;Sgr
+M21;NGC 6531;Open Cluster / Amas Ouvert;Summer / Été;5;Archer;Sagittaire;Sagittarius;18:04:13.45;-22:29:24.2;4200;13,0';assets/appimages/M21.jpg;http://www.lasam.ca/M021.JPG;Sgr
+M22;NGC 6656;Globular Cluster / Amas Globulaire;Summer / Été;5;Archer;Sagittaire;Sagittarius;18:36:24.20;-23:54:12.3;7800;17,0';assets/appimages/M22.jpg;http://www.lasam.ca/M022.JPG;Sgr
+M23;NGC 6494;Open Cluster / Amas Ouvert;Summer / Été;5;Archer;Sagittaire;Sagittarius;17:57:04.77;-18:59:07.2;2150;25,0';assets/appimages/M23.jpg;http://www.lasam.ca/M023.JPG;Sgr
+M24;NGC 6603;Open Cluster / Amas Ouvert;Summer / Été;11;Archer;Sagittaire;Sagittarius;18:16:56.12;-18:30:52.4;16000;45,0';assets/appimages/M24.jpg;http://www.lasam.ca/M024.JPG;Sgr
+M25;IC4725;Open Cluster / Amas Ouvert;Summer / Été;4;Archer;Sagittaire;Sagittarius;18:31:46.77;-19:06:53.8;2060;35,0';assets/appimages/M25.jpg;http://www.lasam.ca/M025.JPG;Sgr
+M26;NGC 6694;Open Cluster / Amas Ouvert;Summer / Été;8;Shield;L’Écu de Sobieski;Scutum;18:45:18.66;-09:23:01.0;5100;15,0';assets/appimages/M26.jpg;http://www.lasam.ca/M026.JPG;Sct
+M27;NGC 6853;Planetary Nebula / Nébuleuse Planétaire;Summer / Été;8;Little Fox;Petit Renard;Vulpecula;19:59:36.38;+22:43:15.7;980;348,0'';assets/appimages/M27.jpg;http://www.lasam.ca/M027.JPG;Vul
+M28;NGC 6626;Globular Cluster / Amas Globulaire;Summer / Été;6;Archer;Sagittaire;Sagittarius;18:24:32.89;-24:52:11.4;19000;15,0';assets/appimages/M28.jpg;http://www.lasam.ca/M028.JPG;Sgr
+M29;NGC 6913;Open Cluster / Amas Ouvert;Summer / Été;6;Swan;Cygne;Cygnus;20:23:57.77;+38:30:27.6;4100;7,0';assets/appimages/M29.jpg;http://www.lasam.ca/M029.JPG;Cyg
+M30;NGC 7099;Globular Cluster / Amas Globulaire;Autumn / Automne;7;Goat;Capricorne;Capricornus;21:40:22.02;-23:10:44.7;41000;8,9';assets/appimages/M30.jpg;http://www.lasam.ca/M030.JPG;Cap
+M31;NGC 224;Galaxy / Galaxie;Autumn / Automne;3;Andromeda;Andromède;Andromeda;00:42:44.35;+41:16:08.6;2500000;180,0' x 63,0';assets/appimages/M31.jpg;http://www.lasam.ca/M031.JPG;And
+M32;NGC 221;Galaxy / Galaxie;Autumn / Automne;8;Andromeda;Andromède;Andromeda;00:42:41.83;+40:51:55.0;;7,6' x 5,8';assets/appimages/M32.jpg;http://www.lasam.ca/M032.JPG;And
+M33;NGC 598;Galaxy / Galaxie;Autumn / Automne;5;Triangle;Triangle;Triangulum;01:33:50.89;+30:39:36.8;2723000;62,0. x 39,0';assets/appimages/M33.jpg;http://www.lasam.ca/M033.JPG;Tri
+M34;NGC 1039;Open Cluster / Amas Ouvert;Autumn / Automne;5;Perseus;Persée;Perseus;02:42:07.40;+42:44:46.1;1450;35,0';assets/appimages/M34.jpg;http://www.lasam.ca/M034.JPG;Per
+M35;NGC 2168;Open Cluster / Amas Ouvert;Winter / Hiver;5;Twins;Les Gémeaux;Gemini;06:09:05.06;+24:20:19.1;2800;30,0';assets/appimages/M35.jpg;http://www.lasam.ca/M035.JPG;Gem
+M36;NGC 1960;Open Cluster / Amas Ouvert;Winter / Hiver;6;Charioteer;Cocher;Auriga;05:36:17.74;+34:08:26.7;3700;12,0';assets/appimages/M36.jpg;http://www.lasam.ca/M036.JPG;Aur
+M37;NGC 2099;Open Cluster / Amas Ouvert;Winter / Hiver;5;Charioteer;Cocher;Auriga;05:52:18.35;+32:33:10.8;3600;24,0';assets/appimages/M37.jpg;http://www.lasam.ca/M037.JPG;Aur
+M38;NGC 1912;Open Cluster / Amas Ouvert;Winter / Hiver;6;Charioteer;Cocher;Auriga;05:28:42.49;+35:51:17.7;2750;21,0';assets/appimages/M38.jpg;http://www.lasam.ca/M038.JPG;Aur
+M39;NGC 7092;Open Cluster / Amas Ouvert;Autumn / Automne;4;Swan;Cygne;Cygnus;21:31:48.32;+48:26:17.4;880;32,0';assets/appimages/M39.jpg;http://www.lasam.ca/M039.JPG;Cyg
+M40;Winnecke 4;Double star / Étoile Double;Spring / Printemps;9;;;;12:22:16.1;+58:05:04;;;assets/appimages/M40.jpg;http://www.lasam.ca/M040.JPG;
+M41;NGC 2287;Open Cluster / Amas Ouvert;Winter / Hiver;4;Great Dog;Grand Chien;Canis Major;06:45:59.94;-20:45:15.2;1600;30,0';assets/appimages/M41.jpg;http://www.lasam.ca/M041.JPG;CMa
+M42;NGC 9176;Emission Nebula / Nébuleuse à émission;Winter / Hiver;4;Orion, Hunter;Orion;Orion;05:35:16.48;-05:23:22.8;1500;30,0';assets/appimages/M42.jpg;http://www.lasam.ca/M042.JPG;Ori
+M43;NGC 1982;Reflection Nebula / Nébuleuse à réflexion;Winter / Hiver;9;Orion, Hunter;Orion;Orion;05:35:31.38;-05:16:02.9;1500;20,0' x 15,0';assets/appimages/M43.jpg;http://www.lasam.ca/M043.JPG;Ori
+M44;NGC 2632;Open Cluster / Amas Ouvert;Spring / Printemps;3;Crab;Cancer;Cancer;08:40:22.20;+19:40:19.4;520;70,0';assets/appimages/M44.jpg;http://www.lasam.ca/M044.JPG;Cnc
+M45;;Open Cluster / Amas Ouvert;Winter / Hiver;1;;;;03:47:24.0;+24:07:00.0;410;120,0';assets/appimages/M45.jpg;http://www.lasam.ca/M045.JPG;
+M46;NGC 2437;Open Cluster / Amas Ouvert;Winter / Hiver;6;Stern,Poop deck;Poupe;Puppis;07:41:46.82;-14:48:36.0;3200;24,0';assets/appimages/M46.jpg;http://www.lasam.ca/M046.JPG;Pup
+M47;NGC 2422;Open Cluster / Amas Ouvert;Winter / Hiver;4;Stern,Poop deck;Poupe;Puppis;07:36:35.02;-14:28:57.4;1750;22,0';assets/appimages/M47.jpg;http://www.lasam.ca/M047.JPG;Pup
+M48;NGC 2548;Open Cluster / Amas Ouvert;Winter / Hiver;5;Hydra, Sea Snake;Hydre;Hydra;08:13:43.18;-05:45:01.6;1500;42';assets/appimages/M48.jpg;http://www.lasam.ca/M048.JPG;Hya
+M49;NGC 4472;Galaxy / Galaxie;Spring / Printemps;8;Virgin;Vierge;Virgo;12:29:46.76;+08:00:01.7;41000000;8,9' x 7,4';assets/appimages/M49.jpg;http://www.lasam.ca/M049.JPG;Vir
+M50;NGC 2323;Open Cluster / Amas Ouvert;Winter / Hiver;5;Unicorn;Licorne;Monoceros;07:02:40.47;-08:21:50.5;2950;16,0. x 5,5';assets/appimages/M50.jpg;http://www.lasam.ca/M050.JPG;Mon
+M51;NGC 5194;Galaxy / Galaxie;Spring / Printemps;8;Hound Dogs;Les Chiens de chasse;Canes Venatici;13:29:52.71;+47:11:42.6;37000000;11,0' x 7,8';assets/appimages/M51.jpg;http://www.lasam.ca/M051.JPG;CVn
+M52;NGC 7654;Open Cluster / Amas Ouvert;Autumn / Automne;6;Cassiopeia;Cassiopée;Cassiopeia;23:24:48.40;+61:35:35.4;3000;13,0';assets/appimages/M52.jpg;http://www.lasam.ca/M052.JPG;Cas
+M53;NGC 5024;Globular Cluster / Amas Globulaire;Spring / Printemps;7;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;13:12:55.23;+18:10:08.8;69000;14,4';assets/appimages/M53.jpg;http://www.lasam.ca/M053.JPG;Com
+M54;NGC 6715;Globular Cluster / Amas Globulaire;Summer / Été;7;Archer;Sagittaire;Sagittarius;18:55:03.27;-30:28:42.6;49000;5,5';assets/appimages/M54.jpg;http://www.lasam.ca/M054.JPG;Sgr
+M55;NGC 6809;Globular Cluster / Amas Globulaire;Summer / Été;7;Archer;Sagittaire;Sagittarius;19:39:59.40;-30:57:43.5;20000;14,8';assets/appimages/M55.jpg;http://www.lasam.ca/M055.JPG;Sgr
+M56;NGC 6779;Globular Cluster / Amas Globulaire;Summer / Été;8;Lyre;Lyre;Lyra;19:16:35.51;+30:11:04.2;45600;2,4';assets/appimages/M56.jpg;http://www.lasam.ca/M056.JPG;Lyr
+M57;NGC 6720;Planetary Nebula / Nébuleuse Planétaire;Summer / Été;9;Lyre;Lyre;Lyra;18:53:35.01;+33:01:42.9;1410;71'';assets/appimages/M57.jpg;http://www.lasam.ca/M057.JPG;Lyr
+M58;NGC 4579;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:37:43.52;+11:49:05.5;41000000;5,4' x 4,4';assets/appimages/M58.jpg;http://www.lasam.ca/M058.JPG;Vir
+M59;NGC 4621;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:42:02.24;+11:38:49.3;41000000;5,1' x 3,4';assets/appimages/M59.jpg;http://www.lasam.ca/M059.JPG;Vir
+M60;NGC 4649;Galaxy / Galaxie;Spring / Printemps;8;Virgin;Vierge;Virgo;12:43:39.98;+11:33:09.7;41000000;7,2' x 6,2';assets/appimages/M60.jpg;http://www.lasam.ca/M060.JPG;Vir
+M61;NGC 4303;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:21:54.90;+04:28:25.1;41000000;6,0' x 5,5';assets/appimages/M61.jpg;http://www.lasam.ca/M061.JPG;Vir
+M62;NGC 6266;Globular Cluster / Amas Globulaire;Summer / Été;6;Serpent Holder;Ophiuchus;Ophiuchus;17:01:12.60;-30:06:44.5;22500;6,3';assets/appimages/M62.jpg;http://www.lasam.ca/M062.JPG;Oph
+M63;NGC 5055;Galaxy / Galaxie;Spring / Printemps;8;Hound Dogs;Les Chiens de chasse;Canes Venatici;13:15:49.33;+42:01:45.4;23800000;12,0' x 7,6';assets/appimages/M63.jpg;http://www.lasam.ca/M063.JPG;CVn
+M64;NGC 4826;Galaxy / Galaxie;Spring / Printemps;8;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:56:43.64;+21:40:58.7;11800000;9,3' x 5,4';assets/appimages/M64.jpg;http://www.lasam.ca/M064.JPG;Com
+M65;NGC 3623;Galaxy / Galaxie;Spring / Printemps;9;Lion;Lion;Leo;11:18:55.92;+13:05:32.5;29000000;10,0' x 3,3';assets/appimages/M65.jpg;http://www.lasam.ca/M065.JPG;Leo
+M66;NGC 3627;Galaxy / Galaxie;Spring / Printemps;9;Lion;Lion;Leo;11:20:14.96;+12:59:29.5;29000000;8,7' x 4,4';assets/appimages/M66.jpg;http://www.lasam.ca/M066.JPG;Leo
+M67;NGC 2682;Open Cluster / Amas Ouvert;Spring / Printemps;6;Crab;Cancer;Cancer;08:51:20.13;+11:48:43.0;2600;27,0';assets/appimages/M67.jpg;http://www.lasam.ca/M067.JPG;Cnc
+M68;NGC 4590;Globular Cluster / Amas Globulaire;Spring / Printemps;8;Hydra, Sea Snake;Hydre;Hydra;12:39:28.01;-26:44:34.9;36000;9,8';assets/appimages/M68.jpg;http://www.lasam.ca/M068.JPG;Hya
+M69;NGC 6637;Globular Cluster / Amas Globulaire;Summer / Été;7;Archer;Sagittaire;Sagittarius;18:31:23.23;-32:20:52.7;23500;3,8';assets/appimages/M69.jpg;http://www.lasam.ca/M069.JPG;Sgr
+M70;NGC 6681;Globular Cluster / Amas Globulaire;Summer / Été;8;Archer;Sagittaire;Sagittarius;18:43:12.64;-32:17:30.8;65000;4,1';assets/appimages/M70.jpg;http://www.lasam.ca/M070.JPG;Sgr
+M71;NGC 6838;Globular Cluster / Amas Globulaire;Summer / Été;8;Arrow;Flèche;Sagitta;19:53:46.11;+18:46:42.2;13000;6,1';assets/appimages/M71.jpg;http://www.lasam.ca/M071.JPG;Sge
+M72;NGC 6981;Globular Cluster / Amas Globulaire;Autumn / Automne;9;Water Bearer;Verseau;Aquarius;20:53:27.91;-12:32:13.4;62000;5,1';assets/appimages/M72.jpg;http://www.lasam.ca/M072.JPG;Aqr
+M73;NGC 6994;Open Cluster / Amas Ouvert;Autumn / Automne;9;Water Bearer;Verseau;Aquarius;20:58:55.97;-12:38:07.8;;2,8';assets/appimages/M73.jpg;http://www.lasam.ca/M073.JPG;Aqr
+M74;NGC 628;Galaxy / Galaxie;Autumn / Automne;9;Fishes;Les Poissons;Pisces;01:36:41.75;+15:47:01.2;26000000;10,0' x 9,6';assets/appimages/M74.jpg;http://www.lasam.ca/M074.JPG;Psc
+M75;NGC 6864;Globular Cluster / Amas Globulaire;Summer / Été;8;Archer;Sagittaire;Sagittarius;20:06:04.84;-21:55:20.0;78500;4,6';assets/appimages/M75.jpg;http://www.lasam.ca/M075.JPG;Sgr
+M76;NGC 650;Planetary Nebula / Nébuleuse Planétaire;Autumn / Automne;10;Perseus;Persée;Perseus;01:42:19.69;+51:34:31.7;8200;65'';assets/appimages/M76.jpg;http://www.lasam.ca/M076.JPG;Per
+M77;NGC 1068;Galaxy / Galaxie;Autumn / Automne;8;Sea-monster;Baleine;Cetus;02:42:40.71;-00:00:47.8;52000000;6,9' x 5,9';assets/appimages/M77.jpg;http://www.lasam.ca/M077.JPG;Cet
+M78;NGC 2068;Reflection Nebula / Nébuleuse à réflexion;Winter / Hiver;8;Orion, Hunter;Orion;Orion;05:46:45.82;+00:04:45.5;1630;8,0' x 6,0';assets/appimages/M78.jpg;http://www.lasam.ca/M078.JPG;Ori
+M79;NGC 1904;Globular Cluster / Amas Globulaire;Winter / Hiver;8;Hare;Lièvre;Lepus;05:24:10.59;-24:31:27.2;43400;7,8';assets/appimages/M79.jpg;http://www.lasam.ca/M079.JPG;Lep
+M80;NGC 6093;Globular Cluster / Amas Globulaire;Summer / Été;7;Scorpion;Scorpion;Scorpius;16:17:02.51;-22:58:30.4;36000;5,1';assets/appimages/M80.jpg;http://www.lasam.ca/M080.JPG;Sco
+M81;NGC 3031;Galaxy / Galaxie;Spring / Printemps;6;Big Bear;Grande Ourse;Ursa Major;09:55:33.17;+69:03:55.1;8500000;26,0' x 14,0';assets/appimages/M81.jpg;http://www.lasam.ca/M081.JPG;UMa
+M82;NGC 3034;Galaxy / Galaxie;Spring / Printemps;8;Big Bear;Grande Ourse;Ursa Major;09:55:52.73;+69:40:45.8;8500000;11,0' x 4,6';assets/appimages/M82.jpg;http://www.lasam.ca/M082.JPG;UMa
+M83;NGC 5236;Galaxy / Galaxie;Spring / Printemps;7;Hydra, Sea Snake;Hydre;Hydra;13:37:00.95;-29:51:55.5;8500000;11,0' x 10,0';assets/appimages/M83.jpg;http://www.lasam.ca/M083.JPG;Hya
+M84;NGC 4374;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:25:03.74;+12:53:13.1;41000000;5,0' x 4,4';assets/appimages/M84.jpg;http://www.lasam.ca/M084.JPG;Vir
+M85;NGC 4382;Galaxy / Galaxie;Spring / Printemps;9;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:25:24.11;+18:11:29.4;41000000;7,1' x 5,2';assets/appimages/M85.jpg;http://www.lasam.ca/M085.JPG;Com
+M86;NGC 4406;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:26:11.74;+12:56:46.4;20000000;7,4' x 5,5';assets/appimages/M86.jpg;http://www.lasam.ca/M086.JPG;Vir
+M87;NGC 4486;Galaxy / Galaxie;Spring / Printemps;8;Virgin;Vierge;Virgo;12:30:49.42;+12:23:28.0;63000000;7,2' x 6,8';assets/appimages/M87.jpg;http://www.lasam.ca/M087.JPG;Vir
+M88;NGC 4501;Galaxy / Galaxie;Spring / Printemps;9;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:31:59.16;+14:25:13.4;41000000;6,9' x 3,9';assets/appimages/M88.jpg;http://www.lasam.ca/M088.JPG;Com
+M89;NGC 4552;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:35:39.81;+12:33:22.8;41000000;4,2' x 4,2';assets/appimages/M89.jpg;http://www.lasam.ca/M089.JPG;Vir
+M90;NGC 4560;Galaxy / Galaxie;Spring / Printemps;9;Virgin;Vierge;Virgo;12:36:49.79;+13:09:46.6;41000000;9,5' x 4,7';assets/appimages/M90.jpg;http://www.lasam.ca/M090.JPG;Vir
+M91;NGC 4548;Galaxy / Galaxie;Spring / Printemps;10;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:35:26.45;+14:29:46.8;37000000;5,4' x 4,4';assets/appimages/M91.jpg;http://www.lasam.ca/M091.JPG;Com
+M92;NGC 6341;Globular Cluster / Amas Globulaire;Summer / Été;6;Hercules;Hercule;Hercules;17:17:07.27;+43:08:11.5;28400;12,2';assets/appimages/M92.jpg;http://www.lasam.ca/M092.JPG;Her
+M93;NGC 2447;Open Cluster / Amas Ouvert;Winter / Hiver;6;Stern,Poop deck;Poupe;Puppis;07:44:29.23;-23:51:11.1;3600;22,0';assets/appimages/M93.jpg;http://www.lasam.ca/M093.JPG;Pup
+M94;NGC 4736;Galaxy / Galaxie;Spring / Printemps;8;Hound Dogs;Les Chiens de chasse;Canes Venatici;12:50:53.06;+41:07:13.6;32600000;11,0' x 9,1';assets/appimages/M94.jpg;http://www.lasam.ca/M094.JPG;CVn
+M95;NGC 3351;Galaxy / Galaxie;Spring / Printemps;9;Lion;Lion;Leo;10:43:57.70;+11:42:13.7;20300000;7,4' x 5,1';assets/appimages/M95.jpg;http://www.lasam.ca/M095.JPG;Leo
+M96;NGC 3368;Galaxy / Galaxie;Spring / Printemps;9;Lion;Lion;Leo;10:46:45.74;+11:49:11.8;29300000;7,1' x 5,1';assets/appimages/M96.jpg;http://www.lasam.ca/M096.JPG;Leo
+M97;NGC 3587;Planetary Nebula / Nébuleuse Planétaire;Spring / Printemps;11;Big Bear;Grande Ourse;Ursa Major;11:14:47.71;+55:01:08.5;10000;194'';assets/appimages/M97.jpg;http://www.lasam.ca/M097.JPG;UMa
+M98;NGC 4192;Galaxy / Galaxie;Spring / Printemps;10;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:13:48.29;+14:54:01.2;36000000;9,5' x 3,2';assets/appimages/M98.jpg;http://www.lasam.ca/M098.JPG;Com
+M99;NGC 4254;Galaxy / Galaxie;Spring / Printemps;9;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:18:49.60;+14:24:59.4;41000000;5,4' x 4,8';assets/appimages/M99.jpg;http://www.lasam.ca/M099.JPG;Com
+M100;NGC 4321;Galaxy / Galaxie;Spring / Printemps;9;Hair of Berenice;Chevelure de Bérénice;Coma Berenices;12:22:54.83;+15:49:18.5;41000000;6,9' x 6,2';assets/appimages/M100.jpg;http://www.lasam.ca/M100.JPG;Com
+M101;NGC 5457;Galaxy / Galaxie;Spring / Printemps;7;Big Bear;Grande Ourse;Ursa Major;14:03:12.54;+54:20:56.2;23000000;27,0' x 26,0';assets/appimages/M101.jpg;http://www.lasam.ca/M101.JPG;UMa
+M102;NGC 5866;Galaxy / Galaxie;Spring / Printemps;10;;;;15:06:29.5 ;+55:45:48.1;23000000;5,2' x 2,3';assets/appimages/M102.jpg;http://www.lasam.ca/M102.JPG;
+M103;NGC 581;Open Cluster / Amas Ouvert;Autumn / Automne;7;Cassiopeia;Cassiopée;Cassiopeia;01:33:21.81;+60:39:28.8;8500;5,0';assets/appimages/M103.jpg;http://www.lasam.ca/M103.JPG;Cas
+M104;NGC 4594;Galaxy / Galaxie;Spring / Printemps;8;Crow;Corbeau;Corvus;12:39:59.43;-11:37:23.0;40000000;8,9' x 4,1';assets/appimages/M104.jpg;http://www.lasam.ca/M104.JPG;Crv
+M105;NGC 3379;Galaxy / Galaxie;Spring / Printemps;9;Lion;Lion;Leo;10:47:49.59;+12:34:53.8;21500000;4,5' x 4,0';assets/appimages/M105.jpg;http://www.lasam.ca/M105.JPG;Leo
+M106;NGC 4258;Galaxy / Galaxie;Spring / Printemps;8;Hound Dogs;Les Chiens de chasse;Canes Venatici;12:18:57.50;+47:18:14.3;20000000;18,0' x 7,9';assets/appimages/M106.jpg;http://www.lasam.ca/M106.JPG;CVn
+M107;NGC 6171;Globular Cluster / Amas Globulaire;Summer / Été;8;Serpent Holder;Ophiuchus;Ophiuchus;16:32:31.92;-13:03:13.1;19200;7,8';assets/appimages/M107.jpg;http://www.lasam.ca/M107.JPG;Oph
+M108;NGC 3556;Galaxy / Galaxie;Spring / Printemps;10;Big Bear;Grande Ourse;Ursa Major;11:11:30.97;+55:40:26.8;23500000;8,3' x 2,5';assets/appimages/M108.jpg;http://www.lasam.ca/M108.JPG;UMa
+M109;NGC 3992;Galaxy / Galaxie;Autumn / Automne;9;Big Bear;Grande Ourse;Ursa Major;11:57:35.98;+53:22:28.3;27000000;7,6' x 4,9';assets/appimages/M109.jpg;http://www.lasam.ca/M109.JPG;UMa
+M110;NGC 205;Galaxy / Galaxie;Autumn / Automne;8;Andromeda;Andromède;Andromeda;00:40:22.08;+41:41:07.1;2250000;17,0, x 9,8';assets/appimages/M110.jpg;http://www.lasam.ca/M110.JPG;And

@@ -97,7 +97,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     }
     
     String newDate = "${DateFormat("yyyy-MM-dd").format(_selectedDate)} ${_selectedTime.hour}:${_selectedTime.minute}";
-    _checkHelper.updateTime(newDate);
+    await _checkHelper.updateTime(newDate);
 
     setState(() {
       _catalog = ObjectSelection().selection.toList();

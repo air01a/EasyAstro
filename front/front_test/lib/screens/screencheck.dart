@@ -4,7 +4,7 @@ import 'package:front_test/services/servicecheck.dart';
 import 'package:location/location.dart';
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/components/pagestructure.dart';
-
+import 'package:front_test/astro/astrocalc.dart';
 
 class CheckScreen extends StatefulWidget {
   @override
@@ -26,22 +26,29 @@ class _CheckScreen extends State<CheckScreen> {
   Future<void> _getLocation() async {
     LocationData? locationData;
     ServiceCheckHelper checkHelper = ServiceCheckHelper();
-
+    
+    
+    await AstroCalc.init();
     setState(() {
       _locationData = null; // Afficher le message d'attente
     });
 
     locationData = await checkHelper.getLocation();
+    CurrentLocation().location = locationData;
     setState(() {
       _locationData = locationData; // Afficher la position GPS
     });
 
-    await checkHelper.updateAPILocation();
+    //await checkHelper.updateAPILocation();
     setState(() {
       _apiUpdated = true;
     });
     ObservableRepository catalog = ObservableRepository();
-    ObjectSelection().selection = await catalog.fetchCatalogList();
+    if (_locationData!=null) {
+      ObjectSelection().selection = await catalog.fetchCatalogList(_locationData?.longitude, _locationData?.latitude, _locationData?.altitude, null);
+    } else {
+      ObjectSelection().selection = await catalog.fetchCatalogList(0, 0, 0,null);
+    }
     setState(() {
       _catalogUpdated = true;
     });

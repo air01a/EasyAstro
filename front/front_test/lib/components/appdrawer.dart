@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'; 
-
+import 'package:front_test/services/globals.dart';
 class AppDrawer extends Drawer{
   const AppDrawer({super.key}); 
 
@@ -35,15 +35,25 @@ class AppDrawer extends Drawer{
                         Navigator.pushNamed(context, '/selection');
                       },
                       ),
-                      ListTile(
-                      leading: const Icon(
-                        Icons.visibility,
-                      ),
-                      title: const Text('Observe'),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/capture');
-                      },
-                      ),
+                      ServerInfo().connected
+                        ? ListTile(
+                        leading: const Icon(
+                          Icons.visibility,
+                        ),
+                        title: Text('Observe'),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/capture');
+                        },
+                        )
+                        : ListTile(
+                        leading: const Icon(
+                          Icons.visibility,
+                        ),
+                        title: Text('Connect'),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/connect');
+                        },
+                        ),
                       ListTile(
                       leading: const Icon(
                         Icons.settings,
@@ -52,8 +62,8 @@ class AppDrawer extends Drawer{
                       onTap: () {
                         Navigator.pushNamed(context, '/config');
                       },
-                      ),
-                      ListTile(
+                      ), ServerInfo().connected
+                      ? ListTile(
                       leading: const Icon(
                         Icons.power_settings_new,
                       ),
@@ -61,13 +71,15 @@ class AppDrawer extends Drawer{
                       onTap: () {
                         Navigator.pushNamed(context, '/shutdown');
                       },
-                      ),
+                      ) 
+                      : Container(width: 0, height: 0)
+                      ,
                       ListTile(
                       leading: const Icon(
                         Icons.logout,
                       ),
                       
-                      title: const Text('Logout'),
+                      title: const Text('Quit'),
                       onTap: () {
                         Navigator.pushNamed(context, '/');
                       },

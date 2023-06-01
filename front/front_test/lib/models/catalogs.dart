@@ -36,11 +36,11 @@ class ObservableObject {
   ObservableObject.fromJson(Map<String, dynamic> json ) {
     name = json['NAME'] ?? 'N/A';
 
-    ra = json['RA'] ?? 0;
-    dec = json['DEC'] ?? 0;
+    ra = json['RA deg'] ?? 0;
+    dec = json['DEC deg'] ?? 0;
     description = json['description'] ?? 'N/A';
     image = json['Image'] ?? '';
-    magnitude = int.parse(json['Magnitude']);
+    magnitude = json['Magnitude'];
     type = json['Object type'];
     meridian = json['meridian_time'];
 
