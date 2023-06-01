@@ -23,7 +23,7 @@ class ObservableObject {
   String ngc='';
   String type='';
   String season='';
-  int magnitude=10;
+  double magnitude=10;
 
   double ra=0;
   double dec=0;
@@ -34,13 +34,18 @@ class ObservableObject {
   ObservableObject({required this.name, required this.ngc, required this.type, required this.season, required this.magnitude, required this.ra, required this.dec, required this.description, required this.image});
 
   ObservableObject.fromJson(Map<String, dynamic> json ) {
+
     name = json['NAME'] ?? 'N/A';
 
     ra = json['RA deg'] ?? 0;
     dec = json['DEC deg'] ?? 0;
     description = json['description'] ?? 'N/A';
     image = json['Image'] ?? '';
-    magnitude = json['Magnitude'];
+    if (json['Magnitude'] is String) {
+      magnitude = double.parse(json['Magnitude']);
+    } else {
+      magnitude = json['Magnitude'] + 0.0;
+    }
     type = json['Object type'];
     meridian = json['meridian_time'];
 

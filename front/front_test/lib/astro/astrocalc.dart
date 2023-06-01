@@ -3,11 +3,11 @@ import 'dart:math';
 
 
 // Structure for storing right ascension, declinaison and object distance from jpl
-class Coordinates {
+class AstroCoordinates {
   final double ra;
   final double dec;
   final double distance;
-  const Coordinates(this.ra, this.dec, this.distance);
+  const AstroCoordinates(this.ra, this.dec, this.distance);
 
 }
 
@@ -70,10 +70,10 @@ class AstroCalc {
 
 
   // Calculate object position from JPL ephemerid
-  Coordinates getObjectCoord(HeavenlyBody object) {
+  AstroCoordinates getObjectCoord(HeavenlyBody object) {
     final pos =
         Sweph.swe_calc_ut(asTime, object, SwephFlag.SEFLG_JPLEPH | SwephFlag.SEFLG_EQUATORIAL   );
-    return Coordinates(pos.longitude, pos.latitude, pos.distance);
+    return AstroCoordinates(pos.longitude, pos.latitude, pos.distance);
   }
 
 
@@ -145,5 +145,22 @@ class AstroCalc {
 
   }
 
+   HeavenlyBody? getObjectName(String object) {
+    switch(object) {
+      case 'Jupiter':
+        return HeavenlyBody.SE_JUPITER;
+      case 'Saturn':
+        return HeavenlyBody.SE_SATURN;
+      case 'Sun':
+        return HeavenlyBody.SE_SUN;
+      case 'Moon':
+        return HeavenlyBody.SE_MOON;
+      case 'Mars':
+        return HeavenlyBody.SE_MARS;
+      case 'Venus':
+        return HeavenlyBody.SE_VENUS;
+    }
+    return null;
+   } 
 
 }

@@ -51,12 +51,24 @@ class ServiceCheckHelper {
 
   }
 
+  Future<int> getDarkProgession() async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    int ret = await helper.get("/telescope/get_dark_progress");
+    return ret;
+  }
 
   Future<void> updateTime(String time) async {
     ApiBaseHelper helper = ApiBaseHelper();
     //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();
     ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().location?.longitude, CurrentLocation().location?.latitude, CurrentLocation().location?.altitude, time);
+  }
+
+
+  Future<void> takeDark() async {
+    ApiBaseHelper helper = ApiBaseHelper();
+    await helper.get("/telescope/take_dark");
+    
   }
 
   Future<LocationData?> getLocation() async {

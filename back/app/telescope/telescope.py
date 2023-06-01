@@ -13,7 +13,6 @@ from ..imageprocessor.filters import stretch, hot_pixel_remover
 from ..imageprocessor.align import find_transformation, apply_transformation
 from ..imageprocessor.stack import stack_image
 from datetime import datetime
-
 from signal import signal, SIGINT
 
 if config.PLATFORM==config.LINUX:
@@ -55,6 +54,8 @@ class IndiOrchestrator:
         self.ccd_orientation = 0
         self._end = False
 
+        self.dark_progress=0
+        self.dark_total=0
         self._job_queue = []
         (cra, cdec)=self.indi.get_current_coordinates()
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
@@ -77,9 +78,17 @@ class IndiOrchestrator:
         elif job['action']=='move_to_short':
             logger.debug('+++ JOB MOVE TO SHORT %f,%f'%(job['ra'],job['dec']))
             self._move_short(job['ra'],job['dec'])
+        elif job['action']=='take_dark':
+            logger.debug('+++ JOB TAKE DARK')
+            self._take_dark()
 
     def shutdown(self):
         self._end = True
+
+    def get_dark_progress(self):
+        if self.dark_total==0:
+            return 0
+        return int(100*self.dark_progress/self.dark_total)
 
     def _move_short(self, ra : float,  dec : float):
         self.lock.acquire()
@@ -149,6 +158,31 @@ class IndiOrchestrator:
         if dec<0.09:
             dec = 0
         self._job_queue.append({'action':'move_to_short','ra':ra,'dec':dec})
+
+
+    def take_dark(self):
+        self._job_queue.append({'action':'take_dark'})
+
+    def _take_dark(self):
+        expositions = [1,3,5,10,15]
+        gains = [50, 100, 150, 200]
+        self.dark_total = sum(expositions) * len(gains)
+        self.dark_progress=0
+        logger.debug(' --- START SHOOTING DARK LIBRARY')
+        today = datetime.now().strftime("%Y-%m-%d")
+        working_dir = config.CONFIG["WORKFLOW"]["STORAGE_DIR"] + "/"+today+"/"
+        logger.debug(' --- WORKING DIR %s' % working_dir)
+        if not os.path.isdir(working_dir):
+            os.mkdir(working_dir)
+        working_dir += '/dark/'
+        if not os.path.isdir(working_dir):
+            os.mkdir(working_dir)
+        for expo in expositions:
+            for gain in gains:
+                self.indi.take_picture(working_dir+'dark_'+str(expo)+'_'+str(gain)+'.fits',expo,gain)
+                self.dark_progress += expo
+        
+
 
 
     def get_expo_auto(self, ra, dec):

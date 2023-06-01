@@ -21,22 +21,42 @@ class _ObjectBox extends State<ObjectBox> {
    Widget build(BuildContext context) {
       Image currentImage;
       if (kIsWeb) {
-          currentImage = Image.network(widget.object.image, width: 100);
+          currentImage = Image.network(widget.object.image);
       } else {
-          currentImage = Image(image:AssetImage(widget.object.image),width:100);
+          currentImage = Image(image:AssetImage(widget.object.image));
       }
-      
+      Container containerImage=Container(
+        
+      decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          image: new DecorationImage(
+          fit: BoxFit.fill,
+          image: currentImage.image,
+        )
+      ,));
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
       return Container(
+        
          padding: const EdgeInsets.all(2), 
          height: 140, 
          child: Card(
+            color: Theme.of(context).primaryColor,
             child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
-                  currentImage, 
+                  Container(
+                    width: 190.0,
+                    height: 190.0,
+                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: new DecorationImage(
+                                            fit: BoxFit.contain,
+                                            image: currentImage.image,
+                                        )
+                    )), 
                   Expanded( 
                      child: Container( 
+                        color: Theme.of(context).primaryColor,
                         padding: const EdgeInsets.all(5), 
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
@@ -48,7 +68,9 @@ class _ObjectBox extends State<ObjectBox> {
                         )
                      )
                   ),
-                  widget.rating,
+                  Container(
+                    color: Theme.of(context).primaryColor,
+                    child:widget.rating),
                   ServerInfo().connected
                    ? ElevatedButton(
                                     onPressed: () { 

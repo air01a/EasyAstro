@@ -22,8 +22,7 @@ Future<void> _loadSavedIpAddress() async {
       _controller.text = savedIpAddress;
     }
   }
-
-
+  
   @override
   void initState() {
     // TODO: implement initState

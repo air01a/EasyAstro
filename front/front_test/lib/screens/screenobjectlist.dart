@@ -90,13 +90,18 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     );
     if (picked2 != null && picked2 != _selectedTime) {
       setState(() {
+
         _selectedTime = picked2;
       });
     } else {
       return; 
     }
     
-    String newDate = "${DateFormat("yyyy-MM-dd").format(_selectedDate)} ${_selectedTime.hour}:${_selectedTime.minute}";
+    String hour = _selectedTime.hour.toString();if (hour.length==1)  hour = "0$hour";
+    String min  = _selectedTime.minute.toString();if (min.length==1) min = "0$min";
+    
+
+    String newDate = "${DateFormat("yyyy-MM-dd").format(_selectedDate)} $hour:$min";
     await _checkHelper.updateTime(newDate);
 
     setState(() {

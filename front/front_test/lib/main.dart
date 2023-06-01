@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_test/routes.dart';
 import 'package:front_test/services/globals.dart';
-
+import 'package:front_test/theme/theme.dart';
 
 
 void main() async {
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+          theme:theme.dark(), 
           routes:routes,
         );
       

@@ -53,6 +53,13 @@ def last_picture():
     return Response(content=img_bytes, headers=headers)
     #return Response(content=img_bytes, media_type="image/jpeg")
 
+@router.get('/take_dark')
+def take_dark():
+    return telescope.take_dark()
+
+@router.get('/get_dark_progress')
+def get_dark_progress():
+    return telescope.get_dark_progress()
 
 @router.post('/stacking')
 def stacking(coord : Coordinates.StarCoord):

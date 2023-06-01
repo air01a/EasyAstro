@@ -34,6 +34,7 @@ class _ObjectPage extends State<ObjectPage> {
               child: IntrinsicHeight(
             
                 child: Container( 
+                  color: Theme.of(context).primaryColor,
                   padding: const EdgeInsets.all(0), 
                   child: Column( 
                       mainAxisAlignment: MainAxisAlignment.start, 
