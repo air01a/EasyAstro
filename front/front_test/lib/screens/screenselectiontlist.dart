@@ -23,7 +23,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
 
     setState(() {
       _catalog  = ObjectSelection().selection.where((line) => line.selected == true).toList();
-      _catalog.sort((a, b) => a.meridian.compareTo(b.meridian));
+      _catalog.sort((a, b) => a.timeToMeridian.compareTo(b.timeToMeridian));
 
     });
   }
@@ -33,7 +33,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     super.initState();
     setState(() {
        _catalog = ObjectSelection().selection.where((line) => line.selected == true).toList();
-       _catalog.sort((a, b) => a.meridian.compareTo(b.meridian));
+       _catalog.sort((a, b) => a.timeToMeridian.compareTo(b.timeToMeridian));
     });
   }
 

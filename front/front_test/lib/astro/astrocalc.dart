@@ -21,7 +21,27 @@ class EphemerisParameters {
   const EphemerisParameters(this.rising, this.setting, this.culmination, this.visible);
 }
 
+class ConvertAngle {
 
+  static hourToString(double hour) {
+    hour = hour % 24;
+    String h = (hour.floor()).toString();
+    if (h.length==1) h = "0$h";
+
+    String m = ((hour - hour.floor())*60).floor().toString();
+    if (m.length==1) m = "0$m";
+
+    return "$h:$m";
+
+  }
+
+  static degToHour(double deg) {
+    double hour = deg / 15;
+    return hourToString(hour);
+
+
+  }
+}
 
 // Main class
 class AstroCalc {
@@ -163,4 +183,36 @@ class AstroCalc {
     return null;
    } 
 
+  double getHeight(double dec, double h) {
+    double decRad = dec * pi / 180;
+    double latRad = latitude * pi / 180;
+    double hRad = h*pi/180;
+    return asin(sin(decRad)*sin(latRad)+cos(decRad)*cos(latRad)*cos(h));
+  }
+
+  Map<int,double> getAzimutalChart(double ra, double dec,double siderealTime) {
+    Map<int,double> coord = {};
+    double? ha = calcHourAngle(dec);
+    double ha1;
+    double ha2;
+    double st = siderealTime;print(siderealTime);
+    double timeAtMeridian = (hour + ((ra-st))/15/1.002737909);
+
+    ha1 = st - 12;
+    ha2 = st + 12;
+    double ptr=ha1;
+    print(ra);
+    print(ptr);
+    print('--');
+    while (ptr<ha2) {
+      double hourAngle = (ptr*15 -ra);
+      print(hourAngle);
+      double height = getHeight(dec,hourAngle)*180/pi;
+      double h = (hour + ptr/(15*1.002737909));
+      print("$ptr:${ConvertAngle.hourToString(h)};$height");
+      ptr+=1;
+    }
+
+    return coord;
+  }
 }

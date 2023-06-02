@@ -105,3 +105,4 @@ flutter:
     - web/assets/appimages/
     - assets/appimages/
     - assets/data/deepsky.lst
+    - assets/data/description_en

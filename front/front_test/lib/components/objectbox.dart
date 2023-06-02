@@ -3,6 +3,7 @@ import 'package:front_test/components/rating.dart';
 import 'package:front_test/models/catalogs.dart'; 
 import 'package:front_test/services/globals.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:front_test/astro/astrocalc.dart';
 
 class ObjectBox extends StatefulWidget {
     // final Function() onValueChanged;
@@ -20,10 +21,13 @@ class _ObjectBox extends State<ObjectBox> {
    @override
    Widget build(BuildContext context) {
       Image currentImage;
+      double imageSize;
       if (kIsWeb) {
           currentImage = Image.network(widget.object.image);
+          imageSize=190;
       } else {
           currentImage = Image(image:AssetImage(widget.object.image));
+          imageSize=60;
       }
       Container containerImage=Container(
         
@@ -45,8 +49,8 @@ class _ObjectBox extends State<ObjectBox> {
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
                   Container(
-                    width: 190.0,
-                    height: 190.0,
+                    width: imageSize,
+                    height: imageSize,
                     decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: new DecorationImage(
@@ -56,12 +60,14 @@ class _ObjectBox extends State<ObjectBox> {
                     )), 
                   Expanded( 
                      child: Container( 
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).primaryColor.withOpacity(0.5),
                         padding: const EdgeInsets.all(5), 
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                            children: <Widget>[ 
-                              Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)), Text(widget.object.description), 
+                              Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)), 
+                              Text("Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "), 
+                              Text("Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"), 
                               Text("Type: ${widget.object.type}"), 
                               Text("Magnitude: ${widget.object.magnitude.toString()}"), 
                            ], 
@@ -69,7 +75,7 @@ class _ObjectBox extends State<ObjectBox> {
                      )
                   ),
                   Container(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor.withOpacity(0.5),
                     child:widget.rating),
                   ServerInfo().connected
                    ? ElevatedButton(

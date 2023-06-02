@@ -153,6 +153,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                                         child: ObjectBox(object: _catalog[index], rating : rating),
                                         onTap: () {
                                           Navigator.push(
+                                            
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => ObjectPage(item: _catalog[index], rating: rating),
