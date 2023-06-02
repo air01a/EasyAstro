@@ -18,7 +18,8 @@ class EphemerisParameters {
   final double setting;
   final double culmination;
   final bool visible; 
-  const EphemerisParameters(this.rising, this.setting, this.culmination, this.visible);
+  final double height;
+  const EphemerisParameters(this.rising, this.setting, this.culmination, this.visible, this.height);
 }
 
 class ConvertAngle {
@@ -117,7 +118,7 @@ class AstroCalc {
     return siderealTime % 360 / 15;
   }
 
-
+  // Calculate H0, always the same for a given object. Take into account parallax and refraction.
   double calcH0() {
     double refractionCoeff = 34/60 *pi/180;
     double moonParallax = 0;
@@ -125,6 +126,8 @@ class AstroCalc {
     return moonParallax - refractionCoeff - correctedAltitude;
   }
 
+
+  // Calculate Hour coordinates
   double? calcHourAngle(double dec) {
     double h0 = calcH0(); // Default hour angle, always the same. It's time sidereal that is changing day after day
     double radLat = latitude * pi / 180; // Convert to rad
@@ -138,6 +141,8 @@ class AstroCalc {
     return cosH;
   }
 
+
+  // Calculate data for an object
   EphemerisParameters calculateEphemeris(double ra, double dec, siderealTime) {
 
     double? ha = calcHourAngle(dec); // Calculate hour angle H = ts - alpha
@@ -146,6 +151,9 @@ class AstroCalc {
     double hSet;
     double hCum  = (hour + ((ra-st))/15/1.002737909) % 24;
     bool visible = false;
+
+
+    double height = getHeight(dec,(st -ra))*180/pi;
 
     if (ha==null) { // Circumpolar
       hRise=0;
@@ -156,15 +164,19 @@ class AstroCalc {
       double tsSet  = (st - (ra+ha))/15;
       hRise = hour  - tsRise/1.002737909; 
       hSet = hour - tsSet/1.002737909;
+      if (hRise<0) hRise += 24;
+      if (hSet<0)  hSet  += 24;
       if (hRise<hour && hSet>hour ) {
         visible = true;
       }
     }
 
-    return EphemerisParameters(hRise,hSet,hCum, visible);
+    return EphemerisParameters(hRise,hSet,hCum, visible, height);
 
   }
 
+
+  // Convert string name to HeaverlyBody object
    HeavenlyBody? getObjectName(String object) {
     switch(object) {
       case 'Jupiter':
@@ -183,33 +195,34 @@ class AstroCalc {
     return null;
    } 
 
+
+  // Get object height at a given hour
   double getHeight(double dec, double h) {
     double decRad = dec * pi / 180;
     double latRad = latitude * pi / 180;
     double hRad = h*pi/180;
-    return asin(sin(decRad)*sin(latRad)+cos(decRad)*cos(latRad)*cos(h));
+    return asin(sin(decRad)*sin(latRad)+cos(decRad)*cos(latRad)*cos(hRad));
   }
 
-  Map<int,double> getAzimutalChart(double ra, double dec,double siderealTime) {
-    Map<int,double> coord = {};
-    double? ha = calcHourAngle(dec);
+
+  // Get height for an object at multiple hour, to draw an azimutal chart
+  Map<double,double> getAzimutalChart(double ra, double dec,double siderealTime) {
+    Map<double,double> coord = {};
     double ha1;
     double ha2;
-    double st = siderealTime;print(siderealTime);
-    double timeAtMeridian = (hour + ((ra-st))/15/1.002737909);
+    double st = siderealTime;
 
     ha1 = st - 12;
     ha2 = st + 12;
     double ptr=ha1;
-    print(ra);
-    print(ptr);
-    print('--');
+
     while (ptr<ha2) {
       double hourAngle = (ptr*15 -ra);
-      print(hourAngle);
       double height = getHeight(dec,hourAngle)*180/pi;
-      double h = (hour + ptr/(15*1.002737909));
-      print("$ptr:${ConvertAngle.hourToString(h)};$height");
+      double h = (hour + (ptr-st)/(1.002737909));
+
+      coord[h]=height;
+      print("${ConvertAngle.hourToString(h)};$height");
       ptr+=1;
     }
 

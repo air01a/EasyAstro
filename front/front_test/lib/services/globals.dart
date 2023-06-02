@@ -1,5 +1,6 @@
 import 'package:front_test/models/catalogs.dart'; 
 import 'package:location/location.dart';
+import 'package:front_test/astro/astrocalc.dart';
 
 
 class ServerInfo {
@@ -18,6 +19,7 @@ class ServerInfo {
 class ObjectSelection {
   static final ObjectSelection _singleton = ObjectSelection._internal();
   List<ObservableObject> selection =<ObservableObject>[];
+  AstroCalc? astro;
 
   factory ObjectSelection() {
     return _singleton;

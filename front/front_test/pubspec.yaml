@@ -48,7 +48,7 @@ dependencies:
     git: http://github.com/yangyxd/flutter_picker.git
   shared_preferences: ^2.1.1
   sweph: ^2.10.3+11
-
+  fl_chart: ^0.62.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -33,6 +33,8 @@ class ObservableObject {
   double meridian = 0;
   double rise = 0;
   double set = 0;
+  double height = 0;
+  bool visible=false;
 
   ObservableObject({required this.name, required this.ngc, required this.type, required this.season, required this.magnitude, required this.ra, required this.dec, required this.description, required this.image});
 
@@ -56,7 +58,8 @@ class ObservableObject {
     set = json['set'] ?? -1;
     meridian = json['meridian_time'] ?? -1;
     timeToMeridian=json['timeToMeridian'] ?? 0;
-    
+    height = json['height'];
+    visible = json['visible'];
   }
 
 }

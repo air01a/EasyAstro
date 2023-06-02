@@ -51,7 +51,9 @@ class _ObjectBox extends State<ObjectBox> {
                   Container(
                     width: imageSize,
                     height: imageSize,
+                    
                     decoration: new BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
                                         shape: BoxShape.circle,
                                         image: new DecorationImage(
                                             fit: BoxFit.contain,
@@ -60,7 +62,7 @@ class _ObjectBox extends State<ObjectBox> {
                     )), 
                   Expanded( 
                      child: Container( 
-                        color: Theme.of(context).primaryColor.withOpacity(0.5),
+                        color: Theme.of(context).primaryColor,//.withOpacity(0.5),
                         padding: const EdgeInsets.all(5), 
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
@@ -75,7 +77,7 @@ class _ObjectBox extends State<ObjectBox> {
                      )
                   ),
                   Container(
-                    color: Theme.of(context).primaryColor.withOpacity(0.5),
+                    color: Theme.of(context).primaryColor, //.withOpacity(0.5),
                     child:widget.rating),
                   ServerInfo().connected
                    ? ElevatedButton(

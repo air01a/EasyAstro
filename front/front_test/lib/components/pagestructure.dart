@@ -17,7 +17,8 @@ class PageStructure extends StatelessWidget {
                       Scaffold(
                               appBar: AppBar(title: const Text("Easy Astro")),
                               drawer:AppDrawer() ,
-                              body : Container( 
+                              body : 
+                              /*Container( 
                                   decoration: BoxDecoration( 
                                     image: DecorationImage( 
                                       image: AssetImage
@@ -25,7 +26,8 @@ class PageStructure extends StatelessWidget {
                                       ), 
                                   fit: BoxFit.cover, ), 
                                   ),
-                                  child: body),
+                                  child: body)*/
+                                 Container(color: Theme.of(context).primaryColor ,child:body),
                               bottomNavigationBar : bottom
                           );
               } else {

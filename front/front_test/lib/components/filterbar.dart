@@ -3,10 +3,12 @@ import 'package:front_test/models/catalogs.dart';
 import 'package:front_test/services/globals.dart';
 
 class FilterField {
-  late Function(String) callback;
+  late Function(String?, bool?) callback;
   bool isFilterActive = false;
+  bool onlyVisible = true;
   FocusNode myFocusNode = FocusNode();
   FilterField();
+  String currentSelected='All';
 
   void filterActivate() {
     isFilterActive = ! isFilterActive;
@@ -15,14 +17,14 @@ class FilterField {
     }
   }
 
-  void setCallBack(Function(String) cb) {
+  void setCallBack(Function(String?, bool?) cb) {
     callback = cb;
   }
 
   List<String> getType() {
     Set<String> ret = {};
     List<ObservableObject> results = ObjectSelection().selection;
-
+    ret.add('All');
     for (ObservableObject object in results) {
       ret.add(object.type);
     }    
@@ -32,10 +34,10 @@ class FilterField {
   Widget buildFilterTextField() {
     if (isFilterActive) {
       final values = getType();
-      return Container(
+      return Row(children: [Container(
             margin: EdgeInsets.symmetric(horizontal: 20.0),
             child: DropdownButton<String>(
-            value: values[0], // La valeur sélectionnée dans la liste déroulante
+            value: currentSelected, // La valeur sélectionnée dans la liste déroulante
             items: values.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -44,10 +46,23 @@ class FilterField {
             }).toList(),
             onChanged: (String ?newValue) {
               if (newValue!=null) {
-                callback(newValue);
+                currentSelected=newValue;
+                callback(newValue, null);
               }
             })
-            );
+            ),
+            Text("Only Visible"),
+            Checkbox(
+                  checkColor: Colors.white,
+                  value: onlyVisible,
+                  onChanged: (bool? value) {
+                    
+                              onlyVisible = !onlyVisible;
+    
+                              callback(null, onlyVisible);
+  
+                      }
+        )]);
             
     
       } else {

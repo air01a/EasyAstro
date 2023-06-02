@@ -25,17 +25,21 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   String filterValue = '';
   SearchField sf = SearchField();
   FilterField ff = FilterField();
-
+  bool onlyVisible=true;
 
   void _getNewCatalog() {
-    
-    List<ObservableObject> temp = ObjectSelection().selection;
+    List<ObservableObject> temp = ObjectSelection().selection.toList();
+
+
     if (sf.isSearchActive) {
       temp = temp.where((object)=>object.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
     } 
 
     if (ff.isFilterActive) {
-      temp = temp.where((object)=>object.type.toLowerCase().contains(filterValue.toLowerCase())).toList();
+      if (filterValue.toLowerCase()!='all') temp = temp.where((object)=>object.type.toLowerCase().contains(filterValue.toLowerCase())).toList();
+      if (onlyVisible==true) temp = temp.where((object)=>object.visible==true).toList();
+    } else {
+      temp = temp.where((object)=>object.visible==true).toList();
     }
 
     setState(() {
@@ -51,8 +55,9 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   }
 
 
-  void filter(String value) {
-    filterValue = value;
+  void filter(String? value, bool? visible) {
+    if (value!=null) filterValue = value;
+    if (visible!=null) onlyVisible = visible;
     _getNewCatalog();
   }
 
@@ -88,7 +93,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
       context: context,
       initialTime: _selectedTime,
     );
-    if (picked2 != null && picked2 != _selectedTime) {
+    if (picked2 != null) {
       setState(() {
 
         _selectedTime = picked2;
@@ -103,18 +108,13 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
     String newDate = "${DateFormat("yyyy-MM-dd").format(_selectedDate)} $hour:$min";
     await _checkHelper.updateTime(newDate);
-
-    setState(() {
-      _catalog = ObjectSelection().selection.toList();
-    });
+    print("get new catalog $newDate");
+    _getNewCatalog();
   }
     
   void update(int index, bool value){
     ObjectSelection().selection[index].selected = value;
-
-    setState(() {
-      _catalog  = ObjectSelection().selection.toList();
-    });
+    _getNewCatalog();
   }
 
   @override
@@ -122,10 +122,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     super.initState();
     sf.setCallBack(search);
     ff.setCallBack(filter);
-    setState(() {
-      _catalog  = ObjectSelection().selection.toList();
-    });
-
+    _getNewCatalog();
   }
 
   @override

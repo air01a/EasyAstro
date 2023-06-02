@@ -5,6 +5,7 @@ import 'package:front_test/models/catalogs.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:front_test/components/pagestructure.dart';
 import 'package:front_test/astro/astrocalc.dart';
+import 'package:front_test/components/azimutalgraph.dart';
 
 class ObjectPage extends StatefulWidget { 
   final ObservableObject item; 
@@ -18,6 +19,17 @@ class ObjectPage extends StatefulWidget {
 
 
 class _ObjectPage extends State<ObjectPage> {
+
+  Map<double,double> azimuthalChart = {};
+
+  @override 
+  void initState() {
+    super.initState();
+    if (ObjectSelection().astro != null) {
+      azimuthalChart = ObjectSelection().astro!.getAzimutalChart(widget.item.ra, widget.item.dec, ObjectSelection().astro!.getSiderealTime());
+    }
+  }
+
    @override 
    Widget build(BuildContext context) {
       Image currentImage;
@@ -78,7 +90,8 @@ class _ObjectPage extends State<ObjectPage> {
                                                           size: 48.0
                                                         )
                                       )
-                                      : Container(width: 0, height: 0)
+                                      : Container(width: 0, height: 0),
+                                      AzimutalGraph(data:azimuthalChart),
                                   ], 
                               )
                             )

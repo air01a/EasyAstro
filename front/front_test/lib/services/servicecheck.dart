@@ -61,6 +61,7 @@ class ServiceCheckHelper {
     ApiBaseHelper helper = ApiBaseHelper();
     //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();
+    
     ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().location?.longitude, CurrentLocation().location?.latitude, CurrentLocation().location?.altitude, time);
   }
 
