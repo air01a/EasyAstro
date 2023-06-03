@@ -97,7 +97,7 @@ class _ObjectPage extends State<ObjectPage> {
                                                         )
                                       )
                                       : Container(width: 0, height: 0),
-                                      Container(width: screenWidth*0.8, height: screenWidth*0.4, child : AzimutalGraph(data:azimuthalChart) )
+                                      Container(width: screenWidth*0.8, height: screenWidth*0.4, child : Center(child:AzimutalGraph(data:azimuthalChart)) )
                                       
                                   ], 
                               )

@@ -18,16 +18,19 @@ class PageStructure extends StatelessWidget {
                               appBar: AppBar(title: const Text("Easy Astro")),
                               drawer:AppDrawer() ,
                               body : 
-                              /*Container( 
+                              Container( 
                                   decoration: BoxDecoration( 
+                                    color: Colors.black,
                                     image: DecorationImage( 
+                                      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
+                                      BlendMode.dstATop),
                                       image: AssetImage
                                         ("assets/appimages/background_dark.jpg"
                                       ), 
                                   fit: BoxFit.cover, ), 
                                   ),
-                                  child: body)*/
-                                 Container(color: Theme.of(context).primaryColor ,child:body),
+                                  child: body),
+                               //  Container(color: Theme.of(context).primaryColor ,child:body),
                               bottomNavigationBar : bottom
                           );
               } else {
@@ -38,7 +41,10 @@ class PageStructure extends StatelessWidget {
                                 ), 
                               body : Container( 
                                   decoration: BoxDecoration( 
+                                    color: Colors.black,
                                     image: DecorationImage( 
+                                      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
+                                      BlendMode.dstATop),
                                       image: AssetImage
                                         ("assets/appimages/background_dark.jpg"
                                       ), 

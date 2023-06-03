@@ -34,7 +34,11 @@ class FilterField {
   Widget buildFilterTextField() {
     if (isFilterActive) {
       final values = getType();
-      return Row(children: [Container(
+      return Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            direction: Axis.horizontal,
+            spacing: 5,
+            children: [Container(
             margin: EdgeInsets.symmetric(horizontal: 20.0),
             child: DropdownButton<String>(
             value: currentSelected, // La valeur sélectionnée dans la liste déroulante
@@ -51,7 +55,7 @@ class FilterField {
               }
             })
             ),
-            Text("Only Visible"),
+            Wrap(crossAxisAlignment: WrapCrossAlignment.center,children: [Text("Only Visible"),
             Checkbox(
                   checkColor: Colors.white,
                   value: onlyVisible,
@@ -62,7 +66,7 @@ class FilterField {
                               callback(null, onlyVisible);
   
                       }
-        )]);
+        )])]);
             
     
       } else {
