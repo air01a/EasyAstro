@@ -41,6 +41,12 @@ class _ObjectPage extends State<ObjectPage> {
           currentImage = Image(image:AssetImage(widget.item.image));
           imageSize=150;
       }
+
+      final mediaQueryData = MediaQuery.of(context);
+
+      // Récupère la taille de l'écran en pixels
+      final screenSize = mediaQueryData.size;
+      final screenWidth = screenSize.width;
       
 
       return PageStructure(body: Center(
@@ -56,8 +62,8 @@ class _ObjectPage extends State<ObjectPage> {
                       children: <Widget>[ 
                         Center(child : 
                           Container(
-                              width: 400.0,
-                              height: 400.0,
+                              width: 300.0,
+                              height: 300.0,
                               decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
@@ -91,7 +97,8 @@ class _ObjectPage extends State<ObjectPage> {
                                                         )
                                       )
                                       : Container(width: 0, height: 0),
-                                      AzimutalGraph(data:azimuthalChart),
+                                      Container(width: screenWidth*0.8, height: screenWidth*0.4, child : AzimutalGraph(data:azimuthalChart) )
+                                      
                                   ], 
                               )
                             )

@@ -222,6 +222,9 @@ class IndiOrchestrator:
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
             self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+
+    
+
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
             logger.debug(' SOLVER COORDINATES (RA,DEC, ORIENTATION) : (%f),(%f),(%f)', ps_return['ra'],ps_return['dec'], ps_return['orientation'])
 
