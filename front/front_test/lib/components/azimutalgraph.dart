@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:front_test/astro/astrocalc.dart';
+import 'package:front_test/services/globals.dart';
 
 class AzimutalGraph extends StatefulWidget {
   final Map<double,double> data; 
@@ -39,7 +40,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
         ),
         SizedBox(
           width: 60,
-          height: 34,
+          height: 15  ,
           child: TextButton(
             onPressed: () {
               setState(() {
@@ -47,7 +48,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
               });
             },
             child: Text(
-              'avg',
+              'Height',
               style: TextStyle(
                 fontSize: 12,
                 color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
@@ -88,21 +89,27 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   LineChartData mainData() {
 
     List<FlSpot> tab=[];
-    double minX=0;
+    double minX=1000;
     double maxX=0;
     widget.data.forEach((i, value) {
-      print('index=$i, value=$value');
-      tab.add(FlSpot(i,value));
+      tab.add(FlSpot(i,value.floor()+0.0));
       if (i<minX) minX=i;
       if (i>maxX) maxX=i;
     });
-   
+    
     return LineChartData(
+      rangeAnnotations: RangeAnnotations(
+        verticalRangeAnnotations: [
+          VerticalRangeAnnotation(
+            x1: ObjectSelection().astro!.hour,
+            x2: ObjectSelection().astro!.hour+1,
+            color: Color(0xFF2196F3).withOpacity(0.2),
+          )]),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
         drawHorizontalLine: true,
-        horizontalInterval: 15,
+        horizontalInterval: 30,
         verticalInterval: 15,
         getDrawingHorizontalLine: (value) {
           if (value == 0) {
