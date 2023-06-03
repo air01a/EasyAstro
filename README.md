@@ -1,8 +1,11 @@
 # EasyAstro
 Plan your observations, pilot your telescope, stack your images easily
 This project will permit to plan observation and to pilot a telescope easily, through a responsive web page. 
+Compatible with indi (linux) and astap (windows)
+Use Astap of local Astrometry.net for platesolving.
 
-Current state :
+
+# CurrentState
 FRONT:
 - Display visible messier object at current time
 - Can select messier object to plan an observation night
@@ -10,13 +13,13 @@ FRONT:
 - Can change observation time
 
 
-TODO :
+# Todo
 - Improve front ui 
 - Improve stacking
 - Image processing with front
 - Installation process
 
-#Pictures of current state
+# Screenshot
 
 
 ![Alt text](doc/web.png?raw=true "Web interface")
