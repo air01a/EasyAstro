@@ -21,9 +21,9 @@ TODO :
 
 ![Alt text](doc/web.png?raw=true "Web interface")
 ![Alt text](doc/web2.png?raw=true "Web interface")
-![Alt text](doc/android.png?raw=true "Android interface")
 ![Alt text](doc/android.png?raw=true "Plan your observation")
 ![Alt text](doc/selecthour.png?raw=true "Plan your observation")
 ![Alt text](doc/list.png?raw=true "Plan your observation")
 ![Alt text](doc/server.png?raw=true "Pilot your telescope")
+![Alt text](doc/telescop2.png?raw=true "Pilot your telescope")
 ![Alt text](doc/m97_stacking.png?raw=true "Live Stacking")
