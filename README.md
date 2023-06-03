@@ -9,11 +9,15 @@ FRONT:
 - Can tap long on an object to make a telescope goto
 - Can change observation time
 
-BACK:
-- API for front functionnalities
-- Indi orchestration, goto, plate solve
-
 
 TODO :
-- Improve front ui (filters, save observation plan, ...)
-- Back live  (siril or python ?)
+- Improve front ui 
+- Improve stacking
+- Image processing with front
+- Installation process
+
+#Pictures of current state
+
+
+![Alt text](doc/web.png?raw=true "Web interface")
+![Alt text](doc/web2.png?raw=true "Web interface")
