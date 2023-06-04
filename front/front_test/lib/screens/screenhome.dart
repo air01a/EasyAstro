@@ -52,10 +52,10 @@ class _ScreenHome extends State<ScreenHome> {
   Image getSunImage() {
 Image currentImage;
     if (kIsWeb) {
-            currentImage = Image.network("assets/appimages/sun.jpg", width:200);
+            currentImage = Image.network("assets/appimages/Sun.jpg", width:getSize());
 
         } else {
-            currentImage = Image(image:AssetImage("assets/appimages/sun.jpg"), width: 180);
+            currentImage = Image(image:AssetImage("assets/appimages/Sun.jpg"), width: getSize());
 
         }
 
@@ -119,14 +119,14 @@ Image currentImage;
       displaySun.add(Column(mainAxisSize :MainAxisSize.min,children: displaySunText,));
 
       // Display Position
-      displayLocation.add(Icon(Icons.location_on, size: getSize()/2));
+      displayLocation.add(Container(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2)));
       List<Widget> displayLocationText = [];
       displayLocationText.add(Text("Longitude : ${astro!.longitude}"));
       displayLocationText.add(Text("Latitude : ${astro!.latitude}"));
       displayLocationText.add(Text("Altitude : ${astro!.altitude}"));
       displayLocation.add(Column(mainAxisSize :MainAxisSize.min,children:displayLocationText));
 
-      displayTime.add(Icon(Icons.schedule, size: getSize()/2));
+      displayTime.add(Container(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) );
       List<Widget> displayTimeText = [];
       displayTimeText.add(Text("Date : ${astro!.getDate()}"));
       displayTimeText.add(Text("Hour : ${ConvertAngle.hourToString(astro!.hour)}"));

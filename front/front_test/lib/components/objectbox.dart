@@ -32,19 +32,20 @@ class _ObjectBox extends State<ObjectBox> {
       double imageSize;
       if (kIsWeb) {
           currentImage = Image.network(widget.object.image);
-          imageSize=190;
+          imageSize=200;
       } else {
           currentImage = Image(image:AssetImage(widget.object.image));
-          imageSize=60;
+          imageSize=150;
       }
       Container containerImage=Container(
-        
+      height: 200,  
       decoration: new BoxDecoration(
           color:  getColor(widget.object.visible, widget.object.height),
           shape: BoxShape.circle,
           image: new DecorationImage(
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
           image: currentImage.image,
+          
         )
       ,));
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
