@@ -6,21 +6,24 @@ class RatingBox extends StatefulWidget {
   final bool initialValue; 
   final int index; 
 
-  const RatingBox({super.key, required this.onValueChanged, required this.index, required this.initialValue});
+  RatingBox({super.key, required this.onValueChanged, required this.index, required this.initialValue});
    @override 
-   State<RatingBox> createState() => _RatingBoxState(); 
+   State<RatingBox> createState() => RatingBoxState(); 
 } 
 
-class _RatingBoxState extends State<RatingBox> { 
+class RatingBoxState extends State<RatingBox> { 
   bool _selected = false;
 
-  _RatingBoxState();
+  RatingBoxState();
 
    void _setSelected() {
       setState(() {
-         _selected = _selected == false; 
-          widget.onValueChanged(widget.index, _selected);
-      }); 
+         _selected = _selected == false;
+        widget.onValueChanged(widget.index, _selected);
+
+      });
+
+
    }
 
   @override

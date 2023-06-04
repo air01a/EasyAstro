@@ -26,6 +26,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   SearchField sf = SearchField();
   FilterField ff = FilterField();
   bool onlyVisible=true;
+  Map<String, GlobalKey<RatingBoxState>> mappingRatingBox = {};
 
   void _getNewCatalog() {
     List<ObservableObject> temp = ObjectSelection().selection.toList();
@@ -113,8 +114,13 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   }
     
   void update(int index, bool value){
-    ObjectSelection().selection[index].selected = value;
-    _getNewCatalog();
+    String objectName = _catalog[index].name;
+    ObjectSelection().selection.firstWhere((k) => k.name == objectName ).selected=value;
+    setState(() {
+      _catalog[index].selected = value;
+      mappingRatingBox[_catalog[index].name]?.currentState?.build(context);
+     });
+
   }
 
   @override
@@ -128,7 +134,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   @override
   Widget build(BuildContext context) {
     final bbar = BottomBar();
-
+    mappingRatingBox.clear();
     bbar.addItem(const Icon(Icons.schedule), 'Change Date', _selectDate);
     bbar.addItem(const Icon(Icons.filter_alt), 'Filter', _filter);
     bbar.addItem(const Icon(Icons.search), 'Search', _search);
@@ -143,8 +149,9 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                               child: ListView.builder(
                                     itemCount: _catalog.length,
                                     itemBuilder: (context, index) {
-                                      RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: ObjectSelection().selection[index].selected);
-                                     
+                                      GlobalKey<RatingBoxState> childKey = GlobalKey<RatingBoxState>();
+                                      RatingBox rating = RatingBox(key: childKey, onValueChanged: update, index: index, initialValue:  _catalog[index].selected);
+                                      mappingRatingBox[_catalog[index].name]=childKey;
 
                                       return GestureDetector(
                                         child: ObjectBox(object: _catalog[index], rating : rating),

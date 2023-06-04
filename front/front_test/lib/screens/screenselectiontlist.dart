@@ -23,10 +23,13 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   void update(int index, bool value){
     
     ObjectSelection().selection[service.getObjectIndex(_catalog[index].name)].selected = value;
-
+    if(value==false) _catalog.removeAt(index);
     setState(() {
-      _catalog  = ObjectSelection().selection.where((line) => line.selected == true).toList();
-      _catalog.sort((a, b) => a.timeToMeridian.compareTo(b.timeToMeridian));
+      _catalog.length;
+      //_catalog[index].selected = value;
+      
+      //_catalog  = ObjectSelect;ion().selection.where((line) => line.selected == true).toList();
+      //_catalog.sort((a, b) => a.timeToMeridian.compareTo(b.timeToMeridian));
 
     });
   }
@@ -91,7 +94,9 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     return PageStructure(body: ListView.builder(
         itemCount: _catalog.length,
         itemBuilder: (context, index) {
-          RatingBox rating = RatingBox(onValueChanged: update, index: index, initialValue: _catalog[index].selected);
+
+          RatingBox rating = RatingBox(key: ValueKey(_catalog[index].name), onValueChanged: update, index: index, initialValue: true);
+          //rating.noUpdate=true;
           return GestureDetector(
             child: ObjectBox(object : _catalog[index],  rating : rating), //, onValueChanged: update),
             onTap: () {
