@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.1.1
   sweph: ^2.10.3+11
   fl_chart: ^0.62.0
+  localstore: ^1.3.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
