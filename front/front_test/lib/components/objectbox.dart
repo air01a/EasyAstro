@@ -17,7 +17,15 @@ class ObjectBox extends StatefulWidget {
 }
 
 
+
 class _ObjectBox extends State<ObjectBox> {
+   Color getColor(bool isVisible, double height) {
+    if (!isVisible) return Colors.red.shade800;
+    if (height<20) return Colors.grey.shade800;
+    return Theme.of(context).primaryColor;
+
+
+   }
    @override
    Widget build(BuildContext context) {
       Image currentImage;
@@ -32,6 +40,7 @@ class _ObjectBox extends State<ObjectBox> {
       Container containerImage=Container(
         
       decoration: new BoxDecoration(
+          color:  getColor(widget.object.visible, widget.object.height),
           shape: BoxShape.circle,
           image: new DecorationImage(
           fit: BoxFit.fill,
@@ -44,7 +53,7 @@ class _ObjectBox extends State<ObjectBox> {
          padding: const EdgeInsets.all(2), 
          height: 140, 
          child: Card(
-            color: Theme.of(context).primaryColor,
+            color:  getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor,
             child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                children: <Widget>[ 
@@ -53,7 +62,7 @@ class _ObjectBox extends State<ObjectBox> {
                     height: imageSize,
                     
                     decoration: new BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
+                                        color:  getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor,
                                         shape: BoxShape.circle,
                                         image: new DecorationImage(
                                             fit: BoxFit.contain,
@@ -62,7 +71,7 @@ class _ObjectBox extends State<ObjectBox> {
                     )), 
                   Expanded( 
                      child: Container( 
-                        color: Theme.of(context).primaryColor,//.withOpacity(0.5),
+                        color: getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor,//.withOpacity(0.5),
                         padding: const EdgeInsets.all(5), 
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
@@ -77,7 +86,7 @@ class _ObjectBox extends State<ObjectBox> {
                      )
                   ),
                   Container(
-                    color: Theme.of(context).primaryColor, //.withOpacity(0.5),
+                    color:  getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor, //.withOpacity(0.5),
                     child:widget.rating),
                   ServerInfo().connected
                    ? ElevatedButton(

@@ -7,6 +7,7 @@ import 'package:front_test/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   ServerInfo(); 
   ObjectSelection();
 

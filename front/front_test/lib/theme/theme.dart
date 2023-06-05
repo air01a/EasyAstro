@@ -8,7 +8,6 @@ class theme {
         // Define the default brightness and colors.
         brightness: Brightness.dark,
         primaryColor: Color.fromARGB(140, 1, 7, 10),
-
         // Define the default font family.
         fontFamily: 'Georgia',
 

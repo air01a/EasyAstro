@@ -19,6 +19,8 @@ class PageStructure extends StatelessWidget {
                               drawer:AppDrawer() ,
                               body : 
                               Container( 
+                                height: double.infinity,
+                                width: double.infinity,
                                   decoration: BoxDecoration( 
                                     color: Colors.black,
                                     image: DecorationImage( 
@@ -40,6 +42,8 @@ class PageStructure extends StatelessWidget {
                                     title: Text(title!), 
                                 ), 
                               body : Container( 
+                                height: double.infinity,
+                                width: double.infinity,
                                   decoration: BoxDecoration( 
                                     color: Colors.black,
                                     image: DecorationImage( 

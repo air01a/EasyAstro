@@ -85,6 +85,7 @@ class _ObjectPage extends State<ObjectPage> {
                                     Text("Set : ${ConvertAngle.hourToString(widget.item.set)}"), 
                                     Text("Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"), 
                                     Text("Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
+                                    Text("Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left), 
                                     widget.rating,
                                     ServerInfo().connected
                                         ?ElevatedButton(

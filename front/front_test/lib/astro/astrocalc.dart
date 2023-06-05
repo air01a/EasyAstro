@@ -11,7 +11,6 @@ class AstroCoordinates {
 
 }
 
-
 // Structure for storing rising hour, setting hour, culmination hour and if visible or not given the time of observation
 class EphemerisParameters {
   final double rising;
@@ -39,8 +38,6 @@ class ConvertAngle {
   static degToHour(double deg) {
     double hour = deg / 15;
     return hourToString(hour);
-
-
   }
 }
 
@@ -75,11 +72,15 @@ class AstroCalc {
     asTime = Sweph.swe_julday(year, month, day,hour, CalendarType.SE_GREG_CAL);
   }
 
+  String getDate() {
+    
+    return "${year.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}";
+  }
+
   // Set observation date
   void setDate(int y, int m, int d, double h) {
     year = y; month = m; day = d; hour = h;
     asTime = Sweph.swe_julday(year, month, day,hour, CalendarType.SE_GREG_CAL);
-
   }
 
   // Define position for observer
@@ -97,7 +98,13 @@ class AstroCalc {
     return AstroCoordinates(pos.longitude, pos.latitude, pos.distance);
   }
 
+  int getMoonPhase() {
+    List<double> result=[];
+    final ephemeride = Sweph.swe_pheno_ut(asTime, HeavenlyBody.SE_MOON,SwephFlag.SEFLG_TRUEPOS);
+    print(ephemeride);
+    return (ephemeride[1]*100).toInt();
 
+  }
   // Calculate local sidereal time given utc time and longitude
   double getSiderealTime() {
     int intHour = hour.toInt();

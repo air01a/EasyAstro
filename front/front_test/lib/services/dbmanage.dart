@@ -55,6 +55,7 @@ Future<List<Map<String, dynamic>>> openCatalog(double lon, double lat, double al
 
     astro.setPosition(lon, lat, alt);
     if (time!=null) {
+      print(time);
       final now = DateTime.parse(time);
       int day = now.day;
       int month = now.month;

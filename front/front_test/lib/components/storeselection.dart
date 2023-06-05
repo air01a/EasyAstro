@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:localstore/localstore.dart';
+import 'package:front_test/services/localstorage.dart';
+import 'package:front_test/astro/astrocalc.dart';
+import 'package:front_test/components/pagestructure.dart';
+
+class LoadSelection extends StatefulWidget {
+  const LoadSelection({Key? key, this.title, required this.callback}) : super(key: key);
+  final Function(Map<String,dynamic>) callback;
+  final String? title;
+
+  @override
+  State<LoadSelection> createState() => _LoadSelection();
+}
+
+class _LoadSelection extends State<LoadSelection> {
+  final _db = Localstore.instance;
+  Map<String, dynamic>? _items = <String, dynamic>{};
+  final localStorage = LocalStorage();
+
+
+  @override
+  void initState() {
+    super.initState();
+    localStorage.getAllSelections().then((value)=>{ if (value!=null) setState(() { _items = value;})});
+
+  }
+
+  void onClick(Map<String,dynamic> item){
+    widget.callback(item);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageStructure(
+      body: ListView.builder(
+        itemCount: _items!.keys.length,
+        itemBuilder: (context, index) {
+          final key = _items!.keys.elementAt(index);
+          final item = _items![key]!;
+          return GestureDetector(onTap:() => {onClick(item) },
+          child:Card(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("${item["date"]} - ${ConvertAngle.hourToString(item["hour"])}"),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      localStorage.deleteSelection(key);
+                      _items!.remove(key);
+                    });
+                  })
+              ])
+            ));
+        },
+      ),
+      showDrawer: false,
+       title:"Selection stored"
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+}

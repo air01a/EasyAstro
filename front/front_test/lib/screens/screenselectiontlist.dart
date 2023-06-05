@@ -6,7 +6,10 @@ import 'package:front_test/components/objectbox.dart';
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/components/rating.dart';
 import 'package:front_test/services/servicecheck.dart'; 
-
+import 'package:front_test/components/bottombar.dart'; 
+import 'package:front_test/services/localstorage.dart';
+import 'package:front_test/components/storeselection.dart';
+import 'package:front_test/astro/astrocalc.dart';
 
 class ScreenSelectionList extends StatefulWidget {
   @override
@@ -37,9 +40,53 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     });
   }
 
+  void callback(Map<String,dynamic> selection) {
+    final ls = LocalStorage();
+    setState( () {
+          String newDate = "${selection!['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
+          service.updateTime(newDate).then((value) {
+            List<dynamic> selected = selection["selection"];
+            selected.forEach((element) {
+              ObjectSelection().selection.firstWhere((obj) => obj.name==element).selected=true;
+            });
+             _catalog  = ObjectSelection().selection.where((line) => line.selected == true).toList();
+          });
+        });
+
+  }
+
+  void _load(BuildContext context) {
+    
+     Navigator.push(                                 
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoadSelection(title:'Load planned selection', callback:callback),
+          ),
+        );
+    
+  }
+
+  void _save(BuildContext context) {
+    final ls = LocalStorage();
+    List<String> selected = _catalog.map((object) => object.name).toList();
+    String date =  ObjectSelection().astro!.getDate();
+    double hour = ObjectSelection().astro!.hour;
+    double longitude = ObjectSelection().astro!.longitude;
+    double latitude = ObjectSelection().astro!.latitude;
+    double altitude = ObjectSelection().astro!.altitude;
+    
+    SelectionStructure selection = SelectionStructure(altitude: altitude, date: date, hour: hour, longitude:longitude, latitude:latitude, selected: selected);
+    ls.addSelection(selection);
+  }
+
   @override
   Widget build(BuildContext context) {
  
+    
+    final bbar = BottomBar();
+
+    bbar.addItem(const Icon(Icons.save), 'Save', _save);
+    bbar.addItem(const Icon(Icons.download), 'Load', _load);
 
     return PageStructure(body: ListView.builder(
         itemCount: _catalog.length,
@@ -61,6 +108,6 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
             }
           );
   
-        }));
+        }), bottom: bbar,);
   }
 }

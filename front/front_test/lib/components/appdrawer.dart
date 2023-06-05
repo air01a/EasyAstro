@@ -18,12 +18,21 @@ class AppDrawer extends Drawer{
                       ),
                       ListTile(
                       leading: const Icon(
+                        Icons.home,
+                      ),
+                      title: const Text('Home'),
+                      onTap: () {
+                        //Navigator.pop(context);
+                        Navigator.pushNamed(context, '/home');
+                      },
+                      ),ListTile(
+                      leading: const Icon(
                         Icons.add_task,
                       ),
                       title: const Text('Plan'),
                       onTap: () {
                         //Navigator.pop(context);
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushNamed(context, '/plan');
                       },
                       ),
                       ListTile(
