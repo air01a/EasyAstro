@@ -79,6 +79,7 @@ class AstroCalc {
 
   // Set observation date
   void setDate(int y, int m, int d, double h) {
+    print("call set date");
     year = y; month = m; day = d; hour = h;
     asTime = Sweph.swe_julday(year, month, day,hour, CalendarType.SE_GREG_CAL);
   }
@@ -98,12 +99,22 @@ class AstroCalc {
     return AstroCoordinates(pos.longitude, pos.latitude, pos.distance);
   }
 
-  int getMoonPhase() {
+  List<int> getMoonPhase() {
     List<double> result=[];
     final ephemeride = Sweph.swe_pheno_ut(asTime, HeavenlyBody.SE_MOON,SwephFlag.SEFLG_TRUEPOS);
     print(ephemeride);
-    return (ephemeride[1]*100).toInt();
+ 
 
+        // long-term avg duration 29.530587981 days (coverted to seconds)
+        double lp = 2551442.8015584;
+        DateTime date =  DateTime(year, month, day, 20, 35, 0);
+        // reference point new moon, the new moon at Jan 7th, 1970, 20:35.
+        DateTime newMoon = DateTime(1970, 1, 7, 20, 35, 0);
+        double phase =
+            ((date.millisecondsSinceEpoch - newMoon.millisecondsSinceEpoch) / 1000) % lp;
+        int phase2 = (phase / (24 * 3600)).floor() + 1;
+            print(phase2);
+        return [(ephemeride[1]*100).toInt(),phase2];  
   }
   // Calculate local sidereal time given utc time and longitude
   double getSiderealTime() {

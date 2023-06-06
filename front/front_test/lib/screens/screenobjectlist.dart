@@ -6,6 +6,7 @@ import 'package:front_test/components/objectlist.dart';
 import 'package:front_test/components/objectbox.dart';
 import 'package:front_test/services/globals.dart';
 import 'package:front_test/components/rating.dart'; 
+import 'package:front_test/components/selectdate.dart'; 
 import 'package:intl/intl.dart';
 import 'package:front_test/services/servicecheck.dart';
 import 'package:front_test/components/searchbar.dart';
@@ -76,43 +77,15 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    } else {
-      return; 
+      Map<String,dynamic> newDate = await SelectDate.selectDate(context, _selectedDate, _selectedTime);
+      if (newDate['nopickup']==false) {
+        _selectedDate = newDate['date'];
+        _selectedTime = newDate['time'];   
+       _getNewCatalog();
+
+      }
     }
-
-    final TimeOfDay? picked2 = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked2 != null) {
-      setState(() {
-
-        _selectedTime = picked2;
-      });
-    } else {
-      return; 
-    }
-    
-    String hour = _selectedTime.hour.toString();if (hour.length==1)  hour = "0$hour";
-    String min  = _selectedTime.minute.toString();if (min.length==1) min = "0$min";
-    
-
-    String newDate = "${DateFormat("yyyy-MM-dd").format(_selectedDate)} $hour:$min";
-    await _checkHelper.updateTime(newDate);
-    print("get new catalog $newDate");
-    _getNewCatalog();
-  }
-    
+        
   void update(int index, bool value){
     String objectName = _catalog[index].name;
     ObjectSelection().selection.firstWhere((k) => k.name == objectName ).selected=value;

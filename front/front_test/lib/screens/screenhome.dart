@@ -4,7 +4,7 @@ import 'package:front_test/astro/astrocalc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:front_test/services/globals.dart';
 import 'package:sweph/sweph.dart';
-
+import 'package:front_test/components/selectdate.dart'; 
 class  ScreenHome extends StatefulWidget {
  
 
@@ -13,19 +13,10 @@ class  ScreenHome extends StatefulWidget {
 }
 
 
-  
-  /*Image.asset(
-  "assets/appimages/moon_phase.jpg",
-// move on the X axis to right 10% of the image and 0% on the Y Axis
-   alignment: const Alignment(0.1,0),
-// set fit to none
-   fit: BoxFit.none,
-// use scale to zoom out of the image
-   scale: 2,);
-*/
 class _ScreenHome extends State<ScreenHome> {
-  final astro = ObjectSelection().astro;
-  
+  AstroCalc? astro = ObjectSelection().astro;
+
+
   double getSize() {
     if (kIsWeb) {
       return 200;
@@ -33,18 +24,16 @@ class _ScreenHome extends State<ScreenHome> {
     return 150;
   }
 
-  Image getMoonImage(int percent) {
-    int imageNumber = (percent/7.8+1).toInt(); 
+  Image getMoonImage(int imageNumber) {
     Image currentImage;
+    imageNumber = (imageNumber * 24/28 % 24).toInt();
+
     if (kIsWeb) {
             currentImage = Image.network("assets/appimages/moon$imageNumber.png", width:getSize());
-
         } else {
             currentImage = Image(image:AssetImage("assets/appimages/moon$imageNumber.png"), width: getSize());
 
         }
-
-
     return currentImage;
   }
 
@@ -53,13 +42,9 @@ class _ScreenHome extends State<ScreenHome> {
 Image currentImage;
     if (kIsWeb) {
             currentImage = Image.network("assets/appimages/Sun.jpg", width:getSize());
-
         } else {
             currentImage = Image(image:AssetImage("assets/appimages/Sun.jpg"), width: getSize());
-
         }
-
-
     return currentImage;
 
   }
@@ -87,21 +72,34 @@ Image currentImage;
      
   }
 
+  List<Widget> getTimeText() {
+      List<Widget> display = [];
+      display.add(Text("Date : ${ObjectSelection().astro!.getDate()}"));
+      display.add(Text("Hour : ${ConvertAngle.hourToString(ObjectSelection().astro!.hour)}"));
+      display.add(Text("Sidereal : ${ConvertAngle.hourToString(ObjectSelection().astro!.getSiderealTime())}"));
+      display.add(Text("\nclick to change"));
+      return display;
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> display=[];
-    List<Widget> displaySun=[];
-    List<Widget> displayLocation=[];
-    List<Widget> displayTime=[];    
+    AstroCalc? astro = ObjectSelection().astro;
+  List<Widget> display=[];
+  List<Widget> displaySun=[];
+  List<Widget> displayLocation=[];
+  List<Widget> displayTime=[];  
+  List<Widget> displayTimeText = [];
+    displayTime=[];    
     if (astro!=null) {
 
       // Get moon card with all informations
-      int moonPhase = astro!.getMoonPhase();
+      List<int> moonPhase = astro!.getMoonPhase();
       List<Widget> displayMoon = [];
       AstroCoordinates moon = astro!.getObjectCoord(HeavenlyBody.SE_MOON);
       final ephemeris = astro!.calculateEphemeris(moon.ra, moon.dec, astro!.getSiderealTime());
-      display.add(getMoonImage(moonPhase));
-      displayMoon.add(Text("Illumination : $moonPhase %"));
+      display.add(getMoonImage(moonPhase[1]));
+      displayMoon.add(Text("Illumination : ${moonPhase[0]} %"));
       displayMoon.add(Text("Rise : ${ConvertAngle.hourToString(ephemeris.rising)}"));
       displayMoon.add(Text("Set : ${ConvertAngle.hourToString(ephemeris.setting)}"));
       displayMoon.add(Text("Culmination : ${ConvertAngle.hourToString(ephemeris.culmination)}"));
@@ -126,12 +124,7 @@ Image currentImage;
       displayLocationText.add(Text("Altitude : ${astro!.altitude}"));
       displayLocation.add(Column(mainAxisSize :MainAxisSize.min,children:displayLocationText));
 
-      displayTime.add(Container(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) );
-      List<Widget> displayTimeText = [];
-      displayTimeText.add(Text("Date : ${astro!.getDate()}"));
-      displayTimeText.add(Text("Hour : ${ConvertAngle.hourToString(astro!.hour)}"));
-      displayTimeText.add(Text("Sidereal : ${ConvertAngle.hourToString(astro!.getSiderealTime())}"));
-      displayTime.add(Column(mainAxisSize :MainAxisSize.min,children:displayTimeText));
+      displayTimeText = getTimeText();
     }
     if (display.isEmpty) display.add(Container());
 
@@ -151,8 +144,15 @@ Image currentImage;
                                 getCard(displaySun),
                                 getCard(display),
                                 getCard(displayLocation),
-                                getCard(displayTime)
-                  
+                                getCard([GestureDetector(
+                                    onTap: ()  => { SelectDate.selectDate(context, DateTime.parse(astro!.getDate()), TimeOfDay.fromDateTime(DateTime.parse(astro!.getDate()))).then((value) {
+                                              setState(()  { 
+                          
+                                                    displayTimeText = getTimeText();});})            
+                                     },
+                                      child: Container(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) ),
+                                      Column(mainAxisSize :MainAxisSize.min,children:displayTimeText)]
+                                )
                 ])
    )))));
   }
