@@ -162,13 +162,13 @@ migrate_working_dir/
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-front/front_test/.dart_tool/
-front/front_test/.flutter-plugins
-front/front_test/.flutter-plugins-dependencies
-front/front_test/.packages
-front/front_test/.pub-cache/
-front/front_test/.pub/
-front/front_test/build/
+front/easyastro/.dart_tool/
+front/easyastro/.flutter-plugins
+front/easyastro/.flutter-plugins-dependencies
+front/easyastro/.packages
+front/easyastro/.pub-cache/
+front/easyastro/.pub/
+front/easyastro/build/
 
 # Symbolication related
 app.*.symbols
@@ -177,10 +177,10 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-front/front_test/android/app/debug
-front/front_test/android/app/profile
-front/front_test/android/app/release
-front/front_test/android
-front/front_test/ios
-front/front_test/macos
-front/front_test/windows
+front/easyastro/android/app/debug
+front/easyastro/android/app/profile
+front/easyastro/android/app/release
+front/easyastro/android
+front/easyastro/ios
+front/easyastro/macos
+front/easyastro/windows
