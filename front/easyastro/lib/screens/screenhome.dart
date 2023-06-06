@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/services/globals.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/components/selectdate.dart'; 
+import 'package:easyastro/components/setlocation.dart'; 
 class  ScreenHome extends StatefulWidget {
  
 
@@ -15,7 +16,6 @@ class  ScreenHome extends StatefulWidget {
 
 class _ScreenHome extends State<ScreenHome> {
   AstroCalc? astro = ObjectSelection().astro;
-
 
   double getSize() {
     if (kIsWeb) {
@@ -97,7 +97,7 @@ Image currentImage;
       List<int> moonPhase = astro!.getMoonPhase();
       List<Widget> displayMoon = [];
       AstroCoordinates moon = astro!.getObjectCoord(HeavenlyBody.SE_MOON);
-      final ephemeris = astro!.calculateEphemeris(moon.ra, moon.dec, astro!.getSiderealTime());
+      final ephemeris = astro!.calculateEphemeris(moon.ra, moon.dec, astro.getSiderealTime());
       display.add(getMoonImage(moonPhase[1]));
       displayMoon.add(Text("Illumination : ${moonPhase[0]} %"));
       displayMoon.add(Text("Rise : ${ConvertAngle.hourToString(ephemeris.rising)}"));
@@ -117,7 +117,13 @@ Image currentImage;
       displaySun.add(Column(mainAxisSize :MainAxisSize.min,children: displaySunText,));
 
       // Display Position
-      displayLocation.add(Container(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2)));
+      displayLocation.add(GestureDetector(onTap: (){  Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SetLocation(),
+                ),
+              ); },
+        child: Container(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2))));
       List<Widget> displayLocationText = [];
       displayLocationText.add(Text("Longitude : ${astro!.longitude}"));
       displayLocationText.add(Text("Latitude : ${astro!.latitude}"));

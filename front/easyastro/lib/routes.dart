@@ -8,6 +8,7 @@ import 'package:easyastro/screens/screenselectiontlist.dart';
 import 'package:easyastro/screens/screenconfig.dart';
 import 'package:easyastro/screens/screenhome.dart';
 
+
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
      
       "/" : (BuildContext context) => CheckScreen(), 
@@ -18,4 +19,5 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
       "/capture": (BuildContext context) => ScreenCapture(),
       "/connect": (BuildContext context) => ConnectionPage(),
       "/config": (BuildContext context) => ConfigScreen(),
+
 };
