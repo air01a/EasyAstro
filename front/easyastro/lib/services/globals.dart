@@ -30,7 +30,9 @@ class ObjectSelection {
 
 class CurrentLocation {
   static final CurrentLocation _singleton = CurrentLocation._internal();
-  LocationData? location;
+  double? longitude=0;
+  double? latitude=0;
+  double? altitude=0;
   
   factory CurrentLocation() {
     return _singleton;

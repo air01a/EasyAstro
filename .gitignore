@@ -169,6 +169,9 @@ front/easyastro/.packages
 front/easyastro/.pub-cache/
 front/easyastro/.pub/
 front/easyastro/build/
+front/easyastro/linux/flutter/generated_plugin_registrant.cc
+front/easyastro/linux/flutter/generated_plugins.cmake
+front/easyastro/pubspec.lock
 
 # Symbolication related
 app.*.symbols

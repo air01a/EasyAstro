@@ -6,6 +6,9 @@ import 'package:easyastro/services/globals.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/components/selectdate.dart'; 
 import 'package:easyastro/components/setlocation.dart'; 
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:location/location.dart';
+
 class  ScreenHome extends StatefulWidget {
  
 
@@ -16,6 +19,7 @@ class  ScreenHome extends StatefulWidget {
 
 class _ScreenHome extends State<ScreenHome> {
   AstroCalc? astro = ObjectSelection().astro;
+
 
   double getSize() {
     if (kIsWeb) {
@@ -39,7 +43,7 @@ class _ScreenHome extends State<ScreenHome> {
 
 
   Image getSunImage() {
-Image currentImage;
+    Image currentImage;
     if (kIsWeb) {
             currentImage = Image.network("assets/appimages/Sun.jpg", width:getSize());
         } else {
@@ -81,6 +85,20 @@ Image currentImage;
       return display;
   }
 
+  void setNewLocation(GeoPoint p) {
+    print(p);
+    if (p!=null) {
+
+        CurrentLocation().longitude = p.longitude ;
+        CurrentLocation().latitude = p.latitude;
+        CurrentLocation().altitude = 0;
+        setState(() {
+          astro!.setPosition(p.longitude,p.latitude,0);
+        },);
+        
+        print("change donne");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +135,13 @@ Image currentImage;
       displaySun.add(Column(mainAxisSize :MainAxisSize.min,children: displaySunText,));
 
       // Display Position
-      displayLocation.add(GestureDetector(onTap: (){  Navigator.push(
+      displayLocation.add(GestureDetector(onTap: () async{  var p = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SetLocation(),
+                  builder: (context) => LocationSearchPage(),
                 ),
-              ); },
+              ); 
+              if (p!=null) setNewLocation(p);},
         child: Container(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2))));
       List<Widget> displayLocationText = [];
       displayLocationText.add(Text("Longitude : ${astro!.longitude}"));
