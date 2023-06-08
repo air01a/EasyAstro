@@ -10,6 +10,7 @@ import 'package:easyastro/components/bottombar.dart';
 import 'package:easyastro/services/localstoragehelper.dart';
 import 'package:easyastro/components/storeselection.dart';
 import 'package:easyastro/astro/astrocalc.dart';
+import 'package:easyastro/models/selection.dart';
 
 class ScreenSelectionList extends StatefulWidget {
   @override
