@@ -6,6 +6,8 @@ import 'package:easyastro/services/globals.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/components/selectdate.dart'; 
 import 'package:easyastro/components/setlocation.dart'; 
+import 'package:easyastro/models/weathermodel.dart';
+
 class  ScreenHome extends StatefulWidget {
  
 
@@ -79,6 +81,14 @@ Image currentImage;
       display.add(Text("Sidereal : ${ConvertAngle.hourToString(ObjectSelection().astro!.getSiderealTime())}"));
       display.add(Text("\nclick to change"));
       return display;
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    WeatherModel test = WeatherModel();
+    //test.getLocationWeather(astro!.longitude, astro!.latitude);
   }
 
 

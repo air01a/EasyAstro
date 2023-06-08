@@ -17,7 +17,9 @@ class SelectionStructure {
 
 class LocalStorage {
   final db = Localstore.instance;
-  final collectionName = 'selection';
+  final collectionName;
+  LocalStorage(this.collectionName); 
+
 
   Future<Map<String, dynamic>?> getSelection(String? id) async { 
     return db.collection(collectionName).doc(id).get();

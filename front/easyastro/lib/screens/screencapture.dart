@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/components/pagestructure.dart';
-import 'package:easyastro/services/protocol.dart';
+import 'package:easyastro/services/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/servicecheck.dart';
 import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';
+import 'package:easyastro/services/telescopehelper.dart';
 
 
 class ScreenCapture extends StatefulWidget {
@@ -20,7 +20,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   int i=0;
   final protocol = CommunicationProtocol();
   final TextEditingController _textController = TextEditingController();
-  final ServiceCheckHelper service = ServiceCheckHelper();
+  final TelescopeHelper service = TelescopeHelper(ServerInfo().host);
   final ExpositionSelector expoSelector = ExpositionSelector();
 
   bool _isConfigVisible = false;

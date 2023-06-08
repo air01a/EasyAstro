@@ -5,9 +5,9 @@ import 'package:easyastro/components/objectlist.dart';
 import 'package:easyastro/components/objectbox.dart';  
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/components/rating.dart';
-import 'package:easyastro/services/servicecheck.dart'; 
+import 'package:easyastro/services/locationHelper.dart'; 
 import 'package:easyastro/components/bottombar.dart'; 
-import 'package:easyastro/services/localstorage.dart';
+import 'package:easyastro/services/localstoragehelper.dart';
 import 'package:easyastro/components/storeselection.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 
@@ -18,11 +18,11 @@ class ScreenSelectionList extends StatefulWidget {
 
 class _ScreenSelectionList extends State<ScreenSelectionList> {
   List<ObservableObject> _catalog = <ObservableObject>[];
-  final service = ServiceCheckHelper();
+  final service = LocationHelper();
   
   void update(int index, bool value){
     
-    ObjectSelection().selection[service.getObjectIndex(_catalog[index].name)].selected = value;
+    ObjectSelection().selection[ObservableObjects.getObjectIndex(_catalog[index].name, ObjectSelection().selection)].selected = value;
     if(value==false) _catalog.removeAt(index);
     setState(() {
       _catalog.length;
@@ -44,7 +44,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   }
 
   void callback(Map<String,dynamic> selection) {
-    final ls = LocalStorage();
+    final ls = LocalStorage('selection');
     setState( () {
           String newDate = "${selection!['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
           service.updateTime(newDate).then((value) {
@@ -70,7 +70,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   }
 
   void _save(BuildContext context) {
-    final ls = LocalStorage();
+    final ls = LocalStorage('selection');
     List<String> selected = _catalog.map((object) => object.name).toList();
     String date =  ObjectSelection().astro!.getDate();
     double hour = ObjectSelection().astro!.hour;

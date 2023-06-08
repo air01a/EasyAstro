@@ -7,8 +7,6 @@ import 'package:easyastro/components/objectbox.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/components/rating.dart'; 
 import 'package:easyastro/components/selectdate.dart'; 
-import 'package:intl/intl.dart';
-import 'package:easyastro/services/servicecheck.dart';
 import 'package:easyastro/components/searchbar.dart';
 import 'package:easyastro/components/filterbar.dart';
 
@@ -21,7 +19,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   List<ObservableObject> _catalog=[];
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  ServiceCheckHelper _checkHelper = ServiceCheckHelper();
   String searchValue = '';
   String filterValue = '';
   SearchField sf = SearchField();

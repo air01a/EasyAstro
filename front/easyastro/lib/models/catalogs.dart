@@ -3,6 +3,13 @@ class ObservableObjects {
 
   ObservableObjects();
 
+  static int getObjectIndex(String object, List<ObservableObject> catalog){
+    return catalog.indexWhere((element) =>  element.name == object);
+  }
+
+  static ObservableObject getObjectWithIndex(String object, List<ObservableObject> catalog){
+    return catalog[getObjectIndex(object, catalog)];
+  }
 
   ObservableObjects.fromJson(List<dynamic> json) {
       if (json != null) {

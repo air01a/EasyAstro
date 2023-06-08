@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/persistentdata.dart';
-import 'package:easyastro/services/servicecheck.dart';
+import 'package:easyastro/services/persistentdatahelper.dart';
+import 'package:easyastro/services/telescopeHelper.dart';
 
 class ConnectionPage extends StatefulWidget {
 
@@ -70,7 +70,7 @@ Future<void> _loadSavedIpAddress() async {
                       
                       ServerInfo().host = _server ?? '';
                       localData.saveValue('host', _server??'');
-                      ServiceCheckHelper checkHelper = ServiceCheckHelper();
+                      TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
                       await checkHelper.updateAPILocation();
                       ServerInfo().connected = true;
                       Navigator.pushNamed(context, '/capture');

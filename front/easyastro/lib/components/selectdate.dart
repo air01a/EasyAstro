@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/servicecheck.dart';
+import 'package:easyastro/services/locationHelper.dart';
 import 'package:intl/intl.dart';
 
 class SelectDate {
-static final ServiceCheckHelper _checkHelper = ServiceCheckHelper();
+static final LocationHelper _locationHelper = LocationHelper();
 
 static Future<Map<String,dynamic>> selectDate(BuildContext context, DateTime currentDate, TimeOfDay currentTime) async {
     final DateTime? picked = await showDatePicker(
@@ -29,8 +29,7 @@ static Future<Map<String,dynamic>> selectDate(BuildContext context, DateTime cur
         
 
         String newDate = "${DateFormat("yyyy-MM-dd").format(picked)} $hour:$min";
-        print (newDate);
-        await _checkHelper.updateTime(newDate);
+        await _locationHelper.updateTime(newDate);
 
 
         return {'nopickup':false, 'date':picked, 'time':picked2, 'str':newDate};

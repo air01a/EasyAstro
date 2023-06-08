@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/repositories/observablerepositories.dart';
-import 'package:easyastro/services/servicecheck.dart';
+import 'package:easyastro/services/locationHelper.dart';
 import 'package:location/location.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/components/pagestructure.dart';
@@ -25,7 +25,7 @@ class _CheckScreen extends State<CheckScreen> {
 
   Future<void> _getLocation() async {
     LocationData? locationData;
-    ServiceCheckHelper checkHelper = ServiceCheckHelper();
+    LocationHelper locationHelper = LocationHelper();
     
     
     await AstroCalc.init();
@@ -33,13 +33,13 @@ class _CheckScreen extends State<CheckScreen> {
       _locationData = null; // Afficher le message d'attente
     });
 
-    locationData = await checkHelper.getLocation();
+    locationData = await locationHelper.getLocation();
     CurrentLocation().location = locationData;
     setState(() {
       _locationData = locationData; // Afficher la position GPS
     });
 
-    //await checkHelper.updateAPILocation();
+    //await locationHelper.updateAPILocation();
     setState(() {
       _apiUpdated = true;
     });
