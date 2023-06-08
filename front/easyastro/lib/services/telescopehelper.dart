@@ -18,7 +18,7 @@ class TelescopeHelper {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd 23:mm').format(now);
     await helper.post(server,"/planning/time",{"time": formattedDate});
-    await helper.post(server, "/planning",{"lon": CurrentLocation().location?.longitude, "lat":CurrentLocation().location?.latitude,"height": CurrentLocation().location?.altitude});
+    await helper.post(server, "/planning",{"lon": CurrentLocation().longitude, "lat":CurrentLocation().latitude,"height": CurrentLocation().altitude});
     
   }
 

@@ -53,6 +53,7 @@ android {
         versionName flutterVersionName
         minSdkVersion 19
     }
+    
 
     buildTypes {
         release {

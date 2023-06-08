@@ -7,6 +7,7 @@ import 'package:sweph/sweph.dart';
 import 'package:easyastro/components/selectdate.dart'; 
 import 'package:easyastro/components/setlocation.dart'; 
 import 'package:easyastro/models/weathermodel.dart';
+import 'package:geopoint/geopoint.dart';
 
 class  ScreenHome extends StatefulWidget {
  

@@ -15,7 +15,7 @@ class LocationHelper {
     //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();
     
-    ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().location?.longitude, CurrentLocation().location?.latitude, CurrentLocation().location?.altitude, time);
+    ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().longitude, CurrentLocation().latitude, CurrentLocation().altitude, time);
   }
   
 
