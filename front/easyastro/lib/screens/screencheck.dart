@@ -34,7 +34,13 @@ class _CheckScreen extends State<CheckScreen> {
     });
 
     locationData = await locationHelper.getLocation();
-    CurrentLocation().location = locationData;
+    if (locationData != null)
+    {
+      CurrentLocation().longitude = locationData.longitude;
+      CurrentLocation().latitude = locationData.latitude;
+      CurrentLocation().altitude = locationData.altitude;
+    }
+
     setState(() {
       _locationData = locationData; // Afficher la position GPS
     });
