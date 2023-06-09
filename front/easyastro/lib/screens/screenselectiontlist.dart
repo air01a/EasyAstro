@@ -49,7 +49,8 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     setState( () {
           String newDate = "${selection!['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
           service.updateTime(newDate).then((value) {
-            List<dynamic> selected = selection["selection"];
+
+            List<dynamic> selected = selection["selected"];
             selected.forEach((element) {
               ObjectSelection().selection.firstWhere((obj) => obj.name==element).selected=true;
             });
@@ -80,7 +81,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     double altitude = ObjectSelection().astro!.altitude;
     
     SelectionStructure selection = SelectionStructure(altitude: altitude, date: date, hour: hour, longitude:longitude, latitude:latitude, selected: selected);
-    ls.addSelection(selection);
+    ls.addSelection(selection.toJson());
   }
 
   @override

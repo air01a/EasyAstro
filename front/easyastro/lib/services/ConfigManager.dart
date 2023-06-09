@@ -1,22 +1,29 @@
-import 'package:easyastro/services/localstoragehelper.dart';
-
+import 'package:easyastro/models/configmodel.dart';
+import 'package:easyastro/repositories/configurationrepositories.dart';
 
 class ConfigManager {
   static final ConfigManager _singleton = ConfigManager._internal();
-  final _ls = LocalStorage('Configuration');
-  Map<String, dynamic>? configuration;
-  
+
+  Map<String, ConfigItem>? configuration;
+
+  void loadConfig() async {
+    ConfigurationRepository config = ConfigurationRepository();
+    configuration = await config.loadConfig();
+  }
+
   factory ConfigManager() {
     return _singleton;
   }
 
-  void loadConfig() async {
-    configuration = await _ls.getAllSelections();
+  Iterable<String> getKey() {
+    if (configuration == null)
+      return [];
+    return configuration!.keys;
   }
 
-
   void saveConfig() async {
-
+    ConfigurationRepository config = ConfigurationRepository();
+    if (configuration!=null) config.saveConfig(configuration!);
   }
 
   ConfigManager._internal();

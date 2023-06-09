@@ -23,6 +23,7 @@ class _LoadSelection extends State<LoadSelection> {
   void initState() {
     super.initState();
     localStorage.getAllSelections().then((value)=>{ if (value!=null) setState(() { _items = value;})});
+    
 
   }
 

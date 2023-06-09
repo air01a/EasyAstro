@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart'; 
 import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/ConfigManager.dart';
+
 class AppDrawer extends Drawer{
   const AppDrawer({super.key}); 
 
@@ -44,6 +46,7 @@ class AppDrawer extends Drawer{
                         Navigator.pushNamed(context, '/selection');
                       },
                       ),
+                      if (ConfigManager().configuration?["manageTelescope"]?.value==true)
                       ServerInfo().connected
                         ? ListTile(
                         leading: const Icon(

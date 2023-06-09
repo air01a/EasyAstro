@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/routes.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/theme/theme.dart';
-
-
+import 'package:easyastro/services/ConfigManager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   ServerInfo(); 
   ObjectSelection();
+  ConfigManager();
 
   runApp(const MyApp());
 }

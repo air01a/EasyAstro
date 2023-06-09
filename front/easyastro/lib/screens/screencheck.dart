@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
-
+import 'package:easyastro/services/ConfigManager.dart';
 class CheckScreen extends StatefulWidget {
   @override
   _CheckScreen createState() => _CheckScreen();
@@ -19,6 +19,8 @@ class _CheckScreen extends State<CheckScreen> {
   @override
   void initState() {
     super.initState();
+    
+  ConfigManager().loadConfig();
     _getLocation();
   }
 
@@ -59,7 +61,16 @@ class _CheckScreen extends State<CheckScreen> {
       _catalogUpdated = true;
     });
 
-    await Future.delayed(const Duration(seconds: 0)); // Attendre 3 secondes
+   /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
+    print('#####"');
+    print(ConfigManager().configuration);
+    if (ConfigManager().configuration!=null) {
+      ConfigManager().configuration?["manageTelescope"];
+      print(ConfigManager().getKey());
+      print(ConfigManager().configuration!['manageTelescope']!.value);
+      ConfigManager().configuration!['manageTelescope']!.value = true;
+      ConfigManager().saveConfig();
+    }*/
     Navigator.pushNamed(context, '/home');
     
   }
