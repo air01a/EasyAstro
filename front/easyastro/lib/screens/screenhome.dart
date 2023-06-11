@@ -150,11 +150,11 @@ class _ScreenHome extends State<ScreenHome> {
                 ),
               ); 
               if (p!=null) setNewLocation(p);},
-        child: Container(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2))));
+        child: SizedBox(width: getSize(), child: Icon(Icons.location_on, size: getSize()/2))));
       List<Widget> displayLocationText = [];
-      displayLocationText.add(Text("Longitude : ${astro!.longitude}"));
-      displayLocationText.add(Text("Latitude : ${astro!.latitude}"));
-      displayLocationText.add(Text("Altitude : ${astro!.altitude}"));
+      displayLocationText.add(Text("Longitude : ${astro.longitude}"));
+      displayLocationText.add(Text("Latitude : ${astro.latitude}"));
+      displayLocationText.add(Text("Altitude : ${astro.altitude}"));
       displayLocation.add(Column(mainAxisSize :MainAxisSize.min,children:displayLocationText));
 
       displayTimeText = getTimeText();
@@ -178,12 +178,12 @@ class _ScreenHome extends State<ScreenHome> {
                                 getCard(display),
                                 getCard(displayLocation),
                                 getCard([GestureDetector(
-                                    onTap: ()  => { SelectDate.selectDate(context, DateTime.parse(astro!.getDate()), TimeOfDay.fromDateTime(DateTime.parse(astro!.getDate()))).then((value) {
+                                    onTap: ()  => { SelectDate.selectDate(context, DateTime.parse(astro!.getDate()), TimeOfDay.fromDateTime(DateTime.parse(astro.getDate()))).then((value) {
                                               setState(()  { 
                           
                                                     displayTimeText = getTimeText();});})            
                                      },
-                                      child: Container(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) ),
+                                      child: SizedBox(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) ),
                                       Column(mainAxisSize :MainAxisSize.min,children:displayTimeText)]
                                 )
                 ])

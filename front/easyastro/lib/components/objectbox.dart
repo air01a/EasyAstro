@@ -37,17 +37,7 @@ class _ObjectBox extends State<ObjectBox> {
           currentImage = Image(image:AssetImage(widget.object.image));
           imageSize=150;
       }
-      Container containerImage=Container(
-      height: 200,  
-      decoration: new BoxDecoration(
-          color:  getColor(widget.object.visible, widget.object.height),
-          shape: BoxShape.circle,
-          image: new DecorationImage(
-          fit: BoxFit.cover,
-          image: currentImage.image,
-          
-        )
-      ,));
+
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
       return Container(
         
@@ -62,10 +52,10 @@ class _ObjectBox extends State<ObjectBox> {
                     width: imageSize,
                     height: imageSize,
                     
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                                         color:  getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor,
                                         shape: BoxShape.circle,
-                                        image: new DecorationImage(
+                                        image: DecorationImage(
                                             fit: BoxFit.contain,
                                             image: currentImage.image,
                                         )
@@ -99,7 +89,7 @@ class _ObjectBox extends State<ObjectBox> {
                                                       size: 48.0
                                                     )
                                   )
-                   : Container(width: 0, height: 0)
+                   : const SizedBox(width: 0, height: 0)
                                
                ]
             ), 

@@ -5,10 +5,10 @@ import 'package:easyastro/components/appdrawer.dart';
 class PageStructure extends StatelessWidget {
    final Widget body;
    final Widget? bottom;
-   bool? showDrawer=true;
-   String? title='';
+   final bool? showDrawer;
+   final String? title;
 
-   PageStructure({super.key, required this.body, this.bottom, this.showDrawer=true, this.title});
+   const PageStructure({super.key, required this.body, this.bottom, this.showDrawer=true, this.title});
 
   @override
   Widget build(BuildContext context) {

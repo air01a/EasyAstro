@@ -12,11 +12,11 @@ class ObservableObjects {
   }
 
   ObservableObjects.fromJson(List<dynamic> json) {
-      if (json != null) {
-        json.forEach((v) {
-          results.add(ObservableObject.fromJson(v));
-        });
-      }
+      
+      json.forEach((v) {
+        results.add(ObservableObject.fromJson(v));
+      });
+      
   }
 
   List<ObservableObject> get catalog {

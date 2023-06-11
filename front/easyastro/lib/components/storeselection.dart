@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:localstore/localstore.dart';
 import 'package:easyastro/services/localstoragehelper.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/pagestructure.dart';
@@ -14,7 +13,6 @@ class LoadSelection extends StatefulWidget {
 }
 
 class _LoadSelection extends State<LoadSelection> {
-  final _db = Localstore.instance;
   Map<String, dynamic>? _items = <String, dynamic>{};
   final localStorage = LocalStorage('selection');
 

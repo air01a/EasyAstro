@@ -33,13 +33,10 @@ class _ObjectPage extends State<ObjectPage> {
    @override 
    Widget build(BuildContext context) {
       Image currentImage;
-      double imageSize;
       if (kIsWeb) {
           currentImage = Image.network(widget.item.image);
-          imageSize=400;
       } else {
           currentImage = Image(image:AssetImage(widget.item.image));
-          imageSize=150;
       }
 
       final mediaQueryData = MediaQuery.of(context);
@@ -79,8 +76,8 @@ class _ObjectPage extends State<ObjectPage> {
                               child: Column( 
                                   mainAxisAlignment: MainAxisAlignment.start, 
                                   children: <Widget>[ 
-                                    Container(margin: EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15))), 
-                                    Container(margin: EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.description,textAlign: TextAlign.left,maxLines: 4,)), 
+                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15))), 
+                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.description,textAlign: TextAlign.left,maxLines: 4,)), 
                                     Text("Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
                                     Text("Set : ${ConvertAngle.hourToString(widget.item.set)}"), 
                                     Text("Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"), 
@@ -97,8 +94,8 @@ class _ObjectPage extends State<ObjectPage> {
                                                           size: 48.0
                                                         )
                                       )
-                                      : Container(width: 0, height: 0),
-                                      Container(width: screenWidth*0.8, height: screenWidth*0.4, child : Center(child:AzimutalGraph(data:azimuthalChart)) )
+                                      : const SizedBox(width: 0, height: 0),
+                                      SizedBox(width: screenWidth*0.8, height: screenWidth*0.4, child : Center(child:AzimutalGraph(data:azimuthalChart)) )
                                       
                                   ], 
                               )

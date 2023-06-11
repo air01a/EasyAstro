@@ -14,8 +14,8 @@ class AzimutalGraph extends StatefulWidget {
 
 class _AzimutalGraph extends State<AzimutalGraph> {
   List<Color> gradientColors = [
-    Color(0xFF50E4FF),
-    Color(0xFF2196F3),
+    const Color(0xFF50E4FF),
+    const Color(0xFF2196F3),
   ];
 
   bool showAvg = false;
@@ -61,10 +61,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
+
     Widget text;
 
     text = Text(ConvertAngle.hourToString(value));
@@ -103,7 +100,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           VerticalRangeAnnotation(
             x1: ObjectSelection().astro!.hour,
             x2: ObjectSelection().astro!.hour+1,
-            color: Color(0xFF2196F3).withOpacity(0.2),
+            color: const Color(0xFF2196F3).withOpacity(0.2),
           )]),
       gridData: FlGridData(
         show: true,
@@ -201,13 +198,13 @@ class _AzimutalGraph extends State<AzimutalGraph> {
         horizontalInterval: 1,
         getDrawingVerticalLine: (value) {
           return  FlLine(
-            color: Color(0xff37434d),
+            color: const Color(0xff37434d),
             strokeWidth: 1,
           );
         },
         getDrawingHorizontalLine: (value) {
           return  FlLine(
-            color: Color(0xff37434d),
+            color: const Color(0xff37434d),
             strokeWidth: 1,
           );
         },

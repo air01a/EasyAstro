@@ -79,7 +79,6 @@ class AstroCalc {
 
   // Set observation date
   void setDate(int y, int m, int d, double h) {
-    print("call set date");
     year = y; month = m; day = d; hour = h;
     asTime = Sweph.swe_julday(year, month, day,hour, CalendarType.SE_GREG_CAL);
   }
@@ -100,9 +99,7 @@ class AstroCalc {
   }
 
   List<int> getMoonPhase() {
-    List<double> result=[];
     final ephemeride = Sweph.swe_pheno_ut(asTime, HeavenlyBody.SE_MOON,SwephFlag.SEFLG_TRUEPOS);
-    print(ephemeride);
  
 
         // long-term avg duration 29.530587981 days (coverted to seconds)
@@ -113,7 +110,6 @@ class AstroCalc {
         double phase =
             ((date.millisecondsSinceEpoch - newMoon.millisecondsSinceEpoch) / 1000) % lp;
         int phase2 = (phase / (24 * 3600)).floor() + 1;
-            print(phase2);
         return [(ephemeride[1]*100).toInt(),phase2];  
   }
   // Calculate local sidereal time given utc time and longitude
@@ -240,7 +236,6 @@ class AstroCalc {
       double h = (hour + (ptr-st)/(1.002737909));
 
       coord[h]=height;
-      print("${ConvertAngle.hourToString(h)};$height");
       ptr+=1;
     }
 

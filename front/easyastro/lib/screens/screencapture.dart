@@ -42,7 +42,6 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   void fetchImage() async {
     setState(() {
-      print("Refresh image");
       var rng = Random().nextInt(999999999);
       _imageUrl = "http://${ServerInfo().host}/telescope/last_picture?v=$i.$rng";
       i+=1;
@@ -51,7 +50,6 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   @override
   void dispose() {
-    print("wss closed");
     channel.sink.close();
     super.dispose();
   }
@@ -84,7 +82,7 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   }
 
-  Widget controlButton(bool visible, IconData? icon, double ?left, double ?bottom, double ?right, double ?top, Function(dynamic) ?callback, dynamic ?param) {
+  Widget controlButton(bool visible, IconData? icon, double ?left, double ?bottom, double ?right, double ?top, Function(dynamic) ?callback, dynamic param) {
     if (visible) {
         return Positioned(
         
@@ -113,7 +111,7 @@ class _ScreenCapture extends State<ScreenCapture> {
         ),
       );
     }
-    return Container(width: 0, height: 0);                              
+    return const SizedBox(width: 0, height: 0);                              
   }
 
   void stack(dynamic object) {
@@ -151,7 +149,7 @@ class _ScreenCapture extends State<ScreenCapture> {
                                 children: [
 
                                      InteractiveViewer(
-                                          boundaryMargin: EdgeInsets.all(20.0), // Marge autour de l'image
+                                          boundaryMargin: const EdgeInsets.all(20.0), // Marge autour de l'image
                                           minScale: 0.1, // Échelle minimale de zoom
                                           maxScale: 4.0, // Échelle maximale de zoom
                                           child: Image.network(_imageUrl, gaplessPlayback: true,), // Image à afficher
@@ -169,9 +167,9 @@ class _ScreenCapture extends State<ScreenCapture> {
                                         style: ElevatedButton.styleFrom(
                                              backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
                                         ),
-                                        child: Opacity(
+                                        child: const Opacity(
                                               opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                              child: const Icon(
+                                              child: Icon(
                                                              Icons.display_settings,
                                               )
                                         )

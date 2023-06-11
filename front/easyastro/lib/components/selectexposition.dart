@@ -29,13 +29,11 @@ final  pickerData = '''
 
 
  showExpositionSelector(BuildContext context, Future<void> Function(String) callback) async  {
-      final result = await Picker(
+      await Picker(
         adapter: PickerDataAdapter<String>(pickerData:  const JsonDecoder().convert(pickerData)),
         changeToFirst: true,
         hideHeader: false,
         onConfirm: (Picker picker, List value) {
-          print(value.toString());
-          print(picker.adapter.text);
           callback(picker.getSelectedValues()[0]);
         }
       ).showModal(context); //_scaffoldKey.currentState);

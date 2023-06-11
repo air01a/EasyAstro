@@ -1,5 +1,4 @@
 
-import 'dart:convert';
 import 'package:easyastro/services/api.dart';
 
 
@@ -24,14 +23,13 @@ class WeatherModel {
 
     var url = "/data/2.5/weather";
     var parameters = {'lat':latitude, 'lon': longitude, 'appid':apiKey};
-    print(url);
-    print(weatherHost);
+
     //var url = "/data/3.0/onecall?lat=$latitude&lon=$longitude&exclude={part}&appid=$apiKey";
     /// Get location data
     ApiBaseHelper networkHelper = ApiBaseHelper();
 
     var weatherData = networkHelper.get(weatherHost, url,  ssl:true, queryParameters: parameters);
-    print(weatherData);
+
     return weatherData;
   }
 
