@@ -13,6 +13,8 @@ class ConfigScreen extends StatefulWidget {
 
 class _ConfigScreen extends State<ConfigScreen> {
   final TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
+  bool _isSaveDisabled = true;
+
 
   Future<dynamic> update() async {
     return await checkHelper.getDarkProgession();
@@ -22,7 +24,7 @@ class _ConfigScreen extends State<ConfigScreen> {
   void changeConfigValue(String key,dynamic value) {
     ConfigManager().configuration![key]!.value = value; 
     
-    setState(() {});
+    setState(() { _isSaveDisabled = false ;});
   }
 
 
@@ -54,8 +56,9 @@ class _ConfigScreen extends State<ConfigScreen> {
         configReturn.add(const Divider(height: 3));
       
     });
+
     configReturn.add(Container(height:10));
-    configReturn.add(Center(child: ElevatedButton(child:const Text("Save"), onPressed: () => { ConfigManager().saveConfig() })));
+    configReturn.add(Center(child: ElevatedButton(child:const Text("Save"), onPressed: _isSaveDisabled? null : () { ConfigManager().saveConfig();_isSaveDisabled=true; })));
     return configReturn;
 
   }

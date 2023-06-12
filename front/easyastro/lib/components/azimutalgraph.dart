@@ -63,8 +63,10 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
 
     Widget text;
-
-    text = Text(ConvertAngle.hourToString(value));
+    const style = TextStyle(
+      fontSize: 10,
+    );
+    text = Text(ConvertAngle.hourToString(value), style: style);
     
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -75,7 +77,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 12,
     );
     String text;
     text = (value.toString());
@@ -95,6 +97,51 @@ class _AzimutalGraph extends State<AzimutalGraph> {
     });
     
     return LineChartData(
+      lineTouchData: LineTouchData(
+    enabled: true,
+    touchCallback:
+        (FlTouchEvent event, LineTouchResponse? touchResponse) {
+      // TODO : Utilize touch event here to perform any operation
+    },
+    touchTooltipData: LineTouchTooltipData(
+      tooltipBgColor: Colors.blue,
+      tooltipRoundedRadius: 20.0,
+      showOnTopOfTheChartBoxArea: true,
+      fitInsideHorizontally: true,
+      tooltipMargin: 0,
+      getTooltipItems: (touchedSpots) {
+        return touchedSpots.map(
+          (LineBarSpot touchedSpot) {
+            const textStyle = TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            );
+            return LineTooltipItem(
+              "${ConvertAngle.hourToString(tab[touchedSpot.spotIndex].x)} : ${tab[touchedSpot.spotIndex].y.toStringAsFixed(2)}°",
+              textStyle,
+            );
+          },
+        ).toList();
+      },
+    ),
+    getTouchedSpotIndicator:
+        (LineChartBarData barData, List<int> indicators) {
+      return indicators.map(
+        (int index) {
+          final line = FlLine(
+              color: Colors.grey,
+              strokeWidth: 1,
+              dashArray: [2, 4]);
+          return TouchedSpotIndicatorData(
+            line,
+            FlDotData(show: false),
+          );
+        },
+      ).toList();
+    },
+    getTouchLineEnd: (_, __) => double.infinity
+  ),
       rangeAnnotations: RangeAnnotations(
         verticalRangeAnnotations: [
           VerticalRangeAnnotation(
@@ -142,7 +189,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            interval: 3,
+            interval: 5,
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),
