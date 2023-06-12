@@ -20,8 +20,8 @@ class _CheckScreen extends State<CheckScreen> {
   void initState() {
     super.initState();
     
-  ConfigManager().loadConfig();
-    _getLocation();
+    ConfigManager().loadConfig().then((value) => _getLocation());
+
   }
 
 
@@ -60,7 +60,7 @@ class _CheckScreen extends State<CheckScreen> {
     setState(() {
       _catalogUpdated = true;
     });
-
+    //ConfigManager().loadConfig().then(() => Navigator.pushNamed(context, '/home'));
    /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
     print('#####"');
     print(ConfigManager().configuration);

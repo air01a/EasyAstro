@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/telescopeHelper.dart';
 import 'package:easyastro/components/pagestructure.dart';
-import 'package:easyastro/components/progression.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/services/ConfigManager.dart';
 import 'package:easyastro/models/configmodel.dart';
@@ -34,7 +33,6 @@ class _ConfigScreen extends State<ConfigScreen> {
     cnf.forEach((key, value) {
       ConfigItem ci = value;
 
-      print("${ci.name}:${ci.type}:${ci.value}");
 
       if (ci.type=='checkbox') {
         configReturn.add(Row(
@@ -49,7 +47,7 @@ class _ConfigScreen extends State<ConfigScreen> {
       if (ci.type=='input') {
           configReturn.add(Row(
           children:[ Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child:Text(ci.description))),
-                     Expanded(flex:5,child:Container(alignment: Alignment.centerLeft,child:TextFormField(
+                     Expanded(flex:5,child:Container(alignment: Alignment.centerLeft,child:TextFormField(initialValue: ci.value,
                             onChanged: (value) => changeConfigValue(key, value)
                     ,)))]));
       }
@@ -57,7 +55,7 @@ class _ConfigScreen extends State<ConfigScreen> {
       
     });
     configReturn.add(Container(height:10));
-    configReturn.add(Center(child: ElevatedButton(child:Text("Save"), onPressed: () => { ConfigManager().saveConfig() })));
+    configReturn.add(Center(child: ElevatedButton(child:const Text("Save"), onPressed: () => { ConfigManager().saveConfig() })));
     return configReturn;
 
   }

@@ -35,7 +35,7 @@ class _ObjectBox extends State<ObjectBox> {
           imageSize=200;
       } else {
           currentImage = Image(image:AssetImage(widget.object.image));
-          imageSize=150;
+          imageSize=MediaQuery.of(context).size.width*0.1;
       }
 
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);

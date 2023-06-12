@@ -8,6 +8,8 @@ import 'package:easyastro/components/selectdate.dart';
 import 'package:easyastro/components/setlocation.dart'; 
 import 'package:easyastro/models/weathermodel.dart';
 import 'package:geopoint/geopoint.dart';
+import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/screens/screenweather.dart';
 
 class  ScreenHome extends StatefulWidget {
  
@@ -19,7 +21,8 @@ class  ScreenHome extends StatefulWidget {
 
 class _ScreenHome extends State<ScreenHome> {
   AstroCalc? astro = ObjectSelection().astro;
-
+  dynamic weather;
+  WeatherModel? lWeather=null;
 
   double getSize() {
     if (kIsWeb) {
@@ -53,8 +56,8 @@ class _ScreenHome extends State<ScreenHome> {
 
   }
 
-  Widget getCard(List<Widget> content) {
-    return SizedBox(
+  Widget getCard(List<Widget> content, {Function()? onTap}) {
+    Widget sb= SizedBox(
                 width: 400,
                 height: getSize(),
                 child:Card(
@@ -73,7 +76,19 @@ class _ScreenHome extends State<ScreenHome> {
                               children: content
                             )
               ));
+    if (onTap==null) return sb;
+    return GestureDetector(onTap: onTap, child:sb);
      
+  }
+
+  void gotoWeather() {
+    Navigator.push(
+          
+          context,
+          MaterialPageRoute(
+            builder: (context) => ScreenWeather(),
+          ),
+    );
   }
 
   List<Widget> getTimeText() {
@@ -95,18 +110,39 @@ class _ScreenHome extends State<ScreenHome> {
         setState(() {
           astro!.setPosition(p.longitude,p.latitude,0);
         },);
-        
-        print("change donne");
-    }
+            }
   }
 
   @override
   void initState() {
     super.initState();
-    WeatherModel test = WeatherModel();
-    //test.getLocationWeather(astro!.longitude, astro!.latitude);
+
+    if (ConfigManager()!=null ) {
+
+      String? openWeatherKey = ConfigManager().configuration?["openWeatherKey"]?.value;
+
+      if (openWeatherKey!=null && openWeatherKey.length>0) {
+
+
+      lWeather = WeatherModel(openWeatherKey);
+      
+      lWeather!.getLocationWeather(astro!.longitude, astro!.latitude).then((value) => setState(() => weather = value));
+
+    }
+  }
   }
 
+  List<Widget> getWeather() {
+
+    if ((weather==null) || (lWeather==null)) return [Container(width:0, height:0)];
+    return [Row(children: [
+                    Container(width: getSize(), child: 
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(style: TextStyle(fontSize: getSize()/2), lWeather!.getWeatherIcon(weather["weather"][0]["id"])))),
+                    Text(lWeather!.getMessage(weather["weather"][0]["id"]))
+           ])];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +150,8 @@ class _ScreenHome extends State<ScreenHome> {
   List<Widget> display=[];
   List<Widget> displaySun=[];
   List<Widget> displayLocation=[];
-  List<Widget> displayTime=[];  
   List<Widget> displayTimeText = [];
-    displayTime=[];    
+  
     if (astro!=null) {
 
       // Get moon card with all informations
@@ -161,6 +196,9 @@ class _ScreenHome extends State<ScreenHome> {
     }
     if (display.isEmpty) display.add(Container());
 
+    List<Widget> weatherMap = getWeather();
+
+
     return PageStructure(
       body:Center(
             child: SingleChildScrollView(
@@ -185,7 +223,11 @@ class _ScreenHome extends State<ScreenHome> {
                                      },
                                       child: SizedBox(width: getSize(), child: Icon(Icons.schedule, size: getSize()/2)) ),
                                       Column(mainAxisSize :MainAxisSize.min,children:displayTimeText)]
-                                )
+                                ),
+                                if (weather!=null)
+                                getCard(weatherMap, onTap: gotoWeather)
+                                
+
                 ])
    )))));
   }

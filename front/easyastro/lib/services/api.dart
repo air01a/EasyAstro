@@ -24,7 +24,7 @@ class ApiBaseHelper {
     dynamic responseJson;
     http.Response response;
     try {
-      response = await http.get(getUri(url, host, ssl, queryParameters: queryParameters));
+      response = await http.get(getUri(host, url, ssl, queryParameters: queryParameters));
       responseJson = _returnResponse(response);
     } on SocketException {
 
@@ -37,7 +37,7 @@ class ApiBaseHelper {
 
     dynamic responseJson;
     try {
-      final response = await http.post(getUri(url, host, ssl), headers: <String, String>{
+      final response = await http.post(getUri(host, url, ssl), headers: <String, String>{
                                   'Content-Type': 'application/json',
                                 },body: jsonEncode(body));
       responseJson = _returnResponse(response);
@@ -53,7 +53,7 @@ class ApiBaseHelper {
 
     dynamic responseJson;
     try {
-      final response = await http.put(getUri(url, host, ssl), body: jsonEncode(body));
+      final response = await http.put(getUri(host, url, ssl), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
 
@@ -66,7 +66,7 @@ class ApiBaseHelper {
   Future<dynamic> delete(String host, String url,{ bool? ssl}) async {
     var apiResponse;
     try {
-      final response = await http.delete(getUri(url, host, ssl));
+      final response = await http.delete(getUri(host, url, ssl));
       apiResponse = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

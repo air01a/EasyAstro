@@ -6,7 +6,7 @@ class ConfigManager {
 
   Map<String, ConfigItem>? configuration;
 
-  void loadConfig() async {
+  Future<void> loadConfig() async {
     ConfigurationRepository config = ConfigurationRepository();
     configuration = await config.loadConfig();
   }
