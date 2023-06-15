@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/azimutalgraph.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ObjectPage extends StatefulWidget { 
   final ObservableObject item; 
@@ -76,13 +77,13 @@ class _ObjectPage extends State<ObjectPage> {
                               child: Column( 
                                   mainAxisAlignment: MainAxisAlignment.start, 
                                   children: <Widget>[ 
-                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15))), 
-                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.description,textAlign: TextAlign.left,maxLines: 4,)), 
-                                    Text("Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
-                                    Text("Set : ${ConvertAngle.hourToString(widget.item.set)}"), 
-                                    Text("Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"), 
-                                    Text("Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
-                                    Text("Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left), 
+                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text(widget.item.name, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 15)).tr()), 
+                                    Container(margin: const EdgeInsets.symmetric(vertical: 10.0), child:Text("_${widget.item.name}",textAlign: TextAlign.left,maxLines: 10,).tr()), 
+                                    Text('rise').tr(args:[ConvertAngle.hourToString(widget.item.rise)]), //"Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
+                                    Text('set').tr(args:[ConvertAngle.hourToString(widget.item.set)]), //"Set : ${ConvertAngle.hourToString(widget.item.set)}"), 
+                                    Text('culmination').tr(args: [ConvertAngle.hourToString(widget.item.meridian)]), //"Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"), 
+                                    Text('magnitude', textAlign: TextAlign.left).tr(args: [widget.item.magnitude.toString()]), //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left), 
+                                    Text('current_height', textAlign: TextAlign.left).tr(args:[widget.item.height.toInt().toString()]), //"Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left), 
                                     widget.rating,
                                     ServerInfo().connected
                                         ?ElevatedButton(

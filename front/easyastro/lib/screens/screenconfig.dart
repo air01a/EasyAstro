@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/services/telescopeHelper.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/services/configmanager.dart';
 import 'package:easyastro/models/configmodel.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfigScreen extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _ConfigScreen extends State<ConfigScreen> {
   }
 
   void changeConfigValue(String key,dynamic value) {
-    ConfigManager().configuration![key]!.value = value; 
+    ConfigManager().update(key, value); 
     
     setState(() { _isSaveDisabled = false ;});
   }
@@ -39,7 +39,7 @@ class _ConfigScreen extends State<ConfigScreen> {
       if (ci.type=='checkbox') {
         configReturn.add(Row(
           children:[
-          Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child: Text(ci.description))),
+          Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child: Text(ci.description).tr())),
           Expanded(flex:5, child: Container(alignment: Alignment.centerLeft,child: Checkbox(value: ci.value,
                   onChanged: (value) => changeConfigValue(key, value))))
           
@@ -48,17 +48,41 @@ class _ConfigScreen extends State<ConfigScreen> {
       
       if (ci.type=='input') {
           configReturn.add(Row(
-          children:[ Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child:Text(ci.description))),
+          children:[ Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child:Text(ci.description).tr())),
                      Expanded(flex:5,child:Container(alignment: Alignment.centerLeft,child:TextFormField(initialValue: ci.value,
                             onChanged: (value) => changeConfigValue(key, value)
                     ,)))]));
       }
-        configReturn.add(const Divider(height: 3));
+
+       if (ci.type=='select') {
+
+          configReturn.add(Row(
+          children:[ Expanded(flex: 5, child:Container(margin: EdgeInsets.fromLTRB(10,0,0,0),alignment: Alignment.centerLeft,child:Text(ci.description).tr())),
+                     Expanded(flex:5,child:Container(alignment: Alignment.centerLeft,
+                     child: DropdownButton<String>(
+                            value: ci.value,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            onChanged:  (value) => changeConfigValue(key, value),
+                            items: ci.attributes.map<DropdownMenuItem<String>>((dynamic value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        )
+            ))]));
+      }
+
+
+      configReturn.add(const Divider(height: 3));
       
     });
 
     configReturn.add(Container(height:10));
-    configReturn.add(Center(child: ElevatedButton(child:const Text("Save"), onPressed: _isSaveDisabled? null : () { ConfigManager().saveConfig();_isSaveDisabled=true; })));
+    configReturn.add(Center(child: ElevatedButton(child:const Text("save").tr(), onPressed: _isSaveDisabled? null : () { ConfigManager().saveConfig();setState(() {
+      _isSaveDisabled=true;
+    });})));
     return configReturn;
 
   }

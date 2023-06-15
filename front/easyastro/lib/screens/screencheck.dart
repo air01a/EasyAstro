@@ -5,7 +5,9 @@ import 'package:location/location.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
-import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/services/configmanager.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 class CheckScreen extends StatefulWidget {
   @override
   _CheckScreen createState() => _CheckScreen();
@@ -16,11 +18,39 @@ class _CheckScreen extends State<CheckScreen> {
   bool _apiUpdated=false;
   bool _catalogUpdated = false; 
 
+
+  Future<void> updateDescription() async {
+    ObjectSelection().selection.forEach((element) {
+      element.description = element.name.tr();
+      
+      print(element.description);
+    });
+
+  }
+
+  void updateLocale(String key, dynamic value) async{
+        switch(value) {
+          case('FR'): {await context.setLocale(Locale('fr', 'FR'));print("fr");}
+            break;
+          case('EN'): {await context.setLocale(Locale('en', 'US'));print("en");}
+            break;
+          default : {await context.resetLocale();await updateDescription();} 
+            break;
+        }
+        
+      }
+
   @override
   void initState() {
     super.initState();
     
-    ConfigManager().loadConfig().then((value) => _getLocation());
+    
+
+    ConfigManager().loadConfig().then((value) { 
+      ConfigManager().addCallBack("language",updateLocale);
+      updateLocale("", ConfigManager().configuration!['language']!.value);
+      _getLocation();
+    });
 
   }
 
@@ -60,6 +90,7 @@ class _CheckScreen extends State<CheckScreen> {
     setState(() {
       _catalogUpdated = true;
     });
+    //await Future.delayed(const Duration(seconds:3));
     //ConfigManager().loadConfig().then(() => Navigator.pushNamed(context, '/home'));
    /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
     print('#####"');
@@ -86,15 +117,15 @@ class _CheckScreen extends State<CheckScreen> {
 
                             Center(
                                       child: _locationData != null && _locationData?.latitude!=null && _locationData?.longitude!=null
-                                  ? Text('Position : ${_locationData?.latitude}, ${_locationData?.longitude}, ${_locationData?.altitude}')
-                                  : const Text('Attente de la position GPS...')),
+                                  ? Text('position').tr(args: [_locationData!.latitude.toString(), _locationData!.longitude.toString(), _locationData!.altitude.toString()]) //'Position : ${_locationData?.latitude}, ${_locationData?.longitude}, ${_locationData?.altitude}')
+                                  : const Text('waiting_position').tr()),
                             Center(child: _apiUpdated == false
-                                   ? const Text('Waiting to update position')
-                                   : const Text('API Updated')
+                                   ? const Text('waiting_position').tr()
+                                   : const Text('api_updated').tr()
                             ),
                             Center(child: _apiUpdated == false
-                                   ? const Text('Waiting to update catalog')
-                                   : const Text('catalog Updated')
+                                   ? const Text('wating_catalog').tr()
+                                   : const Text('catalog_updated').tr()
                             ),
                             
           ]));

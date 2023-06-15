@@ -4,6 +4,7 @@ import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/astro/astrocalc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ObjectBox extends StatefulWidget {
     // final Function() onValueChanged;
@@ -68,11 +69,11 @@ class _ObjectBox extends State<ObjectBox> {
                         child: Column( 
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
                            children: <Widget>[ 
-                              Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)), 
-                              Text("Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "), 
-                              Text("Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"), 
-                              Text("Type: ${widget.object.type}"), 
-                              Text("Magnitude: ${widget.object.magnitude.toString()}"), 
+                              Text(widget.object.name, style: const TextStyle(fontWeight: FontWeight.bold)).tr(), 
+                              Text("rise_set").tr(args: [ConvertAngle.hourToString(widget.object.rise), ConvertAngle.hourToString(widget.object.set)]), //"Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "), 
+                              Text("culmination").tr(args:[ConvertAngle.hourToString(widget.object.meridian)]), //"Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"), 
+                              Text("type").tr(args: [widget.object.type.tr()]), //"Type: ${widget.object.type}"), 
+                              Text("magnitude").tr(args:[widget.object.magnitude.toString()]), //"Magnitude: ${widget.object.magnitude.toString()}"), 
                            ], 
                         )
                      )

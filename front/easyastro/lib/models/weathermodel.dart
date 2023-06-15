@@ -72,15 +72,23 @@ class WeatherModel {
     }
   }
 
-  String getMessage(int temp) {
-    if (temp > 25) {
-      return 'It\'s 🍦 time';
-    } else if (temp > 20) {
-      return 'Time for shorts and 👕';
-    } else if (temp < 10) {
-      return 'You\'ll need 🧣 and 🧤';
-    } else {
-      return 'Bring a 🧥 just in case';
-    }
+  String getMessage(int condition) {
+    if (condition < 300) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 400) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 600) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 700) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 800) {
+        return 'not_suitable';
+      } else if (condition == 800) {
+        return 'perfect';
+      } else if (condition <= 804) {
+        return 'not_suitable';
+      } else {
+        return 'idk';
+      }
   }
 }

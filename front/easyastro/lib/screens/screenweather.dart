@@ -3,8 +3,11 @@ import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/models/weathermodel.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/astro/astrocalc.dart';
-import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/services/configmanager.dart';
 import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+
 
 class  ScreenWeather extends StatefulWidget {
   @override
@@ -65,6 +68,6 @@ class _ScreenWeather extends State<ScreenWeather> {
         crossAxisCount: 4,
         children: forecast),
               showDrawer: false,
-              title: "Weather for next days");
+              title: "weather_next_days".tr());
   }
 }

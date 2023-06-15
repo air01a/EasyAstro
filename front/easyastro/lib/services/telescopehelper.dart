@@ -1,9 +1,7 @@
 import 'package:easyastro/services/api.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:intl/intl.dart';
-import 'package:easyastro/repositories/ObservableRepositories.dart';
 import 'package:easyastro/models/catalogs.dart';
-import 'package:easyastro/services/api.dart';
 import 'package:easyastro/services/globals.dart';
 
 class TelescopeHelper {

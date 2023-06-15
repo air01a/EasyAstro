@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/models/catalogs.dart'; 
 import 'package:easyastro/services/globals.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 class FilterField {
   late Function(String?, bool?) callback;
@@ -8,7 +10,7 @@ class FilterField {
   bool onlyVisible = true;
   FocusNode myFocusNode = FocusNode();
   FilterField();
-  String currentSelected='All';
+  String currentSelected='all';
 
   void filterActivate() {
     isFilterActive = ! isFilterActive;
@@ -24,7 +26,7 @@ class FilterField {
   List<String> getType() {
     Set<String> ret = {};
     List<ObservableObject> results = ObjectSelection().selection;
-    ret.add('All');
+    ret.add('all');
     for (ObservableObject object in results) {
       ret.add(object.type);
     }    
@@ -45,7 +47,7 @@ class FilterField {
             items: values.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(value).tr(),
               );
             }).toList(),
             onChanged: (String ?newValue) {
@@ -55,7 +57,7 @@ class FilterField {
               }
             })
             ),
-            Wrap(crossAxisAlignment: WrapCrossAlignment.center,children: [Text("Only Visible"),
+            Wrap(crossAxisAlignment: WrapCrossAlignment.center,children: [Text('only_visible').tr(),
             Checkbox(
                   checkColor: Colors.white,
                   value: onlyVisible,

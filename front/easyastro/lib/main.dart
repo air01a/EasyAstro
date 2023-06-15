@@ -3,15 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/routes.dart';
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/theme/theme.dart';
-import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/services/configmanager.dart';
+import 'package:easy_localization/easy_localization.dart';
+//import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:easyastro/screens/screencheck.dart';
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
+  await WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   ServerInfo(); 
   ObjectSelection();
   ConfigManager();
-
-  runApp(const MyApp());
+/*  if (kIsWeb) {
+   setUrlStrategy(PathUrlStrategy());
+  }*/
+  runApp(EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('fr', 'FR')],
+        path: 'assets/translations', // <-- change the path of the translation files
+        fallbackLocale: const Locale('en', 'US'),
+        child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,8 +32,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           theme:theme.dark(), 
           routes:routes,
+          initialRoute: '/' ,
+          onGenerateRoute: (settings) {
+              return MaterialPageRoute(builder: (_) => CheckScreen());
+            },
         );
       
   }

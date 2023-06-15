@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'; 
 import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/ConfigManager.dart';
+import 'package:easyastro/services/configmanager.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppDrawer extends Drawer{
   const AppDrawer({super.key}); 
@@ -22,7 +23,7 @@ class AppDrawer extends Drawer{
                       leading: const Icon(
                         Icons.home,
                       ),
-                      title: const Text('Home'),
+                      title: const Text('home').tr(),
                       onTap: () {
                         //Navigator.pop(context);
                         Navigator.pushNamed(context, '/home');
@@ -31,7 +32,7 @@ class AppDrawer extends Drawer{
                       leading: const Icon(
                         Icons.add_task,
                       ),
-                      title: const Text('Plan'),
+                      title: const Text('plan').tr(),
                       onTap: () {
                         //Navigator.pop(context);
                         Navigator.pushNamed(context, '/plan');
@@ -41,7 +42,7 @@ class AppDrawer extends Drawer{
                       leading: const Icon(
                         Icons.explore,
                       ),
-                      title: const Text('Selected'),
+                      title: const Text('selected').tr(),
                       onTap: () {
                         Navigator.pushNamed(context, '/selection');
                       },
@@ -52,7 +53,7 @@ class AppDrawer extends Drawer{
                         leading: const Icon(
                           Icons.visibility,
                         ),
-                        title: Text('Observe'),
+                        title: Text('observe').tr(),
                         onTap: () {
                           Navigator.pushNamed(context, '/capture');
                         },
@@ -61,7 +62,7 @@ class AppDrawer extends Drawer{
                         leading: const Icon(
                           Icons.visibility,
                         ),
-                        title: Text('Connect'),
+                        title: Text('connect').tr(),
                         onTap: () {
                           Navigator.pushNamed(context, '/connect');
                         },
@@ -70,7 +71,7 @@ class AppDrawer extends Drawer{
                       leading: const Icon(
                         Icons.settings,
                       ),
-                      title: const Text('Config'),
+                      title: const Text('config').tr(),
                       onTap: () {
                         Navigator.pushNamed(context, '/config');
                       },
@@ -79,7 +80,7 @@ class AppDrawer extends Drawer{
                       leading: const Icon(
                         Icons.power_settings_new,
                       ),
-                      title: const Text('Shutdown'),
+                      title: const Text('shutdown'),
                       onTap: () {
                         Navigator.pushNamed(context, '/shutdown');
                       },
@@ -91,7 +92,7 @@ class AppDrawer extends Drawer{
                         Icons.logout,
                       ),
                       
-                      title: const Text('Quit'),
+                      title: const Text('quit'),
                       onTap: () {
                         Navigator.pushNamed(context, '/');
                       },
