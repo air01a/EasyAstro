@@ -7,7 +7,7 @@ import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';
 import 'package:easyastro/services/telescopehelper.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -82,6 +82,11 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   }
 
+  void close(dynamic object) {
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+
   Widget controlButton(bool visible, IconData? icon, double ?left, double ?bottom, double ?right, double ?top, Function(dynamic) ?callback, dynamic param) {
     if (visible) {
         return Positioned(
@@ -107,7 +112,6 @@ class _ScreenCapture extends State<ScreenCapture> {
                                 size: 48.0
                 )
           )
-          
         ),
       );
     }
@@ -123,21 +127,7 @@ class _ScreenCapture extends State<ScreenCapture> {
     expoSelector.showExpositionSelector(context, service.changeExposition);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments != null) {
-      final Map<String,dynamic> args = arguments as Map<String, String> ;
-      if (args.containsKey('object')) {
-        String newObject = args['object'];
-        if (newObject!=object) {
-          object = args['object'] ;
-          service.changeObject(object);
-          _isStackable = false;
-        }
-      }
-    }
-    
+  Widget webPage() {
     return PageStructure(body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:<Widget>[
@@ -193,4 +183,76 @@ class _ScreenCapture extends State<ScreenCapture> {
   }
 
 
+    Widget mobilePage() {
+      return Stack(
+                                alignment: Alignment.center,
+                                children: [
+
+                                     InteractiveViewer(
+                                          boundaryMargin: const EdgeInsets.all(20.0), // Marge autour de l'image
+                                          minScale: 0.1, // Échelle minimale de zoom
+                                          maxScale: 4.0, // Échelle maximale de zoom
+                                          child: Image.network(_imageUrl, gaplessPlayback: true,), // Image à afficher
+                                    ),
+                                    Positioned(
+                                      top: 0, // Position verticale du bouton par rapport au haut de l'écran
+                                      left: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Action à effectuer lors du clic sur le bouton
+                                          setState(() {
+                                            _isConfigVisible = ! _isConfigVisible;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                             backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
+                                        ),
+                                        child: const Opacity(
+                                              opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
+                                              child: Icon(
+                                                             Icons.display_settings,
+                                              )
+                                        )
+                                        
+                                      ),
+                                    ),
+                                    controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, moveTelescope,0),
+                                    controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, moveTelescope,1),
+                                    controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, moveTelescope,2),
+                                    controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, moveTelescope,3),
+                                    controlButton(_isStackable,Icons.library_add, null, 0, 0, null, stack, object),
+                                    controlButton(_isConfigVisible,Icons.timer, 0, 0, null, null, selectExposition,context),
+                                    controlButton(true,Icons.close, null, null, 0, 0, close,0),
+                                     Positioned(
+                                            left: 10, // Position horizontale du bouton par rapport à la gauche de l'écran
+                                            top : 0,
+                                            child:Material(child:Center(child: SizedBox(width: 400,height:30,child:ScrollableTextField(
+                                                                              controller: _textController,
+                                                                        )))
+                                ))]);
+                  
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null) {
+      final Map<String,dynamic> args = arguments as Map<String, String> ;
+      if (args.containsKey('object')) {
+        String newObject = args['object'];
+        if (newObject!=object) {
+          object = args['object'] ;
+          service.changeObject(object);
+          _isStackable = false;
+        }
+      }
+    }
+    
+
+    if (kIsWeb) {
+      return mobilePage();
+    } else {
+      return mobilePage();
+    }
+  }
 } 

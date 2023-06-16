@@ -32,7 +32,6 @@ Future<void> _loadSavedIpAddress() async {
 
   @override
   Widget build(BuildContext context)  {
-   print("build : $_server");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Connection'),  

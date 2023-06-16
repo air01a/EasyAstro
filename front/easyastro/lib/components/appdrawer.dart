@@ -26,7 +26,7 @@ class AppDrawer extends Drawer{
                       title: const Text('home').tr(),
                       onTap: () {
                         //Navigator.pop(context);
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushReplacementNamed(context, '/home');
                       },
                       ),ListTile(
                       leading: const Icon(
@@ -35,7 +35,7 @@ class AppDrawer extends Drawer{
                       title: const Text('plan').tr(),
                       onTap: () {
                         //Navigator.pop(context);
-                        Navigator.pushNamed(context, '/plan');
+                        Navigator.pushReplacementNamed(context, '/plan');
                       },
                       ),
                       ListTile(
@@ -44,7 +44,7 @@ class AppDrawer extends Drawer{
                       ),
                       title: const Text('selected').tr(),
                       onTap: () {
-                        Navigator.pushNamed(context, '/selection');
+                        Navigator.pushReplacementNamed(context, '/selection');
                       },
                       ),
                       if (ConfigManager().configuration?["manageTelescope"]?.value==true)
@@ -55,7 +55,7 @@ class AppDrawer extends Drawer{
                         ),
                         title: Text('observe').tr(),
                         onTap: () {
-                          Navigator.pushNamed(context, '/capture');
+                          Navigator.pushReplacementNamed(context, '/capture');
                         },
                         )
                         : ListTile(
@@ -64,7 +64,7 @@ class AppDrawer extends Drawer{
                         ),
                         title: Text('connect').tr(),
                         onTap: () {
-                          Navigator.pushNamed(context, '/connect');
+                          Navigator.pushReplacementNamed(context, '/connect');
                         },
                         ),
                       ListTile(
@@ -73,7 +73,7 @@ class AppDrawer extends Drawer{
                       ),
                       title: const Text('config').tr(),
                       onTap: () {
-                        Navigator.pushNamed(context, '/config');
+                        Navigator.pushReplacementNamed(context, '/config');
                       },
                       ), ServerInfo().connected
                       ? ListTile(
@@ -82,7 +82,7 @@ class AppDrawer extends Drawer{
                       ),
                       title: const Text('shutdown'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/shutdown');
+                        Navigator.pushReplacementNamed(context, '/shutdown');
                       },
                       ) 
                       : Container(width: 0, height: 0)
@@ -94,7 +94,7 @@ class AppDrawer extends Drawer{
                       
                       title: const Text('quit'),
                       onTap: () {
-                        Navigator.pushNamed(context, '/');
+                        Navigator.pushReplacementNamed(context, '/');
                       },
                       ),
                     ],
