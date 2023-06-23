@@ -82,6 +82,14 @@ def normalize(image):
         image.set_color_axis_as(2)
         image.data = numpy.uint16(numpy.clip(image.data, 0, I16_BITS_MAX_VALUE))
 
+
+def reduce(image, size):
+    new_width = int(image.shape[1] * (size))
+    new_height = int(image.shape[0] * (size))
+    resized_image = numpy.resize(image, (new_height, new_width))
+
+    return resized_image
+
 def save_jpeg(image, filename):
     
     image.data = (image.data / (((2 ** 16) - 1) / ((2 ** 8) - 1))).astype('uint8')
@@ -91,9 +99,14 @@ def save_jpeg(image, filename):
                         cv2.cvtColor(image.data, cv2_color_conversion_flag),
                         [int(cv2.IMWRITE_JPEG_QUALITY), 100]), ''
 
-def save_to_bytes(image, format):
+def save_to_bytes(image, format, size=1):
     cv2_color_conversion_flag = cv2.COLOR_RGB2BGR if image.is_color() else cv2.COLOR_GRAY2BGR
-    is_success, buffer = cv2.imencode("."+format,image.data)
+    if (size<1):
+        data = numpy.resize(image.data, (int(image.data.shape[0]*size), int(image.data.shape[1]*size)))
+    else:
+        data = image.data
+
+    is_success, buffer = cv2.imencode("."+format,data)
     io_buf = io.BytesIO(buffer)
     return io_buf
 

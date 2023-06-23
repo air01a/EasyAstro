@@ -43,7 +43,7 @@ class _CheckScreen extends State<CheckScreen> {
   @override
   void initState() {
     super.initState();
-    
+    print("hhhaaaa");
     
 
     ConfigManager().loadConfig().then((value) { 

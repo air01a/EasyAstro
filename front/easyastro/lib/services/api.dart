@@ -20,17 +20,22 @@ class ApiBaseHelper {
     return function(host, url,queryParameters);
   }
 
-  Future<dynamic> get(String host, String url, {Map<String,dynamic>? queryParameters,  bool? ssl}) async {
+  Future<dynamic> get(String host, String url, {Map<String,dynamic>? queryParameters,  bool? ssl, bool? binary}) async {
     dynamic responseJson;
     http.Response response;
     try {
       response = await http.get(getUri(host, url, ssl, queryParameters: queryParameters));
-      responseJson = _returnResponse(response);
+      if (binary==null || binary==false) { 
+        responseJson = _returnResponse(response);
+        return responseJson;
+      } else {
+        return response.bodyBytes;
+      }
     } on SocketException {
 
       throw FetchDataException('No Internet connection');
     }
-    return responseJson;
+    
   }
 
   Future<dynamic> post(String host, String url, dynamic body,{ bool? ssl}) async {

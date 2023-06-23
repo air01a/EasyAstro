@@ -8,8 +8,8 @@ from ..dependencies import error, config
 import logging
 from ..models.image import Image
 import os
-from ..imageprocessor.utils import open_fits, open_process_fits, save_jpeg, adapt, normalize, debayer
-from ..imageprocessor.filters import stretch, hot_pixel_remover
+from ..imageprocessor.utils import open_fits, open_process_fits, save_jpeg, adapt, normalize, debayer, save_to_bytes, reduce
+from ..imageprocessor.filters import stretch, stretch, levels
 from ..imageprocessor.align import find_transformation, apply_transformation
 from ..imageprocessor.stack import stack_image
 from datetime import datetime
@@ -26,6 +26,40 @@ logger = logging.getLogger(__name__)
 
 class IndiOrchestrator:
 
+    stretch = 0.18
+    whites = 65535
+    blacks = 1
+    mids = 1
+    contrast = 1
+    r = 1
+    g = 1
+    b = 1
+
+    def process_last_image(self, process=True, size=1):
+        ret = self.last_image.clone()
+        if (self.stretch > 0):
+            stretch(ret,self.stretch)
+        
+        if (process):    
+            levels(ret, self.blacks,self.mids,self.whites, self.contrast, self.r, self.g, self.b)
+    
+        normalize(ret)
+
+        img_bytes = save_to_bytes(ret,'JPG', size)
+        return img_bytes.getvalue()
+
+    def set_image_processing(self, stretch, blacks, midtones, whites, contrast, r, g, b):
+        self.stretch=stretch
+        self.whites = whites
+        self.blacks = blacks
+        self.mids = midtones
+        self.r = r
+        self.g = g
+        self.b = b
+        self.contrast = contrast
+
+    def get_image_processing(self):
+        return {"contrast":self.contrast, "stretch": self.stretch, "whites":self.whites, "blacks":self.blacks, "mids":self.mids, "r":self.r, "g":self.g, "b":self.b}
 
     def signal_handler(self, signal_received, frame):
         self._end = True
@@ -54,6 +88,7 @@ class IndiOrchestrator:
         self.ccd_orientation = 0
         self._end = False
 
+
         self.dark_progress=0
         self.dark_total=0
         self._job_queue = []
@@ -63,6 +98,10 @@ class IndiOrchestrator:
 
         self.mainThread = threading.Thread(target=self._start_main_loop,args=([capture_image]))
         self.mainThread.start()
+
+
+    def setStretch(self, stretch):
+        self.stretch = stretch
 
     def process_job(self):
         if len(self._job_queue)==0:
@@ -107,8 +146,9 @@ class IndiOrchestrator:
                     self.process_job()
 
                 if self.capture_image:
-                    self.last_image = '/tmp/current'+str(i)+'.fits'
+                    #self.last_image = '/tmp/current'+str(i)+'.fits'
                     self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),100)
+                    self.last_image = open_process_fits('/tmp/current'+str(i)+'.fits')
                     self.qout.put('2.SHOOTING IS FINISHED')
                 #image = open_process_fits(self.last_image)
 
@@ -214,15 +254,17 @@ class IndiOrchestrator:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra,dec)
             logger.debug(' --- GOTO FINISHED')
-            self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+            #self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+            
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,gain)
+            self.last_image = open_process_fits('/tmp/platesolve'+str(retry)+'.fits')
             if refresh:
                 self.qout.put('2.SHOOTING IS FINISHED')
 
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
-            self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
-
+            #self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
+            
     
 
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
@@ -302,12 +344,13 @@ class IndiOrchestrator:
                 stack_image(image, stacked, stack, 1)
                 stack += 1
                 stacked = image.clone()
-                stretch(image, 0.18)
+                self.last_image = image.clone()
+                stretch(image, self._stretch)
                 normalize(image)
                 logger.debug(' --- SAVING')
                 save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                self.last_image=working_dir+str(picture)+str(picture)+'.jpg'
+                #self.last_image=working_dir+str(picture)+str(picture)+'.jpg'
                 self.qout.put('2.SHOOTING IS FINISHED')
                 picture += 1
                 if picture % 8 == 0 : 
