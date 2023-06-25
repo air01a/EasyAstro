@@ -8,10 +8,12 @@ import 'package:easyastro/screens/screenselectiontlist.dart';
 import 'package:easyastro/screens/screenconfig.dart';
 import 'package:easyastro/screens/screenhome.dart';
 
+
+import 'package:easyastro/screens/test.dart';
 //import 'package:easyastro/screens/screenprocessimage.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
-  //   "/" : (BuildContext context) => ScreenProcessingImage(),
+    //"/" : (BuildContext context) => Test(),
      "/" : (BuildContext context) => CheckScreen(), 
       "/check" : (BuildContext context) => CheckScreen(),
       "/home" : (BuildContext context) => ScreenHome(),
