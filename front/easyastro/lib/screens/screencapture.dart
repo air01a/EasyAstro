@@ -1,5 +1,5 @@
+import 'package:easyastro/screens/screenprocessimage.dart';
 import 'package:flutter/material.dart';
-import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/services/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:easyastro/services/globals.dart';
@@ -7,7 +7,9 @@ import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';
 import 'package:easyastro/services/telescopehelper.dart';
-
+import 'package:easyastro/components/bottombar.dart'; 
+import 'package:easyastro/components/coloradujstement.dart';
+import 'package:easyastro/services/processingHelper.dart';
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -15,9 +17,11 @@ class ScreenCapture extends StatefulWidget {
 }
 
 class _ScreenCapture extends State<ScreenCapture> {
-  String _imageUrl = '';
+
+  String _imageUrl='';
   String object ="";
   int i=0;
+
   final protocol = CommunicationProtocol();
   final TextEditingController _textController = TextEditingController();
   final TelescopeHelper service = TelescopeHelper(ServerInfo().host);
@@ -25,7 +29,15 @@ class _ScreenCapture extends State<ScreenCapture> {
 
   bool _isConfigVisible = false;
   bool _isStackable = false;
-  final channel = WebSocketChannel .connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
+
+  final channel = WebSocketChannel.connect(Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
+
+
+  final bbar = BottomBar();
+  late RGBAdjustement colorAdjustement ;
+  late StretchAdjustement stretchAdjustement;
+  late LevelAdjustement levelAdjustement;
+  ProcessingHelper processingHelper = ProcessingHelper();
 
   void moveTelescope(dynamic axis) {
     switch(axis) {
@@ -40,13 +52,6 @@ class _ScreenCapture extends State<ScreenCapture> {
     }
   }
 
-  void fetchImage() async {
-    setState(() {
-      var rng = Random().nextInt(999999999);
-      _imageUrl = "http://${ServerInfo().host}/telescope/last_picture?v=$i.$rng";
-      i+=1;
-    });
-  }
 
   @override
   void dispose() {
@@ -57,14 +62,19 @@ class _ScreenCapture extends State<ScreenCapture> {
   @override
   void initState() {
     super.initState();
-    channel.stream.listen((message) {
+    bbar.addItem(const Icon(Icons.timer),'Expo-gain',selectExposition);
+    bbar.addItem(const Icon(Icons.zoom_out_map),'Move',activateMoveTelescope);
+    bbar.addItem(const Icon(Icons.palette ), 'Modify Image', modifyImage);
+
+     
+    channel.stream.listen((message) async {
       // Mettre à jour l'image en allant la chercher sur l'API
       final info = protocol.analyseMessage(message);
       setState(() {
           _textController.text = message + '\n' + _textController.text; // Ajouter une nouvelle ligne
       });
       if (info['refreshImage']) {
-        fetchImage();
+        reloadImage();
       }
       if (info['goto_success']) {
         _setStackable(true);
@@ -72,7 +82,8 @@ class _ScreenCapture extends State<ScreenCapture> {
       
     });
     // Récupérer l'image initiale depuis l'API
-    fetchImage();
+    //fetchImage();
+    reloadImage();
   }
 
   void _setStackable(bool stackable) {
@@ -80,6 +91,24 @@ class _ScreenCapture extends State<ScreenCapture> {
       _isStackable = stackable;
     });
 
+  }
+
+  void close(dynamic object) {
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
+  void modifyImage(dynamic context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenProcessingImage(),
+      ),
+    );
+  }
+
+  void _changeMoveState() {
+    setState(() => _isConfigVisible = ! _isConfigVisible,)
+    ;
   }
 
   Widget controlButton(bool visible, IconData? icon, double ?left, double ?bottom, double ?right, double ?top, Function(dynamic) ?callback, dynamic param) {
@@ -107,7 +136,6 @@ class _ScreenCapture extends State<ScreenCapture> {
                                 size: 48.0
                 )
           )
-          
         ),
       );
     }
@@ -123,6 +151,59 @@ class _ScreenCapture extends State<ScreenCapture> {
     expoSelector.showExpositionSelector(context, service.changeExposition);
   }
 
+  void reloadImage() {
+    var rng = Random().nextInt(999999999);
+    setState(() {
+      _imageUrl = "http://${ServerInfo().host}/telescope/last_picture?v=$i.$rng";
+
+    });
+    i+=1;
+  }
+
+
+
+
+  void activateMoveTelescope(dynamic context) {
+    
+    setState(() {
+      _isConfigVisible = !_isConfigVisible;
+    });
+  }
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Center(child: Scaffold(body: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                    InteractiveViewer(
+                                        boundaryMargin: const EdgeInsets.all(20.0), // Marge autour de l'image
+                                        minScale: 0.1, // Échelle minimale de zoom
+                                        maxScale: 4.0, // Échelle maximale de zoom
+                                        child: Image.network(_imageUrl, gaplessPlayback: true,), // Image à afficher
+                                  ),
+
+                                  controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, moveTelescope,0),
+                                  controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, moveTelescope,1),
+                                  controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, moveTelescope,2),
+                                  controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, moveTelescope,3),
+                                  controlButton(_isStackable,Icons.library_add, null, 0, 0, null, stack, object),
+
+                                  controlButton(true,Icons.close, null, null, 0, 0, close,0),
+                                    Positioned(
+                                          left: 10, // Position horizontale du bouton par rapport à la gauche de l'écran
+                                          top : 0,
+                                          child:Material(child:Center(child: SizedBox(width: 400,height:30,child:ScrollableTextField(
+                                                                            controller: _textController,
+                                                                      )))
+                                    )
+                              )]),
+                          bottomNavigationBar: bbar));
+                  
+  }
+/*
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)?.settings.arguments;
@@ -137,60 +218,7 @@ class _ScreenCapture extends State<ScreenCapture> {
         }
       }
     }
-    
-    return PageStructure(body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:<Widget>[
-              Center(child: Text("Object $object")),
-              Expanded(                               
-                        child: Center(
-                            child : Stack(
-                                alignment: Alignment.center,
-                                children: [
+    return mobilePage();
 
-                                     InteractiveViewer(
-                                          boundaryMargin: const EdgeInsets.all(20.0), // Marge autour de l'image
-                                          minScale: 0.1, // Échelle minimale de zoom
-                                          maxScale: 4.0, // Échelle maximale de zoom
-                                          child: Image.network(_imageUrl, gaplessPlayback: true,), // Image à afficher
-                                    ),
-                                    Positioned(
-                                      top: 0, // Position verticale du bouton par rapport au haut de l'écran
-                                      left: 0, // Position horizontale du bouton par rapport à la gauche de l'écran
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          // Action à effectuer lors du clic sur le bouton
-                                          setState(() {
-                                            _isConfigVisible = ! _isConfigVisible;
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                             backgroundColor: Colors.black.withOpacity(0.5), // Couleur semi-transparente
-                                        ),
-                                        child: const Opacity(
-                                              opacity: 0.5, // Opacité de l'icône (0.0 à 1.0)
-                                              child: Icon(
-                                                             Icons.display_settings,
-                                              )
-                                        )
-                                        
-                                      ),
-                                    ),
-                                    controlButton(_isConfigVisible,Icons.chevron_left, 0, null, null, null, moveTelescope,0),
-                                    controlButton(_isConfigVisible,Icons.expand_less, null, null, null, 0, moveTelescope,1),
-                                    controlButton(_isConfigVisible,Icons.navigate_next, null, null, 0, null, moveTelescope,2),
-                                    controlButton(_isConfigVisible,Icons.keyboard_arrow_down, null, 0, null, null, moveTelescope,3),
-                                    controlButton(_isStackable,Icons.library_add, null, 0, 0, null, stack, object),
-                                    controlButton(_isConfigVisible,Icons.timer, 0, 0, null, null, selectExposition,context),
-                                    
-                                ])
-                        )
-              ),
-              Center(child: ScrollableTextField(
-                controller: _textController,
-              ))             
-    ]));
-  }
-
-
+  }*/
 } 

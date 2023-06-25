@@ -20,7 +20,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   String searchValue = '';
-  String filterValue = '';
+  String filterValue = 'all';
   SearchField sf = SearchField();
   FilterField ff = FilterField();
   bool onlyVisible=true;
@@ -31,11 +31,11 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
 
     if (sf.isSearchActive) {
-      temp = temp.where((object)=>object.name.toLowerCase().contains(searchValue.toLowerCase())).toList();
+      temp = temp.where((object)=>( object.name.toLowerCase().contains(searchValue.toLowerCase()) || object.description.toLowerCase().contains(searchValue.toLowerCase()) )).toList();
     } 
 
     if (ff.isFilterActive) {
-      if (filterValue.toLowerCase()!='all') temp = temp.where((object)=>object.type.toLowerCase().contains(filterValue.toLowerCase())).toList();
+      if (filterValue.toLowerCase()!='all') temp = temp.where((object)=>object.type.toLowerCase()==filterValue.toLowerCase()).toList();
       if (onlyVisible==true) temp = temp.where((object)=>object.visible==true).toList();
     } else {
       temp = temp.where((object)=>object.visible==true).toList();

@@ -59,19 +59,47 @@ def color_balance(image : Image, red : float, green : float, blue: float):
     image.data[2] = image.data[2] * blue
     image.data = numpy.clip(image.data, 0, 2**16 - 1)
 
-def levels(image : Image, black: float, midtones: float, white: float):
+def mix(x, y, a):
+    return x * (1 - a) + y * a
+
+def levels(image : Image, blacks: float, midtones: float, whites: float, contrast: float, r:float, g:float, b:float):
+    degToRad = 0.0174532925
+    avgLumR = 0.5
+    avgLumG = 0.5
+    avgLumB = 0.5
+    lumCoeffR = 0.2125
+    lumCoeffG = 0.7154
+    lumCoeffB = 0.0721
+
+    br = blacks/I16_BITS_MAX_VALUE
+    wr = whites/I16_BITS_MAX_VALUE
+    mr = midtones / I16_BITS_MAX_VALUE
+
+    mr = 1.0 / (1.0 + 2.0 * (mr - 0.5))
+    image.data = I16_BITS_MAX_VALUE * pow((image.data*contrast/I16_BITS_MAX_VALUE)+br*wr, mr)
+    
+    
+    factor = r + g +b
+    image.data[0] = 3*image.data[0]*r / factor
+    image.data[1] = 3*image.data[1]*g / factor
+    image.data[2] = 3*image.data[2]*b / factor
+    image.data.clip(0,I16_BITS_MAX_VALUE)
+
+
+    #invSaturation  = 0
+    #invContrast = 1.0 - contrast
     # mids : 0-2
     # black : int 0-max(int)
     # white : int 0-max(int)
     
     # midtones
-    image.data = I16_BITS_MAX_VALUE * image.data ** (1 / midtones) / I16_BITS_MAX_VALUE ** (1 / midtones)
+    #image.data = I16_BITS_MAX_VALUE * image.data ** (1 / midtones) / I16_BITS_MAX_VALUE ** (1 / midtones)
     # black / white levels
-    image.data = numpy.clip(image.data, black, white)
+    #image.data = numpy.clip(image.data, black, white)
 
-    image.data = numpy.float32(numpy.interp(image.data,
-                                            (image.data.min(), image.data.max()),
-                                            (0, I16_BITS_MAX_VALUE)))
+    #image.data = numpy.float32(numpy.interp(image.data,
+     #                                       (image.data.min(), image.data.max()),
+     #                                       (0, I16_BITS_MAX_VALUE)))
     
 
 

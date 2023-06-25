@@ -1,5 +1,4 @@
 import 'package:easyastro/models/catalogs.dart'; 
-import 'package:location/location.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 
 
@@ -33,6 +32,7 @@ class CurrentLocation {
   double? longitude=0;
   double? latitude=0;
   double? altitude=0;
+  bool timeChanged=false; 
   
   factory CurrentLocation() {
     return _singleton;

@@ -7,9 +7,13 @@ import 'package:easyastro/services/api.dart';
 /// we can get data by location coordinates or city name
 /// N.B there are many other ways of getting weather data through the url
 const weatherHost = 'api.openweathermap.org';
-const apiKey = '89c8569620e5e090818c5e03f427ee79';
+
 
 class WeatherModel {
+  String apiKey;
+
+  WeatherModel(this.apiKey);
+
   Future<dynamic> getCityWeather(String cityName) async {
     var url = '/data/2.5/weather?q=$cityName&appid=$apiKey&units=metric';
     ApiBaseHelper networkHelper = ApiBaseHelper();
@@ -21,9 +25,23 @@ class WeatherModel {
     /// Get location
     /// await for methods that return future
 
-    var url = "/data/2.5/weather";
-    var parameters = {'lat':latitude, 'lon': longitude, 'appid':apiKey};
+    const String url = "/data/2.5/weather";
+    var parameters = {'lat':latitude.toString(), 'lon': longitude.toString(), 'appid':apiKey};
+    //var url = "/data/3.0/onecall?lat=$latitude&lon=$longitude&exclude={part}&appid=$apiKey";
+    /// Get location data
+    ApiBaseHelper networkHelper = ApiBaseHelper();
 
+    var weatherData = networkHelper.get(weatherHost, url,  ssl:true, queryParameters: parameters);
+
+    return weatherData;
+  }
+
+    Future<dynamic> getLocationForecast(double longitude, double latitude) async {
+    /// Get location
+    /// await for methods that return future
+
+    const String url = "/data/2.5/forecast";
+    var parameters = {'lat':latitude.toString(), 'lon': longitude.toString(), 'appid':apiKey};
     //var url = "/data/3.0/onecall?lat=$latitude&lon=$longitude&exclude={part}&appid=$apiKey";
     /// Get location data
     ApiBaseHelper networkHelper = ApiBaseHelper();
@@ -54,15 +72,23 @@ class WeatherModel {
     }
   }
 
-  String getMessage(int temp) {
-    if (temp > 25) {
-      return 'It\'s 🍦 time';
-    } else if (temp > 20) {
-      return 'Time for shorts and 👕';
-    } else if (temp < 10) {
-      return 'You\'ll need 🧣 and 🧤';
-    } else {
-      return 'Bring a 🧥 just in case';
-    }
+  String getMessage(int condition) {
+    if (condition < 300) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 400) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 600) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 700) {
+        return 'absolutly_not_suitable';
+      } else if (condition < 800) {
+        return 'not_suitable';
+      } else if (condition == 800) {
+        return 'perfect';
+      } else if (condition <= 804) {
+        return 'not_suitable';
+      } else {
+        return 'idk';
+      }
   }
 }

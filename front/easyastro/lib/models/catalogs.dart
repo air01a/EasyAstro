@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 class ObservableObjects {
   List<ObservableObject> results = <ObservableObject>[];
 
@@ -51,7 +53,7 @@ class ObservableObject {
 
     ra = json['RA deg'] ?? 0;
     dec = json['DEC deg'] ?? 0;
-    description = json['description'] ?? 'N/A';
+    description = tr("_$name") ?? 'N/A';
 
     image = json['Image'] ?? '';
     if (json['Magnitude'] is String) {

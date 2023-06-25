@@ -20,24 +20,29 @@ class ApiBaseHelper {
     return function(host, url,queryParameters);
   }
 
-  Future<dynamic> get(String host, String url, {Map<String,dynamic>? queryParameters,  bool? ssl}) async {
+  Future<dynamic> get(String host, String url, {Map<String,dynamic>? queryParameters,  bool? ssl, bool? binary}) async {
     dynamic responseJson;
     http.Response response;
     try {
-      response = await http.get(getUri(url, host, ssl, queryParameters: queryParameters));
-      responseJson = _returnResponse(response);
+      response = await http.get(getUri(host, url, ssl, queryParameters: queryParameters));
+      if (binary==null || binary==false) { 
+        responseJson = _returnResponse(response);
+        return responseJson;
+      } else {
+        return response.bodyBytes;
+      }
     } on SocketException {
 
       throw FetchDataException('No Internet connection');
     }
-    return responseJson;
+    
   }
 
   Future<dynamic> post(String host, String url, dynamic body,{ bool? ssl}) async {
 
     dynamic responseJson;
     try {
-      final response = await http.post(getUri(url, host, ssl), headers: <String, String>{
+      final response = await http.post(getUri(host, url, ssl), headers: <String, String>{
                                   'Content-Type': 'application/json',
                                 },body: jsonEncode(body));
       responseJson = _returnResponse(response);
@@ -53,7 +58,7 @@ class ApiBaseHelper {
 
     dynamic responseJson;
     try {
-      final response = await http.put(getUri(url, host, ssl), body: jsonEncode(body));
+      final response = await http.put(getUri(host, url, ssl), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
 
@@ -66,7 +71,7 @@ class ApiBaseHelper {
   Future<dynamic> delete(String host, String url,{ bool? ssl}) async {
     var apiResponse;
     try {
-      final response = await http.delete(getUri(url, host, ssl));
+      final response = await http.delete(getUri(host, url, ssl));
       apiResponse = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

@@ -1,6 +1,3 @@
-import 'package:easyastro/models/catalogs.dart';
-import 'package:easyastro/services/api.dart';
-import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:easyastro/repositories/ObservableRepositories.dart';
 import 'package:easyastro/services/globals.dart';
@@ -11,10 +8,10 @@ class LocationHelper {
 
 
 
-  Future<void> updateTime(String time) async {
+  Future<void> updateTime(String time, {bool changeDate = true}) async {
     //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();
-    
+    CurrentLocation().timeChanged=changeDate;
     ObjectSelection().selection = await catalog.fetchCatalogList(CurrentLocation().longitude, CurrentLocation().latitude, CurrentLocation().altitude, time);
   }
   

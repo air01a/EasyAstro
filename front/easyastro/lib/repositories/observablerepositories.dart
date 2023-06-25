@@ -1,5 +1,4 @@
 import 'package:easyastro/models/catalogs.dart';
-import 'package:easyastro/services/api.dart';
 import 'package:easyastro/services/dbmanage.dart';
 
 class ObservableRepository {

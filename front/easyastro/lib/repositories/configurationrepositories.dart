@@ -1,9 +1,12 @@
 
 import 'package:easyastro/services/localstoragehelper.dart';
 import 'package:easyastro/models/configmodel.dart';
+
 class ConfigurationRepository {
-  Map<String, ConfigItem> defaultConfig = {'manageTelescope':ConfigItem('manageTelescope', 'Manage telescope', 'checkbox', false, []),
-                                           'openWeatherKey':ConfigItem('openWeatherKey', 'OpenWeather api key', 'input', "", [])};
+  Map<String, ConfigItem> defaultConfig = {'manageTelescope':ConfigItem('manageTelescope', 'manage_telescope', 'checkbox', false, []),
+                                           'openWeatherKey':ConfigItem('openWeatherKey', 'ow_api_key', 'input', "", []),
+                                           'imageRatio':ConfigItem('Image ratio when edit', 'image_ratio', 'input', "0.5", []),
+                                           'language':ConfigItem('Language', 'language', 'select','system',['system','FR','EN'])};
   final _ls = LocalStorage('Configuration');
 
   Future<Map<String,ConfigItem>> loadConfig() async {
@@ -23,11 +26,12 @@ class ConfigurationRepository {
     } else {
       result = defaultConfig;
     }
+
     return result;
   }
 
   Future<void> saveConfig(Map<String, ConfigItem> config) async {
-    print(config);
+
       _ls.addSelection(config, id:'main');
   }
 }

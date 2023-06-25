@@ -45,7 +45,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   }
 
   void callback(Map<String,dynamic> selection) {
-    final ls = LocalStorage('selection');
+
     setState( () {
           String newDate = "${selection!['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
           service.updateTime(newDate).then((value) {

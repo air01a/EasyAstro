@@ -4,7 +4,8 @@ import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/services/globals.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 
 double raToDouble(String ra) {
 
@@ -66,7 +67,7 @@ Future<List<Map<String, dynamic>>> openCatalog(double lon, double lat, double al
     double st = astro.getSiderealTime();
 
     ObjectSelection().astro = astro;
-    Map<String,String> descriptions = await getDescription('en');
+    //Map<String,String> descriptions = await getDescription('en');
     var result = await rootBundle.loadString(
       "assets/data/deepsky.lst",
     );
@@ -107,7 +108,7 @@ Future<List<Map<String, dynamic>>> openCatalog(double lon, double lat, double al
 
               data['rise'] = ephemeris.rising;
               data['set']  = ephemeris.setting;
-              data['description'] = descriptions[data['NAME']];
+              //data['description'] = descriptions[data['NAME']];
 
               data['visible'] = ephemeris.visible;
               if (sunIsVisible && data['NAME']!='Moon') data['visible'] = false;
@@ -124,3 +125,5 @@ Future<List<Map<String, dynamic>>> openCatalog(double lon, double lat, double al
     ObservableObjects.fromJson(jsonData).catalog;
     return jsonData;
   }
+
+

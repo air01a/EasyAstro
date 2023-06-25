@@ -22,6 +22,7 @@ class BottomBar extends StatelessWidget {
     /// BottomNavigationBar is automatically set to type 'fixed'
     /// when there are three of less items
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       onTap:  (int index) {
           callback[index](context);
       },

@@ -62,14 +62,19 @@ class AstroCalc {
     ]);
   }
 
-  // Constructor
-  AstroCalc() {
+
+  void setCurrentTime(){
     final now = DateTime.now();
     day = now.day;
     month = now.month;
     year = now.year;
     hour = now.hour + now.minute/60 + now.second / 3600;
     asTime = Sweph.swe_julday(year, month, day,hour, CalendarType.SE_GREG_CAL);
+  }
+
+  // Constructor
+  AstroCalc() {
+    setCurrentTime();
   }
 
   String getDate() {

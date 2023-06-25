@@ -248,15 +248,15 @@ def fits_to_png2(filename):
 from ..imageprocessor.utils import normalize, open_fits, debayer, save_to_bytes, adapt
 from ..imageprocessor.filters import hot_pixel_remover, stretch, levels
 
-def fits_to_png(filename):
+def fits_to_png(filename, stretchp, blacks, mids, whites):
     img = open_fits(filename)
     hot_pixel_remover(img)
     debayer(img)
     adapt(img)
 
-    levels(img, 1,1,65535)
+    levels(img, blacks,mids,whites)
     
-    stretch(img,0.18)
+    stretch(img,stretchp)
     normalize(img)
     img_bytes = save_to_bytes(img,'PNG')
     return img_bytes.getvalue()
