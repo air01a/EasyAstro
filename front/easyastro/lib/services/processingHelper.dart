@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:easyastro/services/globals.dart';
 import 'package:easyastro/services/api.dart';
