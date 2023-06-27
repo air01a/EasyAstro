@@ -23,16 +23,15 @@ class _CheckScreen extends State<CheckScreen> {
     ObjectSelection().selection.forEach((element) {
       element.description = element.name.tr();
       
-      print(element.description);
     });
 
   }
 
   void updateLocale(String key, dynamic value) async{
         switch(value) {
-          case('FR'): {await context.setLocale(Locale('fr', 'FR'));print("fr");}
+          case('FR'): {await context.setLocale(Locale('fr', 'FR'));}
             break;
-          case('EN'): {await context.setLocale(Locale('en', 'US'));print("en");}
+          case('EN'): {await context.setLocale(Locale('en', 'US'));}
             break;
           default : {await context.resetLocale();await updateDescription();} 
             break;
@@ -43,9 +42,6 @@ class _CheckScreen extends State<CheckScreen> {
   @override
   void initState() {
     super.initState();
-    print("hhhaaaa");
-    
-
     ConfigManager().loadConfig().then((value) { 
       ConfigManager().addCallBack("language",updateLocale);
       updateLocale("", ConfigManager().configuration!['language']!.value);

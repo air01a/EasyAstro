@@ -100,13 +100,17 @@ def save_jpeg(image, filename):
                         [int(cv2.IMWRITE_JPEG_QUALITY), 100]), ''
 
 def save_to_bytes(image, format, size=1):
-    cv2_color_conversion_flag = cv2.COLOR_RGB2BGR if image.is_color() else cv2.COLOR_GRAY2BGR
-    if (size<1):
-        data = numpy.resize(image.data, (int(image.data.shape[0]*size), int(image.data.shape[1]*size)))
-    else:
-        data = image.data
 
-    is_success, buffer = cv2.imencode("."+format,data)
+    image.data = (image.data / (((2 ** 16) - 1) / ((2 ** 8) - 1))).astype('uint8')
+    cv2_color_conversion_flag = cv2.COLOR_RGB2BGR if image.is_color() else cv2.COLOR_GRAY2BGR
+    if size <1:
+        width = int(image.data.shape[1] * size)
+        height = int(image.data.shape[0] * size)
+        dim = (width, height)
+        image.data = cv2.resize(image.data, dim, interpolation = cv2.INTER_AREA)
+
+    is_success, buffer = cv2.imencode("."+format,cv2.cvtColor(image.data, cv2_color_conversion_flag))
+   
     io_buf = io.BytesIO(buffer)
     return io_buf
 

@@ -191,7 +191,7 @@ class _LevelAdjustement extends State<LevelAdjustement> {
                         const Text("Midtones"),
                         Slider(
                           min:0,
-                          max:255,
+                          max:2,
                           label: 'Midtones',
                           value: midtones,
                           onChanged: (double value) {setState(() => midtones=value); },

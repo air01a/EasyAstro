@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/persistentdatahelper.dart';
 import 'package:easyastro/services/telescopeHelper.dart';
 

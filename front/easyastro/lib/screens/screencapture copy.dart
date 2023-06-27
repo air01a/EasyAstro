@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/services/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';

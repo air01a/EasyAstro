@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/selectexposition.dart';
 import 'package:easyastro/services/telescopehelper.dart';
 import 'package:easyastro/components/bottombar.dart'; 
@@ -63,7 +63,7 @@ class _Test extends State<Test> {
   }
 
   void changeProcessing() async {
-    processingHelper.changeProcessingParameters(imageHelper.black.toInt(), imageHelper.white.toInt(), imageHelper.midtones.toInt(), imageHelper.stretch, imageHelper.r, imageHelper.g, imageHelper.b, imageHelper.contrast);
+    processingHelper.changeProcessingParameters(imageHelper.black.toInt(), imageHelper.white.toInt(), imageHelper.midtones, imageHelper.stretch, imageHelper.r, imageHelper.g, imageHelper.b, imageHelper.contrast);
   }
 
   void changeRGB(double r, double g, double b) {

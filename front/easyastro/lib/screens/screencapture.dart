@@ -10,6 +10,8 @@ import 'package:easyastro/services/telescopehelper.dart';
 import 'package:easyastro/components/bottombar.dart'; 
 import 'package:easyastro/components/coloradujstement.dart';
 import 'package:easyastro/services/processingHelper.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -52,6 +54,35 @@ class _ScreenCapture extends State<ScreenCapture> {
     }
   }
 
+  void showConfirmationDialog(String object, String current)  {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("current_task").tr(args: [current]),
+          content: Text('confirm switch').tr(args:[object]),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Action lorsque l'utilisateur confirme
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                service.changeObject(object);
+                _isStackable = false;
+              },
+              child: Text('confirm').tr(),
+            ),
+            TextButton(
+              onPressed: () {
+                // Action lorsque l'utilisateur annule
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+              },
+              child: Text('cancel').tr(),
+            ),
+          ],
+        );
+      },
+    );
+}
 
   @override
   void dispose() {
@@ -62,9 +93,9 @@ class _ScreenCapture extends State<ScreenCapture> {
   @override
   void initState() {
     super.initState();
-    bbar.addItem(const Icon(Icons.timer),'Expo-gain',selectExposition);
-    bbar.addItem(const Icon(Icons.zoom_out_map),'Move',activateMoveTelescope);
-    bbar.addItem(const Icon(Icons.palette ), 'Modify Image', modifyImage);
+    bbar.addItem(const Icon(Icons.timer),'expo-gain'.tr(),selectExposition);
+    bbar.addItem(const Icon(Icons.zoom_out_map),'move'.tr(),activateMoveTelescope);
+    bbar.addItem(const Icon(Icons.palette ), 'modify_image'.tr(), modifyImage);
 
      
     channel.stream.listen((message) async {
@@ -83,8 +114,38 @@ class _ScreenCapture extends State<ScreenCapture> {
     });
     // Récupérer l'image initiale depuis l'API
     //fetchImage();
+    
+   
     reloadImage();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null) {
+      final Map<String,dynamic> args = arguments as Map<String, String> ;
+      if (args.containsKey('object')) {
+
+        String newObject = args['object'];
+        service.getCurrentObject().then((value) {
+          if (value == 'IDLE')
+          {
+            service.changeObject(newObject);
+            _isStackable = false;
+          } else {
+            if (newObject != value) {
+                  WidgetsBinding.instance?.addPostFrameCallback((_) async {
+                      showConfirmationDialog(newObject, value);
+                  });           
+
+            }
+          }
+        },);
+        
+      }
+    }
+}
 
   void _setStackable(bool stackable) {
     setState(() {
@@ -175,6 +236,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   @override
   Widget build(BuildContext context) {
 
+    
     return Center(child: Scaffold(body: Stack(
                               alignment: Alignment.center,
                               children: [

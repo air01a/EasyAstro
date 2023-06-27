@@ -1,5 +1,5 @@
 
-import 'package:easyastro/services/api.dart';
+import 'package:easyastro/services/network/api.dart';
 
 
 

@@ -42,7 +42,6 @@ def hot_pixel_remover(image: Image):
 
     if not image.is_color():
         means = _neighbors_average(image.data)
-        print(means)
         #if means!=0:
         try:
             image.data = numpy.where(image.data / means > HOT_PIXEL_RATIO, means, image.data)
@@ -63,21 +62,25 @@ def mix(x, y, a):
     return x * (1 - a) + y * a
 
 def levels(image : Image, blacks: float, midtones: float, whites: float, contrast: float, r:float, g:float, b:float):
-    degToRad = 0.0174532925
+    '''degToRad = 0.0174532925
     avgLumR = 0.5
     avgLumG = 0.5
     avgLumB = 0.5
     lumCoeffR = 0.2125
     lumCoeffG = 0.7154
     lumCoeffB = 0.0721
+    
 
     br = blacks/I16_BITS_MAX_VALUE
     wr = whites/I16_BITS_MAX_VALUE
     mr = midtones / I16_BITS_MAX_VALUE
 
+   
+
     mr = 1.0 / (1.0 + 2.0 * (mr - 0.5))
-    image.data = I16_BITS_MAX_VALUE * pow((image.data*contrast/I16_BITS_MAX_VALUE)+br*wr, mr)
-    
+    print(br, wr, mr)
+    image.data = I16_BITS_MAX_VALUE * pow(((image.data*contrast/I16_BITS_MAX_VALUE)+br)*wr, mr)
+
     
     factor = r + g +b
     image.data[0] = 3*image.data[0]*r / factor
@@ -85,22 +88,34 @@ def levels(image : Image, blacks: float, midtones: float, whites: float, contras
     image.data[2] = 3*image.data[2]*b / factor
     image.data.clip(0,I16_BITS_MAX_VALUE)
 
+'''
 
     #invSaturation  = 0
     #invContrast = 1.0 - contrast
     # mids : 0-2
     # black : int 0-max(int)
     # white : int 0-max(int)
-    
-    # midtones
-    #image.data = I16_BITS_MAX_VALUE * image.data ** (1 / midtones) / I16_BITS_MAX_VALUE ** (1 / midtones)
-    # black / white levels
-    #image.data = numpy.clip(image.data, black, white)
 
-    #image.data = numpy.float32(numpy.interp(image.data,
-     #                                       (image.data.min(), image.data.max()),
-     #                                       (0, I16_BITS_MAX_VALUE)))
-    
+    min = image.data.min()
+    max = image.data.max()
+    median = max - min
+
+    if midtones <= 0:
+        midtones = 0.1
+    # midtones
+    image.data = I16_BITS_MAX_VALUE *((((image.data-min)/median - 0.5) * contrast + 0.5)  * median + min ) ** (1 / midtones) / I16_BITS_MAX_VALUE ** (1 / midtones)
+    #black / white levels
+    image.data = numpy.clip(image.data, blacks, whites)
+
+    image.data = numpy.float32(numpy.interp(image.data,
+                                            (min, max),
+                                            (0, I16_BITS_MAX_VALUE)))
+    image.data[0] = image.data[0] * r
+    image.data[1] = image.data[1] * g
+    image.data[2] = image.data[2] * b
+
+    image.data = numpy.clip(image.data, 0, 2**16 - 1)
+
 
 
 def gammaCorrection(img_data, gamma):

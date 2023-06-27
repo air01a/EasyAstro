@@ -9,8 +9,12 @@ class ObservableObjects {
     return catalog.indexWhere((element) =>  element.name == object);
   }
 
-  static ObservableObject getObjectWithIndex(String object, List<ObservableObject> catalog){
-    return catalog[getObjectIndex(object, catalog)];
+  static ObservableObject? getObjectWithIndex(String object, List<ObservableObject> catalog){
+    int index = getObjectIndex(object, catalog);
+    if (index<0) {
+      return null;
+    }
+    return catalog[index];
   }
 
   ObservableObjects.fromJson(List<dynamic> json) {

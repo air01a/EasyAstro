@@ -11,6 +11,7 @@ class Coord(BaseModel):
 class StarCoord(BaseModel):
     ra: float
     dec: float
+    object: str
 
 class Exposition(BaseModel):
     exposition: str = Field(description="Exposure time in sec, str format : 0.01, 3, ...")

@@ -70,7 +70,6 @@ class ASCOMPilot():
         self.camera.StartExposure(exposure,openshutter)
         while not self.camera.ImageReady:
             time.sleep(0.1)
-        print(len(self.camera.ImageArray), len(self.camera.ImageArray[0]))
         image = self.camera.ImageArray
         rotated_image = np.rot90(image, k=1)
         

@@ -3,7 +3,7 @@ import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/components/objectlist.dart';
 import 'package:easyastro/components/objectbox.dart';  
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/rating.dart';
 import 'package:easyastro/services/locationHelper.dart'; 
 import 'package:easyastro/components/bottombar.dart'; 

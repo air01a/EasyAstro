@@ -34,17 +34,20 @@ class IndiOrchestrator:
     r = 1
     g = 1
     b = 1
+    currentOperation='IDLE'
 
     def process_last_image(self, process=True, size=1):
         ret = self.last_image.clone()
+        
         if (self.stretch > 0):
+            print("stretch")
             stretch(ret,self.stretch)
         
         if (process):    
             levels(ret, self.blacks,self.mids,self.whites, self.contrast, self.r, self.g, self.b)
-    
+            print("pocess")
+        
         normalize(ret)
-
         img_bytes = save_to_bytes(ret,'JPG', size)
         return img_bytes.getvalue()
 
@@ -81,7 +84,7 @@ class IndiOrchestrator:
 
         self.processing = False
         self.stacking = False
-        self.last_image='./static/noimage.jpg'
+        self.last_image=None
         self.last_image_processed=None
         self.lock = threading.Lock()
         self.exposition = None
@@ -110,16 +113,22 @@ class IndiOrchestrator:
         job = self._job_queue.pop()
         if job['action']=='move_to':
             logger.debug('+++ JOB MOVE TO %f,%f'%(job['ra'],job['dec']))
-            self._move_to(job['ra'],job['dec'],job['solver'])
+            self.currentOperation = 'MOVE TO %s' % job['object']
+            self._move_to(job['ra'],job['dec'],job['solver'], job['object'])
         elif job['action']=='stack':
             logger.debug('+++ JOB STACK %f,%f'%(job['ra'],job['dec']))
+            self.currentOperation = 'STACKING %s' % job['object']
             self._stack(job['ra'],job['dec'])
         elif job['action']=='move_to_short':
             logger.debug('+++ JOB MOVE TO SHORT %f,%f'%(job['ra'],job['dec']))
             self._move_short(job['ra'],job['dec'])
         elif job['action']=='take_dark':
             logger.debug('+++ JOB TAKE DARK')
+            self.currentOperation = 'TAKING DARK'
             self._take_dark()
+
+    def getCurrentOperation(self):
+        return self.currentOperation
 
     def shutdown(self):
         self._end = True
@@ -179,8 +188,8 @@ class IndiOrchestrator:
     def take_picture(self, exposure: int, gain: int):
         self.indi.take_picture('/tmp/exposure.fits', exposure, gain,)
 
-    def move_to(self, ra : float, dec: float, solver : bool = True):
-        self._job_queue.append({'action':'move_to','ra':ra,'dec':dec, 'solver':solver})
+    def move_to(self, ra : float,  dec: float, obj: str, solver : bool = True):
+        self._job_queue.append({'action':'move_to','ra':ra,'dec':dec, 'solver':solver, 'object':obj})
         return error.no_error()
     
     def move_short(self, axis1: float, axis2 : float):
@@ -236,7 +245,7 @@ class IndiOrchestrator:
         return exposition
 
 
-    def _move_to(self, ra: float, dec : float, solver : bool, refresh : bool = True):
+    def _move_to(self, ra: float, dec : float, solver : bool, object : str = '', refresh : bool = True):
         if not solver:
             self._move_short(ra,dec)
             return
@@ -286,6 +295,7 @@ class IndiOrchestrator:
                     self.qout.put('3.GOTO FINISHED')
                     logger.debug('++++ GOTO FINISHED')
                     self._operating = False
+                    self.currentOperation = 'TRACKING %s' % object 
                     self.lock.release()
                     return 
             else:
@@ -298,15 +308,16 @@ class IndiOrchestrator:
         self.last_error = error.ERROR_GOTO_FAILED
         self._operating = False
         self.qout.put('4.GOTO FAILED')
+        self.currentOperation = 'IDLE'
         self.lock.release()
 
-    def stack(self, ra : float, dec : float):
-        self._job_queue.append({'action':'stack','ra':ra,'dec':dec})
+    def stack(self, ra : float, dec : float, obj: str):
+        self._job_queue.append({'action':'stack','ra':ra,'dec':dec,'object':obj})
 
     def stop_stacking(self):
         self.stacking = False
 
-    def _stack(self, ra : float, dec : float):
+    def _stack(self, ra : float, dec : float, object: str):
         if self._operating:
             self._operating = False
         self.lock.acquire()
@@ -356,6 +367,7 @@ class IndiOrchestrator:
                 if picture % 8 == 0 : 
                     logger.debug(' --- MOVE TO FOR REALIGN')
                     self.lock.release()
-                    self._move_to(ra, dec,True, False)
+                    self._move_to(ra, dec,True, object, False)
                     self.lock.acquire()
         self.lock.release()
+        self.currentOperation = 'IDLE'

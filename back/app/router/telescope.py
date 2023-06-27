@@ -21,7 +21,7 @@ telescope = telescope.IndiOrchestrator(True)
 
 @router.post("/goto/")   
 def goto(coord : Coordinates.StarCoord):
-    return telescope.move_to(coord.ra, coord.dec)
+    return telescope.move_to(coord.ra, coord.dec, coord.object)
 
 @router.post("/processing/")   
 def processing(processing : ImageProcessing):
@@ -42,6 +42,10 @@ def picture(exposure: int, gain: int):
 @router.get('/status')
 async def get_status():
     return telescope.processing
+
+@router.get('/operation')
+async def get_status():
+    return telescope.getCurrentOperation()
 
 @router.get('/last_picture')
 def last_picture(process: bool = True, size: float = 1):
@@ -68,7 +72,7 @@ def get_dark_progress():
 
 @router.post('/stacking')
 def stacking(coord : Coordinates.StarCoord):
-    telescope.stack(coord.ra, coord.dec)
+    telescope.stack(coord.ra, coord.dec, coord.object)
 
 @router.post('/exposition')
 def exposition(exposition : Exposition):

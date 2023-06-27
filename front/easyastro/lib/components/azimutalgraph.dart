@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:easyastro/astro/astrocalc.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 
 class AzimutalGraph extends StatefulWidget {
   final Map<double,double> data; 
