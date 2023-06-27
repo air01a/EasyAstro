@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/components/pagestructure.dart';
-import 'package:easyastro/services/protocolHelper.dart';
+import 'package:easyastro/services/network/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';
-import 'package:easyastro/services/telescopehelper.dart';
+import 'package:easyastro/services/telescope/telescopehelper.dart';
 
 
 class ScreenCapture extends StatefulWidget {

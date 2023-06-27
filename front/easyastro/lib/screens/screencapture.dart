@@ -1,15 +1,15 @@
 import 'package:easyastro/screens/screenprocessimage.dart';
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/protocolHelper.dart';
+import 'package:easyastro/services/network/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/scrollabletextfield.dart';
 import 'dart:math';
 import 'package:easyastro/components/selectexposition.dart';
-import 'package:easyastro/services/telescopehelper.dart';
+import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easyastro/components/bottombar.dart'; 
 import 'package:easyastro/components/coloradujstement.dart';
-import 'package:easyastro/services/processingHelper.dart';
+import 'package:easyastro/services/image/processingHelper.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 

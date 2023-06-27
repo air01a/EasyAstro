@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/selectexposition.dart';
-import 'package:easyastro/services/telescopehelper.dart';
+import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easyastro/components/bottombar.dart'; 
 import 'package:easyastro/components/coloradujstement.dart';
 import 'dart:typed_data';
-import 'package:easyastro/services/imagehelper.dart';
-import 'package:easyastro/services/processingHelper.dart';
+import 'package:easyastro/services/image/imagehelper.dart';
+import 'package:easyastro/services/image/processingHelper.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'dart:math';
 

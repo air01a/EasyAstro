@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/locationHelper.dart';
+import 'package:easyastro/services/location/locationHelper.dart';
 import 'package:intl/intl.dart';
 
 class SelectDate {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:easyastro/components/rating.dart'; 
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/models/catalogs.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/components/pagestructure.dart';

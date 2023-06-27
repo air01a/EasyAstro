@@ -1,5 +1,5 @@
 
-import 'package:easyastro/services/localstoragehelper.dart';
+import 'package:easyastro/services/database/localstoragehelper.dart';
 import 'package:easyastro/models/configmodel.dart';
 
 class ConfigurationRepository {

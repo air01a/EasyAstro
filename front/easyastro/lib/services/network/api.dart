@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:easyastro/services/apiexception.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/network/apiexception.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';

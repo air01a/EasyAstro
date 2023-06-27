@@ -1,11 +1,11 @@
 import 'package:image/image.dart' as img;
-import 'package:easyastro/services/imagefilter.dart';
-import 'package:easyastro/services/api.dart';
+import 'package:easyastro/services/image/imagefilter.dart';
+import 'package:easyastro/services/network/api.dart';
 import 'dart:typed_data';
 import 'dart:isolate';
 import 'dart:math';
-import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/configmanager.dart';
+import 'package:easyastro/services/database/globals.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 
 
 class ImageHelper {

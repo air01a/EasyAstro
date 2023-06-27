@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/repositories/observablerepositories.dart';
-import 'package:easyastro/services/locationHelper.dart';
+import 'package:easyastro/services/location/locationHelper.dart';
 import 'package:location/location.dart';
-import 'package:easyastro/services/globals.dart';
+import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
-import 'package:easyastro/services/configmanager.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class CheckScreen extends StatefulWidget {

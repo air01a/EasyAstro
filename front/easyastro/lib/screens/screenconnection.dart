@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/services/persistentdatahelper.dart';
-import 'package:easyastro/services/telescopeHelper.dart';
+import 'package:easyastro/services/database/persistentdatahelper.dart';
+import 'package:easyastro/services/telescope/telescopeHelper.dart';
 
 class ConnectionPage extends StatefulWidget {
 

@@ -1,6 +1,6 @@
 
-import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/api.dart';
+import 'package:easyastro/services/database/globals.dart';
+import 'package:easyastro/services/network/api.dart';
 
 class ProcessingHelper {
   final apiHelper = ApiBaseHelper();

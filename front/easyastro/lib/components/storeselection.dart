@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/localstoragehelper.dart';
+import 'package:easyastro/services/database/localstoragehelper.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/pagestructure.dart';
 

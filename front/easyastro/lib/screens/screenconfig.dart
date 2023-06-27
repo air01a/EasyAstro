@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/telescopeHelper.dart';
+import 'package:easyastro/services/telescope/telescopeHelper.dart';
 import 'package:easyastro/components/pagestructure.dart';
-import 'package:easyastro/services/globals.dart';
-import 'package:easyastro/services/configmanager.dart';
+import 'package:easyastro/services/database/globals.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easyastro/models/configmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 
