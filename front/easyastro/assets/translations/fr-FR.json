@@ -41,6 +41,7 @@
     "emission_nebula":"Nébuleuse à émission",
     "galaxy":"Galaxie",
     "reflection_nebula":"Nébuleuse par reflexion",
+    "dark_nebula":"Nébuleuse sombre",
     "open_cluster":"Amas ouvert",
     "planetary_nebula":"Nébuleuse Planétaire",
     "double_star":"Etoile double",
@@ -50,15 +51,18 @@
     "not_suitable": "Pas sûr de pouvoir voir quelque chose",
     "perfect": "Sortez le téléscope",
     "idk": "Aucune idée",
-
     "confirm": "Confirmer",
     "cancel" : "Annuler",
+    "change_date" : "Changer la date",
+    "filter" : "Filtrer",
+    "search" : "Rechercher",
     "current_task" : "Tâche actuelle : {}",
     "confirm switch" : "Voulez vous changer pour {}",
     "expo-gain" : "Expo-gain",
     "move" : "Déplacer",
     "modify_image":"Modifier l'image",
-
+    "no_connection": "Impossible de joindre le serveur",
+    "image_ratio" : "Taille (ratio) de l'image pour travailler sur les levels",
     "_Sun":"Le soleil est une étoile située au centre de notre système solaire, fournissant chaleur et lumière à la Terre. Il est composé principalement d'hydrogène et d'hélium et sa puissante gravité génère des réactions nucléaires qui libèrent une énergie immense. Le soleil est essentiel à la vie sur Terre, régulant le climat et permettant la photosynthèse.",
     "_Moon":"La Lune est le seul satellite naturel de la Terre. Elle ne possède pas de lumière propre, mais elle reflète la lumière du Soleil, ce qui lui donne son apparence brillante dans le ciel nocturne. La Lune joue un rôle important dans le maintien de la stabilité de l'axe de rotation de la Terre et influence les marées océaniques. Elle a également été explorée par des missions spatiales humaines et est un sujet d'étude scientifique pour mieux comprendre l'histoire et la formation du système solaire.",
     "_Jupiter":"Jupiter est la plus grande planète de notre système solaire, principalement composée d'hydrogène et d'hélium. Elle possède une atmosphère turbulente avec des bandes de nuages colorés et une célèbre grande tache rouge, une tempête géante. Jupiter possède également un grand nombre de lunes, dont les quatre plus grandes sont connues sous le nom de lunes galiléennes.",
@@ -175,6 +179,7 @@
     "_M108":"M108 - La Galaxie de la Grande Ourse : Une galaxie spirale située dans la constellation de la Grande Ourse. Elle est située à environ 45 millions d'années-lumière de la Terre et présente des bras spiraux bien développés.",
     "_M109":"M109 - La Galaxie de la Grande Ourse : Autre galaxie spirale située dans la constellation de la Grande Ourse. Elle fait partie du groupe de galaxies de la Grande Ourse et est située à environ 83 millions d'années-lumière de la Terre.",
     "_M110":"M110 : Située dans la constellation d'Andromède, M110 est une galaxie elliptique naine et une galaxie satellite de la Galaxie d'Andromède (M31). Elle apparaît comme un petit compagnon faible de M31.",
+    "_B33":"Barnard 33 : Barnard 33, également connu sous le nom de Nébuleuse de la Tête de Cheval, est un objet astronomique situé dans la constellation d'Orion. Il s'agit d'une nébuleuse sombre qui obscurcit la lumière de la nébuleuse en émission IC 434 située derrière. La forme distinctive de la Nébuleuse de la Tête de Cheval ressemble à celle de la tête d'un cheval, d'où son nom. C'est une cible populaire pour les astrophotographes et les astronomes amateurs en raison de son apparence frappante. La nébuleuse se trouve à environ 1500 années-lumière de la Terre.",
     "Sun":"Soleil",
     "Moon":"Lune",
     "Jupiter":"Jupiter",
@@ -290,6 +295,7 @@
     "M107":"M107",
     "M108":"M108",
     "M109":"M109",
-    "M110":"M110"
+    "M110":"M110",
+    "B33":"B33"
     
 }

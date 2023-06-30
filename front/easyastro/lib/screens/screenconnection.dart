@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/database/persistentdatahelper.dart';
 import 'package:easyastro/services/telescope/telescopeHelper.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ConnectionPage extends StatefulWidget {
 
   const ConnectionPage({super.key});
@@ -15,6 +15,7 @@ class _ConnectionPage extends State<ConnectionPage> {
   PersistentData localData = PersistentData();
   late String? _server ='';
   final TextEditingController _controller = TextEditingController();
+  String _error='';
 
 Future<void> _loadSavedIpAddress() async {
     String? savedIpAddress = await localData.getValue('host');
@@ -58,7 +59,7 @@ Future<void> _loadSavedIpAddress() async {
                 ),
                 controller : _controller,
               ),
-        
+              if (_error!='') Text(_error.tr(),  style: const TextStyle(fontSize: 10, color:Colors.red),),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
@@ -71,25 +72,12 @@ Future<void> _loadSavedIpAddress() async {
                       localData.saveValue('host', _server??'');
                       TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
                       await checkHelper.updateAPILocation();
-                      ServerInfo().connected = true;
-                      Navigator.pushNamed(context, '/capture');
-                      /*showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Success!'),
-                            content: Text('Your server is $_server and'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                   
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );*/
+                      if (checkHelper.helper.lastError==0) {
+                        ServerInfo().connected = true;
+                        Navigator.pushNamed(context, '/capture');
+                      } else {
+                        setState(() => _error=checkHelper.helper.lastErrorStr,);
+                      }
                     }
                   },
                   child: const Text('Submit'),

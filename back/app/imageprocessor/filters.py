@@ -95,7 +95,7 @@ def levels(image : Image, blacks: float, midtones: float, whites: float, contras
     # mids : 0-2
     # black : int 0-max(int)
     # white : int 0-max(int)
-
+    #if (image.is_color()):
     min = image.data.min()
     max = image.data.max()
     median = max - min
@@ -107,12 +107,20 @@ def levels(image : Image, blacks: float, midtones: float, whites: float, contras
     #black / white levels
     image.data = numpy.clip(image.data, blacks, whites)
 
-    image.data = numpy.float32(numpy.interp(image.data,
+    if (image.is_color()):
+        image.data = numpy.float32(numpy.interp(image.data,
                                             (min, max),
                                             (0, I16_BITS_MAX_VALUE)))
-    image.data[0] = image.data[0] * r
-    image.data[1] = image.data[1] * g
-    image.data[2] = image.data[2] * b
+    else:
+        image.data[0] = numpy.float32(numpy.interp(image.data[0],
+                                            (min, max),
+                                            (0, I16_BITS_MAX_VALUE)))
+
+    if (image.is_color()):
+        image.data[0] = image.data[0] * r
+        image.data[1] = image.data[1] * g
+        image.data[2] = image.data[2] * b
+
 
     image.data = numpy.clip(image.data, 0, 2**16 - 1)
 

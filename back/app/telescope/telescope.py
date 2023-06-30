@@ -40,14 +40,12 @@ class IndiOrchestrator:
         ret = self.last_image.clone()
         
         if (self.stretch > 0):
-            print("stretch")
             stretch(ret,self.stretch)
         
         if (process):    
             levels(ret, self.blacks,self.mids,self.whites, self.contrast, self.r, self.g, self.b)
-            print("pocess")
         
-        normalize(ret)
+        ret = normalize(ret)
         img_bytes = save_to_bytes(ret,'JPG', size)
         return img_bytes.getvalue()
 

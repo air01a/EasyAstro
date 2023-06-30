@@ -9,6 +9,7 @@ import 'package:easyastro/components/rating.dart';
 import 'package:easyastro/components/selectdate.dart'; 
 import 'package:easyastro/components/searchbar.dart';
 import 'package:easyastro/components/filterbar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ScreenObjectList extends StatefulWidget {
   @override
@@ -105,9 +106,9 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   Widget build(BuildContext context) {
     final bbar = BottomBar();
     mappingRatingBox.clear();
-    bbar.addItem(const Icon(Icons.schedule), 'Change Date', _selectDate);
-    bbar.addItem(const Icon(Icons.filter_alt), 'Filter', _filter);
-    bbar.addItem(const Icon(Icons.search), 'Search', _search);
+    bbar.addItem(const Icon(Icons.schedule), 'change_date'.tr(), _selectDate);
+    bbar.addItem(const Icon(Icons.filter_alt), 'filter'.tr(), _filter);
+    bbar.addItem(const Icon(Icons.search), 'search'.tr(), _search);
     return PageStructure(
             body: Container(
                     padding: EdgeInsets.only(left: 8.0),

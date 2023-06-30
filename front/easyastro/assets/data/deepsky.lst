@@ -115,3 +115,4 @@ TYPE;NAME;NGC;Object type;Season;Magnitude;Constellation (EN);Constellation (FR)
 0;M108;NGC 3556;galaxy;Spring / Printemps;10;Big Bear;Grande Ourse;Ursa Major;11:11:30.97;+55:40:26.8;23500000;8,3' x 2,5';assets/appimages/M108.jpg;http://www.lasam.ca/M108.JPG;UMa
 0;M109;NGC 3992;galaxy;Autumn / Automne;9;Big Bear;Grande Ourse;Ursa Major;11:57:35.98;+53:22:28.3;27000000;7,6' x 4,9';assets/appimages/M109.jpg;http://www.lasam.ca/M109.JPG;UMa
 0;M110;NGC 205;galaxy;Autumn / Automne;8;Andromeda;Andromède;Andromeda;00:40:22.08;+41:41:07.1;2250000;17,0, x 9,8';assets/appimages/M110.jpg;http://www.lasam.ca/M110.JPG;And
+0;B33;IC434;dark_nebula;Winter / Hiver;7;Orion, Hunter;Orion;Orion;05:40:59.00;-02:27:30.0;;8' x 6';assets/appimages/B33.jpg;;Ori

@@ -12,7 +12,7 @@ class ImageHelper {
 
   double r=1.0;double g=1.0;double b=1.0;
   double stretch=0;
-  double white=255; double black=0; double midtones = 1;double contrast = 1;
+  double white=255; double black=0; double midtones = 1.0;double contrast = 1;
 
   img.Image? original;
   Uint8List? encoded;
@@ -64,7 +64,7 @@ class ImageHelper {
       stretch=value["stretch"];
       black=(value["blacks"]/256).clamp(0,255);
       white=(value["whites"]/256).clamp(0,255);
-      midtones=(value["mids"]);
+      midtones=(value["mids"])+0.0;
     },);
   }
 }

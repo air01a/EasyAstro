@@ -19,23 +19,23 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 telescope = telescope.IndiOrchestrator(True)
 
-@router.post("/goto/")   
-def goto(coord : Coordinates.StarCoord):
+@router.post("/goto")   
+async def goto(coord : Coordinates.StarCoord):
     return telescope.move_to(coord.ra, coord.dec, coord.object)
 
-@router.post("/processing/")   
-def processing(processing : ImageProcessing):
+@router.post("/processing")   
+async def processing(processing : ImageProcessing):
     return telescope.set_image_processing(processing.stretch, processing.blacks, processing.midtones, processing.whites, processing.contrast, processing.r, processing.g, processing.b)
 
-@router.get("/processing/")
-def get_processing():
+@router.get("/processing")
+async def get_processing():
     return telescope.get_image_processing()
 
-@router.post("/move/")   
-def goto(coord : Movement):
+@router.post("/move")   
+async def goto(coord : Movement):
     return telescope.move_short(coord.axis1, coord.axis2)
 
-@router.get('/picture/')
+@router.get('/picture')
 def picture(exposure: int, gain: int):
     return telescope.take_picture(exposure, gain)
 
@@ -67,16 +67,16 @@ def take_dark():
 @router.get('/get_dark_progress')
 def get_dark_progress():
     return telescope.get_dark_progress()
+    
 
 
 
 @router.post('/stacking')
-def stacking(coord : Coordinates.StarCoord):
+async def stacking(coord : Coordinates.StarCoord):
     telescope.stack(coord.ra, coord.dec, coord.object)
 
 @router.post('/exposition')
-def exposition(exposition : Exposition):
-    print(exposition.exposition)
+async def exposition(exposition : Exposition):
     if exposition.exposition=='AUTO':
         telescope.set_exposition_auto()
     else:

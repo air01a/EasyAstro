@@ -55,6 +55,7 @@ dependencies:
   easy_localization: ^3.0.2
   flutter_xlider: ^3.5.0
   image: ^4.0.17
+  extended_image: ^8.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
