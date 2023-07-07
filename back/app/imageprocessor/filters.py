@@ -5,6 +5,7 @@ from ..models.constants import I16_BITS_MAX_VALUE, HOT_PIXEL_RATIO
 from .gradient import max_type
 import logging
 from .stretch import Stretch
+import cv2
 
 logger = logging.getLogger(__name__)
 def sharpen(image):
@@ -145,13 +146,28 @@ def gammaCorrection(img_data, gamma):
         return numpy.clip(numpy.power(img_data, gamma), 0.0, 1.0)
     
 def stretch(image : Image, strength : float):
+    clip_percent = 0.05
+
+    vmin, vmax = numpy.nanpercentile(image.data, clip_percent), numpy.nanpercentile(image.data, 100 - clip_percent)
+
+
+    stretched_data = numpy.clip(image.data, vmin, vmax)
+    image.data = (stretched_data - vmin) / (vmax - vmin)
+   # if image.is_color():
+    #    for channel in range(3):
+     #       image.data[channel]=cv2.normalize(image.data[channel], None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    #else:
+    #    image.data=cv2.normalize(image.data, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    return
     # strength float : 0-1
     image.data = numpy.interp(image.data,
                                    (image.data.min(), image.data.max()),
                                    (0, I16_BITS_MAX_VALUE))
     if image.is_color():
+        print("Image is color")
         for channel in range(3):
             image.data[channel] = Stretch(target_bkg=strength).stretch(image.data[channel])
         else:
+            print("image_is bw")
             image.data = Stretch(target_bkg=strength).stretch(image.data)
     image.data *= I16_BITS_MAX_VALUE

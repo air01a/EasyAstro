@@ -16,6 +16,7 @@ def debayer(image: Image):
     if preferred_bayer_pattern == "AUTO" and not image.needs_debayering():
         return
 
+    print("debayer")
     cv2_debayer_dict = {
 
         "BG": cv2.COLOR_BAYER_BG2RGB,

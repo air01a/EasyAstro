@@ -67,4 +67,23 @@ class ImageHelper {
       midtones=(value["mids"])+0.0;
     },);
   }
+
+
+  Map<String,List<int>>  getHistogram()  {
+
+    List<int> redHistogram = List.filled(256, 0);
+    List<int> greenHistogram = List.filled(256, 0);
+    List<int> blueHistogram = List.filled(256, 0);
+
+    for (int i = 0; i < encoded!.length; i += 4) {
+      int red = encoded![i];
+      int green = encoded![i + 1];
+      int blue = encoded![i + 2];
+
+      redHistogram[red]++;
+      greenHistogram[green]++;
+      blueHistogram[blue]++;
+    } 
+    return {'red':redHistogram, 'green':greenHistogram, 'blue':blueHistogram};
+  }
 }

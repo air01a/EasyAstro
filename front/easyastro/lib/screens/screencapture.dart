@@ -10,7 +10,7 @@ import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easyastro/components/bottombar.dart'; 
 import 'package:easyastro/components/coloradujstement.dart';
 import 'package:easyastro/services/image/processingHelper.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart'; 
 import 'package:extended_image/extended_image.dart';
 
 

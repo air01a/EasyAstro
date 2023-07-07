@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:easyastro/services/image/imagehelper.dart';
 import 'package:easyastro/services/image/processingHelper.dart';
 import 'package:easyastro/components/pagestructure.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class ScreenProcessingImage extends StatefulWidget {
   @override
@@ -121,6 +122,73 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
     });
 }
 
+
+  Widget getHistogram() {
+      final histo = imageHelper.getHistogram();
+      List<BarChartGroupData> redBarChartGroups = List.generate(
+        256,
+        (index) => BarChartGroupData(
+          x: index,
+          barRods: [
+            BarChartRodData(
+              toY: histo['red']![index].toDouble(),
+              color: Colors.red,
+              width: 8,
+            ),
+          ],
+        ),
+      );
+
+      List<BarChartGroupData> greenBarChartGroups = List.generate(
+        256,
+        (index) => BarChartGroupData(
+          x: index,
+          barRods: [
+            BarChartRodData(
+              toY:  histo['green']![index].toDouble(),
+              color: Colors.green,
+              width: 8,
+            ),
+          ],
+        ),
+      );
+
+        List<BarChartGroupData> blueBarChartGroups = List.generate(
+          256,
+          (index) => BarChartGroupData(
+            x: index,
+            barRods: [
+              BarChartRodData(
+                toY:  histo['blue']![index].toDouble(),
+                color: Colors.blue,
+                width: 8,
+              ),
+              BarChartRodData(
+              toY:  histo['green']![index].toDouble(),
+              color: Colors.green,
+              width: 8,
+            ),BarChartRodData(
+              toY: histo['red']![index].toDouble(),
+              color: Colors.red,
+              width: 8,
+            ),
+          
+            ],
+          ),
+        );
+
+
+        return BarChart(
+          BarChartData(
+            groupsSpace: 8,
+            barTouchData: BarTouchData(enabled: false),
+            titlesData: FlTitlesData(show: false),
+            borderData: FlBorderData(show: false),
+            barGroups: blueBarChartGroups,
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageStructure(body: Center(child: Scaffold(body: Stack(
@@ -137,6 +205,7 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
                                   if (_rgbVisible) colorAdjustement,
                                   if (_stretchVisible) stretchAdjustement,
                                   if (_levelsVisible) levelAdjustement,
+                                   //Positioned(top:0, right:0,child: Container(width:300,height:100,child:getHistogram())),
                                     ]),
                           bottomNavigationBar: bbar)), showDrawer: false, title:"Image processing");
                   
