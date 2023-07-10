@@ -40,7 +40,7 @@ class IndiOrchestrator:
         ret = self.last_image.clone()
         
         if (self.stretch > 0):
-            stretch(ret,self.stretch)
+            stretch(ret,self.stretch,self.stacking)
         
         if (process):    
             levels(ret, self.blacks,self.mids,self.whites, self.contrast, self.r, self.g, self.b)
@@ -261,7 +261,6 @@ class IndiOrchestrator:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra,dec)
             logger.debug(' --- GOTO FINISHED')
-            #self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
             
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,gain)
             self.last_image = open_process_fits('/tmp/platesolve'+str(retry)+'.fits')
@@ -270,7 +269,6 @@ class IndiOrchestrator:
 
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
-            #self.last_image = '/tmp/platesolve'+str(retry)+'.fits'
             
     
 
@@ -343,7 +341,6 @@ class IndiOrchestrator:
             image = open_process_fits(working_dir+str(picture)+'.fits')
             logger.debug(' --- TRANSFORMING')
             transformation = find_transformation(image, ref)
-            #print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
 
             if transformation==None:
                 logger.error("... No alignment point, skipping image %s ..." % (working_dir+str(picture)+'.fits'))
@@ -354,12 +351,11 @@ class IndiOrchestrator:
                 stack += 1
                 stacked = image.clone()
                 self.last_image = image.clone()
-                stretch(image, self._stretch)
+                stretch(image, self._stretch,1)
                 normalize(image)
                 logger.debug(' --- SAVING')
                 save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                #self.last_image=working_dir+str(picture)+str(picture)+'.jpg'
                 self.qout.put('2.SHOOTING IS FINISHED')
                 picture += 1
                 if picture % 8 == 0 : 

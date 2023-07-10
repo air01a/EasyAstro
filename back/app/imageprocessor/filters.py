@@ -145,29 +145,45 @@ def gammaCorrection(img_data, gamma):
     else:
         return numpy.clip(numpy.power(img_data, gamma), 0.0, 1.0)
     
-def stretch(image : Image, strength : float):
-    clip_percent = 0.05
-
-    vmin, vmax = numpy.nanpercentile(image.data, clip_percent), numpy.nanpercentile(image.data, 100 - clip_percent)
-
-
-    stretched_data = numpy.clip(image.data, vmin, vmax)
-    image.data = (stretched_data - vmin) / (vmax - vmin)
-   # if image.is_color():
-    #    for channel in range(3):
-     #       image.data[channel]=cv2.normalize(image.data[channel], None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    #else:
-    #    image.data=cv2.normalize(image.data, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    return
-    # strength float : 0-1
-    image.data = numpy.interp(image.data,
-                                   (image.data.min(), image.data.max()),
-                                   (0, I16_BITS_MAX_VALUE))
-    if image.is_color():
-        print("Image is color")
-        for channel in range(3):
-            image.data[channel] = Stretch(target_bkg=strength).stretch(image.data[channel])
+def stretch(image : Image, strength : float, algo: int =0):
+    #n=1
+    if (algo==0): # algo stretch with clipping (strength 0:1, default = 0.1)
+        # Best for stars imaging
+        if (image.is_color()):
+            for i in range(0,image.data.shape[0]):
+                print(i)
+                min_val = numpy.percentile(image.data[i], strength)
+                max_val = numpy.percentile(image.data[i], 100 - strength)
+                image.data[i] = numpy.clip((image.data[i] - min_val) * (65535.0 / (max_val - min_val)), 0, 65535)
         else:
-            print("image_is bw")
-            image.data = Stretch(target_bkg=strength).stretch(image.data)
-    image.data *= I16_BITS_MAX_VALUE
+                min_val = numpy.percentile(image.data, strength)
+                max_val = numpy.percentile(image.data, 100 - strength)
+                image.data = numpy.clip((image.data - min_val) * (65535.0 / (max_val - min_val)), 0, 65535)
+    elif (algo==1):
+        # strength float : 0-1
+        # Pixinsight MTF algorithm, best with nebula
+        image.data = numpy.interp(image.data,
+                                    (image.data.min(), image.data.max()),
+                                    (0, I16_BITS_MAX_VALUE))
+        if image.is_color():
+            for channel in range(3):
+                image.data[channel] = Stretch(target_bkg=strength).stretch(image.data[channel])
+            else:
+                image.data = Stretch(target_bkg=strength).stretch(image.data)
+        image.data *= I16_BITS_MAX_VALUE
+
+    elif (algo==2):
+        # stddev method
+        # strength between 0-8
+        mean = numpy.mean(image.data)
+        stddev = numpy.std(image.data)
+
+        # Soustraire la moyenne et diviser par l'écart-type multiplié par le facteur de contraste
+        contrast_factor = 1/(2000*strength)
+        stretched_image = (image.data - mean) / (stddev * contrast_factor)
+
+        # Tronquer les valeurs des pixels en dessous de zéro à zéro et au-dessus de 255 à 255
+        stretched_image = numpy.clip(stretched_image, 0, 65535)
+
+        # Convertir les valeurs des pixels en entiers
+        image.data = stretched_image.astype(numpy.uint16)
