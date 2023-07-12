@@ -1,5 +1,4 @@
 import time
-import asyncio
 import threading
 from queue import SimpleQueue
 from ..platesolve import platesolver
@@ -8,7 +7,7 @@ from ..dependencies import error, config
 import logging
 from ..models.image import Image
 import os
-from ..imageprocessor.utils import open_fits, open_process_fits, save_jpeg, adapt, normalize, debayer, save_to_bytes, reduce
+from ..imageprocessor.utils import  open_process_fits, save_jpeg,  normalize, save_to_bytes
 from ..imageprocessor.filters import stretch, stretch, levels
 from ..imageprocessor.align import find_transformation, apply_transformation
 from ..imageprocessor.stack import stack_image
@@ -24,51 +23,19 @@ MAX_PLATESOLVE_ERROR=1
 logger = logging.getLogger(__name__)
 
 
-class IndiOrchestrator:
+class TelescopeOrchestrator:
 
-    stretch = 0.18
-    whites = 65535
-    blacks = 1
-    mids = 1
-    contrast = 1
-    r = 1
-    g = 1
-    b = 1
     currentOperation='IDLE'
-
-    def process_last_image(self, process=True, size=1):
-        ret = self.last_image.clone()
-        
-        if (self.stretch > 0):
-            stretch(ret,self.stretch,self.stacking)
-        
-        if (process):    
-            levels(ret, self.blacks,self.mids,self.whites, self.contrast, self.r, self.g, self.b)
-        
-        ret = normalize(ret)
-        img_bytes = save_to_bytes(ret,'JPG', size)
-        return img_bytes.getvalue()
-
-    def set_image_processing(self, stretch, blacks, midtones, whites, contrast, r, g, b):
-        self.stretch=stretch
-        self.whites = whites
-        self.blacks = blacks
-        self.mids = midtones
-        self.r = r
-        self.g = g
-        self.b = b
-        self.contrast = contrast
-
-    def get_image_processing(self):
-        return {"contrast":self.contrast, "stretch": self.stretch, "whites":self.whites, "blacks":self.blacks, "mids":self.mids, "r":self.r, "g":self.g, "b":self.b}
 
     def signal_handler(self, signal_received, frame):
         self._end = True
 
 
-    def __init__(self, capture_image=True):
+    def __init__(self, image_processor, capture_image=True):
         self.qin = SimpleQueue()
         self.qout = SimpleQueue()
+        self.image_processor = image_processor
+        
         if config.PLATFORM==config.LINUX:
             self.indi = IndiPilot(self.qin, self.qout)
         else:
@@ -82,8 +49,7 @@ class IndiOrchestrator:
 
         self.processing = False
         self.stacking = False
-        self.last_image=None
-        self.last_image_processed=None
+
         self.lock = threading.Lock()
         self.exposition = None
         self.ccd_orientation = 0
@@ -101,8 +67,7 @@ class IndiOrchestrator:
         self.mainThread.start()
 
 
-    def setStretch(self, stretch):
-        self.stretch = stretch
+
 
     def process_job(self):
         if len(self._job_queue)==0:
@@ -111,12 +76,13 @@ class IndiOrchestrator:
         job = self._job_queue.pop()
         if job['action']=='move_to':
             logger.debug('+++ JOB MOVE TO %f,%f'%(job['ra'],job['dec']))
+            self.stacking=False
             self.currentOperation = 'MOVE TO %s' % job['object']
             self._move_to(job['ra'],job['dec'],job['solver'], job['object'])
         elif job['action']=='stack':
             logger.debug('+++ JOB STACK %f,%f'%(job['ra'],job['dec']))
             self.currentOperation = 'STACKING %s' % job['object']
-            self._stack(job['ra'],job['dec'])
+            self._stack(job['ra'],job['dec'],job['object'])
         elif job['action']=='move_to_short':
             logger.debug('+++ JOB MOVE TO SHORT %f,%f'%(job['ra'],job['dec']))
             self._move_short(job['ra'],job['dec'])
@@ -153,18 +119,17 @@ class IndiOrchestrator:
                     self.process_job()
 
                 if self.capture_image:
-                    #self.last_image = '/tmp/current'+str(i)+'.fits'
                     self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),100)
-                    self.last_image = open_process_fits('/tmp/current'+str(i)+'.fits')
+                    self.image_processor.set_last_image('/tmp/current'+str(i)+'.fits')
                     self.qout.put('2.SHOOTING IS FINISHED')
-                #image = open_process_fits(self.last_image)
+                    #image = open_process_fits(self.last_image)
 
-                #logger.debug(' --- FIND DRIFT')
-                #transformation = find_transformation(image, ref)
-                #if transformation==None:
-                #    logger.error("... No alignment point, skipping image %s ..." % (self.last_image))
-                #else:
-                #    print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
+                    #logger.debug(' --- FIND DRIFT')
+                    #transformation = find_transformation(image, ref)
+                    #if transformation==None:
+                    #    logger.error("... No alignment point, skipping image %s ..." % (self.last_image))
+                    #else:
+                    #    print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
                     if self.get_exposition() < 5:
                         time.sleep(3)
                     i=(i+1) % 10
@@ -247,6 +212,7 @@ class IndiOrchestrator:
         if not solver:
             self._move_short(ra,dec)
             return
+
         self.lock.acquire()
         self._operating=True
         retry = 0
@@ -263,7 +229,8 @@ class IndiOrchestrator:
             logger.debug(' --- GOTO FINISHED')
             
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,gain)
-            self.last_image = open_process_fits('/tmp/platesolve'+str(retry)+'.fits')
+            self.image_processor.set_last_image('/tmp/platesolve'+str(retry)+'.fits')
+            #self.last_image = open_process_fits('/tmp/platesolve'+str(retry)+'.fits')
             if refresh:
                 self.qout.put('2.SHOOTING IS FINISHED')
 
@@ -351,12 +318,12 @@ class IndiOrchestrator:
                 stack += 1
                 stacked = image.clone()
                 self.last_image = image.clone()
-                stretch(image, self._stretch,1)
-                normalize(image)
-                logger.debug(' --- SAVING')
-                save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
+                #stretch(image, self.stretch,self.stretch_algo)
+                #normalize(image)
+                #logger.debug(' --- SAVING')
+                #save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                self.qout.put('2.SHOOTING IS FINISHED')
+                self.qout.put('4. STACKING READY')
                 picture += 1
                 if picture % 8 == 0 : 
                     logger.debug(' --- MOVE TO FOR REALIGN')

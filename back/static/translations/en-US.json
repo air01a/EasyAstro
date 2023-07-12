@@ -1,0 +1,8 @@
+{
+    "welcome":"Welcome",
+    "waiting_position" : "Waiting GPS",
+    "api_updated" : "API updated",
+    "wating_catalog" : "Waiting position to update catalog",
+    "catalog_updated" : "Catalog updated",
+    "position": "Position : {}, {}, {}"
+}

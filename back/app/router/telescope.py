@@ -11,13 +11,17 @@ import asyncio
 import logging
 from ..models.coordinates import Exposition, Movement
 from ..models.processing import ImageProcessing
-
+from ..imageprocessor.processor import ImageProcessor
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-telescope = telescope.IndiOrchestrator(True)
+
+processor = ImageProcessor()
+telescope = telescope.TelescopeOrchestrator(processor,True)
+
+
 
 @router.post("/goto")   
 async def goto(coord : Coordinates.StarCoord):
@@ -25,11 +29,11 @@ async def goto(coord : Coordinates.StarCoord):
 
 @router.post("/processing")   
 async def processing(processing : ImageProcessing):
-    return telescope.set_image_processing(processing.stretch, processing.blacks, processing.midtones, processing.whites, processing.contrast, processing.r, processing.g, processing.b)
+    return processor.set_image_processing(processing.stretchAlgo, processing.stretch, processing.blacks, processing.midtones, processing.whites, processing.contrast, processing.r, processing.g, processing.b)
 
 @router.get("/processing")
 async def get_processing():
-    return telescope.get_image_processing()
+    return processor.get_image_processing()
 
 @router.post("/move")   
 async def goto(coord : Movement):
@@ -49,8 +53,7 @@ async def get_status():
 
 @router.get('/last_picture')
 def last_picture(process: bool = True, size: float = 1):
-
-    img_bytes = telescope.process_last_image(process, size)
+    img_bytes = processor.process_last_image(process, size)
     
     headers = {
         "Content-Disposition": "inline",

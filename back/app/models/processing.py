@@ -9,3 +9,4 @@ class ImageProcessing(BaseModel):
     whites : int
     blacks : int
     midtones : int
+    stretchAlgo: int

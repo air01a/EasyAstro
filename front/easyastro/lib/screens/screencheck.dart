@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/repositories/observablerepositories.dart';
 import 'package:easyastro/services/location/locationHelper.dart';
-import 'package:location/location.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:geolocator/geolocator.dart';
 
 class CheckScreen extends StatefulWidget {
   @override
@@ -14,56 +14,58 @@ class CheckScreen extends StatefulWidget {
 }
 
 class _CheckScreen extends State<CheckScreen> {
-  LocationData? _locationData;
-  bool _apiUpdated=false;
-  bool _catalogUpdated = false; 
-
+  Position? _locationData;
+  bool _apiUpdated = false;
+  bool _catalogUpdated = false;
 
   Future<void> updateDescription() async {
     ObjectSelection().selection.forEach((element) {
       element.description = element.name.tr();
-      
     });
-
   }
 
-  void updateLocale(String key, dynamic value) async{
-        switch(value) {
-          case('FR'): {await context.setLocale(Locale('fr', 'FR'));}
-            break;
-          case('EN'): {await context.setLocale(Locale('en', 'US'));}
-            break;
-          default : {await context.resetLocale();await updateDescription();} 
-            break;
+  void updateLocale(String key, dynamic value) async {
+    switch (value) {
+      case ('FR'):
+        {
+          await context.setLocale(Locale('fr', 'FR'));
         }
-        
-      }
+        break;
+      case ('EN'):
+        {
+          await context.setLocale(Locale('en', 'US'));
+        }
+        break;
+      default:
+        {
+          await context.resetLocale();
+          await updateDescription();
+        }
+        break;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    ConfigManager().loadConfig().then((value) { 
-      ConfigManager().addCallBack("language",updateLocale);
+    ConfigManager().loadConfig().then((value) {
+      ConfigManager().addCallBack("language", updateLocale);
       updateLocale("", ConfigManager().configuration!['language']!.value);
       _getLocation();
     });
-
   }
 
-
   Future<void> _getLocation() async {
-    LocationData? locationData;
+    Position? locationData;
     LocationHelper locationHelper = LocationHelper();
-    
-    
+
     await AstroCalc.init();
     setState(() {
       _locationData = null; // Afficher le message d'attente
     });
 
     locationData = await locationHelper.getLocation();
-    if (locationData != null)
-    {
+    if (locationData != null) {
       CurrentLocation().longitude = locationData.longitude;
       CurrentLocation().latitude = locationData.latitude;
       CurrentLocation().altitude = locationData.altitude;
@@ -78,17 +80,22 @@ class _CheckScreen extends State<CheckScreen> {
       _apiUpdated = true;
     });
     ObservableRepository catalog = ObservableRepository();
-    if (_locationData!=null) {
-      ObjectSelection().selection = await catalog.fetchCatalogList(_locationData?.longitude, _locationData?.latitude, _locationData?.altitude, null);
+    if (_locationData != null) {
+      ObjectSelection().selection = await catalog.fetchCatalogList(
+          _locationData?.longitude,
+          _locationData?.latitude,
+          _locationData?.altitude,
+          null);
     } else {
-      ObjectSelection().selection = await catalog.fetchCatalogList(0, 0, 0,null);
+      ObjectSelection().selection =
+          await catalog.fetchCatalogList(0, 0, 0, null);
     }
     setState(() {
       _catalogUpdated = true;
     });
     //await Future.delayed(const Duration(seconds:3));
     //ConfigManager().loadConfig().then(() => Navigator.pushNamed(context, '/home'));
-   /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
+    /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
     print('#####"');
     print(ConfigManager().configuration);
     if (ConfigManager().configuration!=null) {
@@ -99,31 +106,33 @@ class _CheckScreen extends State<CheckScreen> {
       ConfigManager().saveConfig();
     }*/
     Navigator.pushNamed(context, '/home');
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return PageStructure(
-            body: 
-              Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:<Widget>[
-                            const Center(child: CircularProgressIndicator()),
-
-                            Center(
-                                      child: _locationData != null && _locationData?.latitude!=null && _locationData?.longitude!=null
-                                  ? Text('position').tr(args: [_locationData!.latitude.toString(), _locationData!.longitude.toString(), _locationData!.altitude.toString()]) //'Position : ${_locationData?.latitude}, ${_locationData?.longitude}, ${_locationData?.altitude}')
-                                  : const Text('waiting_position').tr()),
-                            Center(child: _apiUpdated == false
-                                   ? const Text('waiting_position').tr()
-                                   : const Text('api_updated').tr()
-                            ),
-                            Center(child: _apiUpdated == false
-                                   ? const Text('wating_catalog').tr()
-                                   : const Text('catalog_updated').tr()
-                            ),
-                            
-          ]));
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+          const Center(child: CircularProgressIndicator()),
+          Center(
+              child: _locationData != null &&
+                      _locationData?.latitude != null &&
+                      _locationData?.longitude != null
+                  ? Text('position').tr(args: [
+                      _locationData!.latitude.toString(),
+                      _locationData!.longitude.toString(),
+                      _locationData!.altitude.toString()
+                    ]) //'Position : ${_locationData?.latitude}, ${_locationData?.longitude}, ${_locationData?.altitude}')
+                  : const Text('waiting_position').tr()),
+          Center(
+              child: _apiUpdated == false
+                  ? const Text('waiting_position').tr()
+                  : const Text('api_updated').tr()),
+          Center(
+              child: _apiUpdated == false
+                  ? const Text('wating_catalog').tr()
+                  : const Text('catalog_updated').tr()),
+        ]));
   }
 }
