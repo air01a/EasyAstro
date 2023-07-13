@@ -71,7 +71,9 @@ def take_dark():
 def get_dark_progress():
     return telescope.get_dark_progress()
     
-
+@router.post('/stop_stacking')
+def get_dark_progress():
+    return telescope.stop_stacking()
 
 
 @router.post('/stacking')
@@ -91,7 +93,7 @@ async def exposition(exposition : Exposition):
 
 class ConnectionManager:
     def __init__(self):
-        self.connections: List[WebSocket] = []
+        self.connections = []
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()

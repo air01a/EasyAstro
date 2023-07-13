@@ -5,12 +5,8 @@ from ..platesolve import platesolver
 from math import sqrt, cos, sin, pi
 from ..dependencies import error, config
 import logging
-from ..models.image import Image
 import os
-from ..imageprocessor.utils import  open_process_fits, save_jpeg,  normalize, save_to_bytes
-from ..imageprocessor.filters import stretch, stretch, levels
-from ..imageprocessor.align import find_transformation, apply_transformation
-from ..imageprocessor.stack import stack_image
+
 from datetime import datetime
 from signal import signal, SIGINT
 
@@ -122,21 +118,12 @@ class TelescopeOrchestrator:
                     self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),100)
                     self.image_processor.set_last_image('/tmp/current'+str(i)+'.fits')
                     self.qout.put('2.SHOOTING IS FINISHED')
-                    #image = open_process_fits(self.last_image)
-
-                    #logger.debug(' --- FIND DRIFT')
-                    #transformation = find_transformation(image, ref)
-                    #if transformation==None:
-                    #    logger.error("... No alignment point, skipping image %s ..." % (self.last_image))
-                    #else:
-                    #    print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*transformation.translation))
                     if self.get_exposition() < 5:
                         time.sleep(3)
                     i=(i+1) % 10
                 else:
                     time.sleep(1)
             else:
-                #print('operating, delay taking picture')
                 time.sleep(1)
 
     def set_exposition_auto(self):
@@ -195,8 +182,6 @@ class TelescopeOrchestrator:
                 self.dark_progress += expo
         
 
-
-
     def get_expo_auto(self, ra, dec):
         return float(config.CONFIG['IMAGING']['MAX_EXPO_AUTO'])
     
@@ -230,7 +215,6 @@ class TelescopeOrchestrator:
             
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,gain)
             self.image_processor.set_last_image('/tmp/platesolve'+str(retry)+'.fits')
-            #self.last_image = open_process_fits('/tmp/platesolve'+str(retry)+'.fits')
             if refresh:
                 self.qout.put('2.SHOOTING IS FINISHED')
 
@@ -296,39 +280,23 @@ class TelescopeOrchestrator:
 
         logger.debug(' --- TAKE REFERENCE')
         self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),100)
-        ref = open_process_fits(working_dir+str(picture)+'.fits')
+        self.image_processor.init_stacking(working_dir+str(picture)+'.fits')
         
-        stacked = ref.clone()
-        stack = 0
         logger.debug(' --- STACKING LOOP')
         while self.stacking:
             logger.debug(' --- SHOOTING')
             self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),100)
             logger.debug(' --- TREATING FITS')
-            image = open_process_fits(working_dir+str(picture)+'.fits')
-            logger.debug(' --- TRANSFORMING')
-            transformation = find_transformation(image, ref)
-
-            if transformation==None:
-                logger.error("... No alignment point, skipping image %s ..." % (working_dir+str(picture)+'.fits'))
-            else:
-                logger.debug(' --- STACKING')
-                apply_transformation(image, transformation, ref)
-                stack_image(image, stacked, stack, 1)
-                stack += 1
-                stacked = image.clone()
-                self.last_image = image.clone()
-                #stretch(image, self.stretch,self.stretch_algo)
-                #normalize(image)
-                #logger.debug(' --- SAVING')
-                #save_jpeg(image,working_dir+str(picture)+str(picture)+'.jpg')
+            if self.image_processor.stack(working_dir+str(picture)+'.fits'):
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                self.qout.put('4. STACKING READY')
-                picture += 1
-                if picture % 8 == 0 : 
-                    logger.debug(' --- MOVE TO FOR REALIGN')
-                    self.lock.release()
-                    self._move_to(ra, dec,True, object, False)
-                    self.lock.acquire()
+                self.qout.put('4. IMAGE ADDED TO STACK;%i,%i' % (self.image_processor.onStack, self.image_processor.discard))
+            else:
+                self.qout.put('5. IMPOSSIBLE TO ADD IMAGE TO STACK;%i,%i' % (self.image_processor.onStack, self.image_processor.discard)) 
+            picture += 1
+            if picture % 8 == 0 : 
+                logger.debug(' --- MOVE TO FOR REALIGN')
+                self.lock.release()
+                self._move_to(ra, dec,True, object, False)
+                self.lock.acquire()
         self.lock.release()
         self.currentOperation = 'IDLE'

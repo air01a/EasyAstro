@@ -1,11 +1,13 @@
 from ..models.image import Image
 import logging
-from ..models.image import Image
 
 from ..imageprocessor.utils import  open_process_fits, save_jpeg,  normalize, save_to_bytes
 from ..imageprocessor.filters import stretch, stretch, levels
 from ..imageprocessor.align import find_transformation, apply_transformation
 from ..imageprocessor.stack import stack_image
+import os
+import random
+import cv2
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +25,13 @@ class ImageProcessor:
     stretch_algo = 1
 
     def __init__(self):
-        self.last_image=None
-        self.last_image_processed=None
+
+        jpg = [file for file in os.listdir('static/images/messier/') if file.endswith(".jpg")]
+        random_file = random.choice(jpg)
+        print(random_file)
+        self.last_image = cv2.imread('static/images/messier/'+random_file)
+        self.last_image_processed = None
+        self.image_stacking = None
 
     def process_last_image(self, process=True, size=1):
         ret = self.last_image.clone()
@@ -58,3 +65,26 @@ class ImageProcessor:
 
     def set_last_image(self, filename):
         self.last_image = open_process_fits(filename)
+
+    def init_stacking(self, filename):
+        self.ref = open_process_fits(filename)
+        self.stacked = self.ref.clone()
+        self.onStack = 1
+        self.discard = 0
+
+    def stack(self, filename):
+        image = open_process_fits(filename)
+        logger.debug(' --- TRANSFORMING')
+        transformation = find_transformation(image, self.ref)
+        if transformation==None:
+            logger.error("... No alignment point, skipping image %s ..." % (filename))
+            self.discard += 1
+            return False
+        else:
+            logger.debug(' --- STACKING')
+            apply_transformation(image, transformation, self.ref)
+            stack_image(image, self.stacked, self.onStack, 1)
+            self.stacked = image.clone()
+            self.last_image = self.stacked
+            self.onStack += 1
+            return True

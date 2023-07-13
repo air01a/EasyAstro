@@ -352,8 +352,8 @@ class _ScreenCapture extends State<ScreenCapture> {
                   child: Material(
                       child: Center(
                           child: SizedBox(
-                              width: 400,
-                              height: 30,
+                              width: 500,
+                              height: 60,
                               child: ScrollableTextField(
                                 controller: _textController,
                               ))))),
