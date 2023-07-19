@@ -13,6 +13,8 @@ import 'package:easyastro/services/image/processingHelper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:easyastro/components/loadingindicatordialog.dart';
+import 'dart:async';
+import 'package:easyastro/models/telescopestatus.dart';
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -34,7 +36,9 @@ class _ScreenCapture extends State<ScreenCapture> {
   bool _imageLoading = false;
   bool _imageToLoad = false;
   bool _isWaiting = false;
-
+  bool _statusVisible = true;
+  double _messageHandlerHeight = 10.0;
+  double _defaultFontSize = 10.0;
   late WebSocketChannel channel;
 
   final bbar = BottomBar();
@@ -42,6 +46,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   late StretchAdjustement stretchAdjustement;
   late LevelAdjustement levelAdjustement;
   ProcessingHelper processingHelper = ProcessingHelper();
+  TelescopeStatus? telescopeStatus;
 
   //#########################################################################################################
   //# API function call to move telescope according to pushed button
@@ -63,6 +68,9 @@ class _ScreenCapture extends State<ScreenCapture> {
     }
   }
 
+  //#########################################################################################################
+  //# Display dialog asking ofr confirmation when changing object
+  //#########################################################################################################
   void showConfirmationDialog(String object, String current) {
     showDialog(
       context: context,
@@ -109,6 +117,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   @override
   void initState() {
     super.initState();
+
     bbar.addItem(const Icon(Icons.timer), 'expo-gain'.tr(), selectExposition);
     bbar.addItem(
         const Icon(Icons.zoom_out_map), 'move'.tr(), activateMoveTelescope);
@@ -116,13 +125,19 @@ class _ScreenCapture extends State<ScreenCapture> {
 
     channel = WebSocketChannel.connect(
         Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
+
     channel.stream.listen((message) async {
       // Mettre à jour l'image en allant la chercher sur l'API
       final info = protocol.analyseMessage(message);
-      setState(() {
-        _textController.text =
-            message + '\n' + _textController.text; // Ajouter une nouvelle ligne
-      });
+
+      if (info['displayMessage']) {
+        setState(() {
+          _textController.text = info['showMessage'] +
+              '\n' +
+              _textController.text; // Ajouter une nouvelle ligne
+        });
+      }
+
       if (info['refreshImage']) {
         reloadImage();
       }
@@ -134,6 +149,12 @@ class _ScreenCapture extends State<ScreenCapture> {
 
       if (info['goto_success']) {
         _setStackable(true);
+        telescopeStatus!.currentTask = 'TRACKING';
+      }
+
+      if (info['imageStacking'] && (telescopeStatus != null)) {
+        telescopeStatus!.stacked = info['stacked'];
+        telescopeStatus!.discarded = info['discarded'];
       }
     });
     // Récupérer l'image initiale depuis l'API
@@ -148,28 +169,40 @@ class _ScreenCapture extends State<ScreenCapture> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    _defaultFontSize = Theme.of(context).textTheme.bodyMedium!.fontSize ?? 20;
+    _messageHandlerHeight = _defaultFontSize + 8;
+
     final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments != null) {
-      final Map<String, dynamic> args = arguments as Map<String, String>;
-      if (args.containsKey('object')) {
-        String newObject = args['object'];
-        service.getCurrentObject().then(
-          (value) {
-            if (value == 'IDLE') {
-              service.changeObject(newObject);
-              object = newObject;
-              _isStackable = false;
-            } else {
-              if (newObject != value) {
-                WidgetsBinding.instance?.addPostFrameCallback((_) async {
-                  showConfirmationDialog(newObject, value);
-                });
-              }
+    service.getCurrentObject().then((value) {
+      telescopeStatus = value;
+      Timer(Duration(seconds: 4), () {
+        _statusVisible = false;
+      });
+      setState(() {
+        _statusVisible = true;
+      });
+      if (arguments != null) {
+        final Map<String, dynamic> args = arguments as Map<String, String>;
+        if (args.containsKey('object')) {
+          String newObject = args['object'];
+          // Get status and if telecope is tracking something
+          if (value.currentTask == 'IDLE') {
+            service.changeObject(newObject);
+            object = newObject;
+            _isStackable = false;
+          } else {
+            if (newObject != value.object) {
+              // Ask if user is sure to stop current task
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                showConfirmationDialog(
+                    newObject, "${value.currentTask} ${value.object}");
+              });
             }
-          },
-        );
+          }
+        }
       }
-    }
+    });
   }
 
   //#########################################################################################################
@@ -207,6 +240,38 @@ class _ScreenCapture extends State<ScreenCapture> {
     setState(
       () => _isConfigVisible = !_isConfigVisible,
     );
+  }
+
+  //#########################################################################################################
+  //# Display message handler
+  //#########################################################################################################
+  Widget messageHandler() {
+    return Positioned(
+        left:
+            10, // Position horizontale du bouton par rapport à la gauche de l'écran
+        top: 0,
+        child: Material(
+            child: Center(
+                child: SizedBox(
+                    width: 500,
+                    height: _messageHandlerHeight,
+                    child: GestureDetector(
+                        onTap: () {
+                          // Action à exécuter lorsqu'on clique sur le TextField en lecture seule
+                          setState(() {
+                            if (_messageHandlerHeight ==
+                                (_defaultFontSize + 8)) {
+                              _messageHandlerHeight = 10 * _defaultFontSize;
+                            } else {
+                              _messageHandlerHeight = _defaultFontSize + 8;
+                            }
+                          });
+                        },
+                        child: AbsorbPointer(
+                            absorbing: true,
+                            child: ScrollableTextField(
+                              controller: _textController,
+                            )))))));
   }
 
   //#########################################################################################################
@@ -303,7 +368,21 @@ class _ScreenCapture extends State<ScreenCapture> {
   Icon getLoadingIcons() {
     if (!_imageLoading) return Icon(Icons.check_box);
     if (_imageLoading) return Icon(Icons.restart_alt);
-    return Icon(Icons.check_box);
+    return const Icon(Icons.check_box);
+  }
+
+  //#########################################################################################################
+  //# Display status icon about telescope
+  //#########################################################################################################
+  List<Widget> getStatusIcons() {
+    List<Widget> ret = [];
+    if (telescopeStatus == null) return ret;
+    if (telescopeStatus!.stacking) ret.add(const Icon(Icons.library_add));
+    if (telescopeStatus!.currentTask == 'TRACKING') {
+      ret.add(const Icon(Icons.location_searching));
+      ret.add(Text(telescopeStatus!.object));
+    }
+    return ret;
   }
 
   //#########################################################################################################
@@ -344,19 +423,31 @@ class _ScreenCapture extends State<ScreenCapture> {
               controlButton(_isStackable, Icons.library_add, null, 0, 0, null,
                   stack, object),
               Positioned(right: 0, bottom: 0, child: getLoadingIcons()),
-              controlButton(true, Icons.close, null, null, 0, 0, close, 0),
               Positioned(
-                  left:
-                      10, // Position horizontale du bouton par rapport à la gauche de l'écran
-                  top: 0,
-                  child: Material(
+                  left: 0, bottom: 0, child: Row(children: getStatusIcons())),
+              controlButton(true, Icons.close, null, null, 0, 0, close, 0),
+              messageHandler(),
+              if (telescopeStatus != null)
+                Visibility(
+                  visible: _statusVisible,
+                  child: Positioned(
+                    child: Container(
+                      width: 200,
+                      height: 100,
+                      color: Colors.grey,
                       child: Center(
-                          child: SizedBox(
-                              width: 500,
-                              height: 60,
-                              child: ScrollableTextField(
-                                controller: _textController,
-                              ))))),
+                          child: Column(children: [
+                        Text(
+                          telescopeStatus?.currentTask ?? 'Initializing',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        Text("Object: ${telescopeStatus?.object ?? ''}"),
+                        Text("RA: ${telescopeStatus?.ra ?? ''}"),
+                        Text("DEC: ${telescopeStatus?.dec ?? ''}"),
+                      ])),
+                    ),
+                  ),
+                ),
             ]),
             bottomNavigationBar: bbar));
   }

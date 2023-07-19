@@ -105,7 +105,7 @@ class _CheckScreen extends State<CheckScreen> {
       ConfigManager().configuration!['manageTelescope']!.value = true;
       ConfigManager().saveConfig();
     }*/
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

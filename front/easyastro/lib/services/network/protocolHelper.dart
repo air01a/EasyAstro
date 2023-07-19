@@ -16,17 +16,20 @@ class CommunicationProtocol {
   Map<String, dynamic> analyseMessage(String message) {
     final ret = {
       'refreshImage': false,
+      'displayMessage': true,
       'goto_success': false,
       'imageStacking': false,
       'showMessage': '',
       'stacked': 0,
       'discarded': 0,
-      'color': Colors.white
+      'color': Colors.white,
+      'alert': false
     };
     switch (message[0]) {
       case '2':
         {
           ret['refreshImage'] = true;
+          ret['displayMessage'] = false;
         }
         break;
       case '3':
@@ -47,11 +50,28 @@ class CommunicationProtocol {
           ret['stacked'] = info[1];
           ret['discarded'] = info[2];
           message = info[0];
-          if (message[0] == '5') ret['colors'] = Colors.red;
+          if (message[0] == '5') {
+            ret['color'] = Colors.red;
+            ret['alert'] = true;
+          }
+        }
+        break;
+      case '6':
+        {
+          List<String> tmp = message.split(';');
+          ret['showMessage'] =
+              "${tmp[0]} (error: ${double.parse(tmp[1]).toStringAsFixed(2)}°)";
+        }
+        break;
+      case '9':
+        {
+          ret['showMessage'] = message;
+          ret['color'] = Colors.red;
+          ret['alert'] = true;
         }
     }
-    ret['showMessage'] = message;
-    print(ret);
+    //ret['showMessage'] = message;
+    if (ret['showMessage'] == '') ret['showMessage'] = message;
     return ret;
   }
 }

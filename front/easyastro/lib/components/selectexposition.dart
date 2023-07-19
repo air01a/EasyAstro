@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 class ExpositionSelector {
-
-final  pickerData = '''
-                      [
+  final pickerData = '''
+                      [[
         "AUTO",                
         "0.001",
         "0.01",
@@ -24,18 +23,29 @@ final  pickerData = '''
         "10",
         "15",
         "20"
-    ]''';
+    ],[100,200,300,400,500,600,700,800]]''';
 
-
-
- showExpositionSelector(BuildContext context, Future<void> Function(String) callback) async  {
-      await Picker(
-        adapter: PickerDataAdapter<String>(pickerData:  const JsonDecoder().convert(pickerData)),
+  showExpositionSelector(
+      BuildContext context, Future<void> Function(double, int) callback) async {
+    Picker picker = Picker(
+        adapter: PickerDataAdapter<String>(
+            pickerData: const JsonDecoder().convert(pickerData), isArray: true),
         changeToFirst: true,
         hideHeader: false,
+        textAlign: TextAlign.left,
+        title: const Text("Expo / Gain"),
+        selectedTextStyle: TextStyle(color: Colors.red),
+        columnPadding: const EdgeInsets.all(8.0),
         onConfirm: (Picker picker, List value) {
-          callback(picker.getSelectedValues()[0]);
-        }
-      ).showModal(context); //_scaffoldKey.currentState);
-    }
+          print(picker.getSelectedValues());
+          double exposition = 0;
+          if (picker.getSelectedValues()[0] == 'AUTO') {
+            exposition = -1;
+          } else {
+            exposition = double.parse(picker.getSelectedValues()[0]);
+          }
+          callback(exposition, int.parse(picker.getSelectedValues()[1]));
+        }); //.showModal(context); //_scaffoldKey.currentState);
+    picker.showBottomSheet(context);
+  }
 }

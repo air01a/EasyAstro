@@ -12,6 +12,8 @@ import logging
 from ..models.coordinates import Exposition, Movement
 from ..models.processing import ImageProcessing
 from ..imageprocessor.processor import ImageProcessor
+from datetime import datetime,date
+from ..models.coordinates import TimeObject
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -21,7 +23,15 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 processor = ImageProcessor()
 telescope = telescope.TelescopeOrchestrator(processor,True)
 
+@router.post("/location") 
+async def set_coord(coord : Coordinates.Coord):
+    telescope.coordinates.set_location_coord(coord.lat, coord.lon, coord.height)
+    return error.no_error()
 
+@router.post("/time")
+async def set_time(time: TimeObject):
+    telescope.coordinates.set_time(telescope.coordinates.time_local_to_utc(datetime.strptime(time.time,"%Y-%m-%d %H:%M")))
+    return error.no_error()
 
 @router.post("/goto")   
 async def goto(coord : Coordinates.StarCoord):
@@ -45,11 +55,11 @@ def picture(exposure: int, gain: int):
 
 @router.get('/status')
 async def get_status():
-    return telescope.processing
+    return telescope.get_status()
 
 @router.get('/operation')
 async def get_status():
-    return telescope.getCurrentOperation()
+    return telescope.get_status()
 
 @router.get('/last_picture')
 def last_picture(process: bool = True, size: float = 1):
@@ -82,13 +92,14 @@ async def stacking(coord : Coordinates.StarCoord):
 
 @router.post('/exposition')
 async def exposition(exposition : Exposition):
-    if exposition.exposition=='AUTO':
+    if exposition.exposition==-1.0:
         telescope.set_exposition_auto()
     else:
         try:
-            telescope.change_exposition(float(exposition.exposition))
+            telescope.change_exposition(exposition.exposition)
         except:
             telescope.set_exposition_auto()
+    telescope.set_gain(exposition.gain)
 
 
 class ConnectionManager:

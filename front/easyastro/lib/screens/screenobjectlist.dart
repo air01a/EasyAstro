@@ -148,7 +148,8 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                               );
                             },
                             onLongPress: () {
-                              Navigator.pushNamed(context, '/capture',
+                              Navigator.pushReplacementNamed(
+                                  context, '/capture',
                                   arguments: {'object': _catalog[index].name});
                             });
                       }))

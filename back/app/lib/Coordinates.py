@@ -46,6 +46,9 @@ class Coordinates :
               
         return value
 
+    def get_location(self):
+        return self._location
+
     def change_time_zone(self, value):
         self._timezone = value
 
@@ -139,3 +142,9 @@ class Coordinates :
         if sidereal_time == None:
             sidereal_time = self.get_sidereal_time().hour
         return ((ra-sidereal_time)*sidereal_convertion)
+    
+    def equatorial_to_altz(self, ra, dec):
+
+        equatorial_coords = SkyCoord(ra=ra*u.deg, dec=dec*u.deg, frame='icrs')
+        altaz_coords = equatorial_coords.transform_to(AltAz(obstime=self._time,location=self._location))
+        return (altaz_coords.az, altaz_coords.alt)

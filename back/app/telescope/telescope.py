@@ -6,9 +6,11 @@ from math import sqrt, cos, sin, pi
 from ..dependencies import error, config
 import logging
 import os
-
+from ..models.telescopestatus import TelescopeInfo
 from datetime import datetime
 from signal import signal, SIGINT
+from ..lib import Coordinates
+from ..models.constants import DEG_TO_RAD
 
 if config.PLATFORM==config.LINUX:
     from .drivers.indi import IndiPilot
@@ -20,8 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class TelescopeOrchestrator:
+    
+    currentStatus = TelescopeInfo()
+    coordinates = Coordinates.Coordinates()
 
-    currentOperation='IDLE'
 
     def signal_handler(self, signal_received, frame):
         self._end = True
@@ -30,6 +34,7 @@ class TelescopeOrchestrator:
     def __init__(self, image_processor, capture_image=True):
         self.qin = SimpleQueue()
         self.qout = SimpleQueue()
+        
         self.image_processor = image_processor
         
         if config.PLATFORM==config.LINUX:
@@ -47,9 +52,9 @@ class TelescopeOrchestrator:
         self.stacking = False
 
         self.lock = threading.Lock()
-        self.exposition = None
         self.ccd_orientation = 0
         self._end = False
+        self.gain = 100
 
 
         self.dark_progress=0
@@ -62,9 +67,6 @@ class TelescopeOrchestrator:
         self.mainThread = threading.Thread(target=self._start_main_loop,args=([capture_image]))
         self.mainThread.start()
 
-
-
-
     def process_job(self):
         if len(self._job_queue)==0:
             return
@@ -73,22 +75,24 @@ class TelescopeOrchestrator:
         if job['action']=='move_to':
             logger.debug('+++ JOB MOVE TO %f,%f'%(job['ra'],job['dec']))
             self.stacking=False
-            self.currentOperation = 'MOVE TO %s' % job['object']
+            self.currentStatus.current_task = 'MOVETO'
+            self.currentStatus.object=job['object']
             self._move_to(job['ra'],job['dec'],job['solver'], job['object'])
         elif job['action']=='stack':
             logger.debug('+++ JOB STACK %f,%f'%(job['ra'],job['dec']))
-            self.currentOperation = 'STACKING %s' % job['object']
+            self.currentStatus.current_task = 'STACKING'
+            self.currentStatus.object = job['object']
             self._stack(job['ra'],job['dec'],job['object'])
         elif job['action']=='move_to_short':
             logger.debug('+++ JOB MOVE TO SHORT %f,%f'%(job['ra'],job['dec']))
             self._move_short(job['ra'],job['dec'])
         elif job['action']=='take_dark':
             logger.debug('+++ JOB TAKE DARK')
-            self.currentOperation = 'TAKING DARK'
+            self.currentStatus.current_task = 'TAKING DARK'
             self._take_dark()
 
-    def getCurrentOperation(self):
-        return self.currentOperation
+    def get_status(self):
+        return self.currentStatus
 
     def shutdown(self):
         self._end = True
@@ -115,7 +119,7 @@ class TelescopeOrchestrator:
                     self.process_job()
 
                 if self.capture_image:
-                    self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),100)
+                    self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),self.gain)
                     self.image_processor.set_last_image('/tmp/current'+str(i)+'.fits')
                     self.qout.put('2.SHOOTING IS FINISHED')
                     if self.get_exposition() < 5:
@@ -127,10 +131,13 @@ class TelescopeOrchestrator:
                 time.sleep(1)
 
     def set_exposition_auto(self):
-        self.exposition = None
+        self.currentStatus.exposition = -1
     
     def change_exposition(self, exposition : float):
-        self.exposition = exposition
+        self.currentStatus.exposition = exposition
+
+    def set_gain(self, gain : int):
+        self.gain = gain
 
     def get_qout(self):
         return self.qout
@@ -157,6 +164,8 @@ class TelescopeOrchestrator:
         if dec<0.09:
             dec = 0
         self._job_queue.append({'action':'move_to_short','ra':ra,'dec':dec})
+        self.currentStatus.ra = ra
+        self.currentStatus.dec = dec
 
 
     def take_dark(self):
@@ -183,13 +192,23 @@ class TelescopeOrchestrator:
         
 
     def get_expo_auto(self, ra, dec):
-        return float(config.CONFIG['IMAGING']['MAX_EXPO_AUTO'])
+        # Maximum expo time in alt az mount
+        # See https://www.californiaskys.com/field-rotation.html
+        if (ra==None):
+            return min(5.0,float(config.CONFIG['IMAGING']['MAX_EXPO_AUTO']))
+        (az,alt) = self.coordinates.equatorial_to_altz(ra,dec)
+        pixel_size = float(config.CONFIG['DEVICE']['PIXELSIZE']) 
+        pixel_traversed = 0.0000729 *float(config.CONFIG['DEVICE']['SENSORDIAG']) * 1000 /pixel_size * cos(self.coordinates.get_location().lat.rad)*cos(az.rad)/cos(alt.rad)
+        expo = 8 / pixel_traversed
+        print(expo)
+        return min(expo,float(config.CONFIG['IMAGING']['MAX_EXPO_AUTO']))
     
     def get_exposition(self,ra=None, dec = None):
-        if self.exposition==None:
+        print(self.currentStatus.exposition)
+        if self.currentStatus.exposition==-1:
             exposition = self.get_expo_auto(ra, dec)
         else:
-            exposition = self.exposition
+            exposition = self.currentStatus.exposition
         return exposition
 
 
@@ -205,23 +224,20 @@ class TelescopeOrchestrator:
         ra = ra * 24/360
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
         logger.debug(' --- going to '+str(ra)+" ; "+str(dec))
-        exposition = 1
-        gain = 500
+        exposition = 1.5
 
         while retry<10 and self._operating:
             logger.debug(' --- GOTO STARTED')
             self.indi.goto(ra,dec)
             logger.debug(' --- GOTO FINISHED')
             
-            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,gain)
+            self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,self.gain)
             self.image_processor.set_last_image('/tmp/platesolve'+str(retry)+'.fits')
             if refresh:
                 self.qout.put('2.SHOOTING IS FINISHED')
 
             logger.debug(' --- PICTURE OK, SOLVING')
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
-            
-    
 
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
             logger.debug(' SOLVER COORDINATES (RA,DEC, ORIENTATION) : (%f),(%f),(%f)', ps_return['ra'],ps_return['dec'], ps_return['orientation'])
@@ -235,40 +251,43 @@ class TelescopeOrchestrator:
                 logger.debug('Syncing telescope to new coordinates')
                 self.indi.sync(ps_return['ra'],ps_return['dec'] )
                 error_rate = sqrt((ps_return['ra']-ra)*(ps_return['ra']-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
-                
+                self.qout.put('6.PLATESOLVE DONE;%f' % error_rate)
                 logger.debug(' SOLVER ERROR RATE %f', error_rate)
+                self.currentStatus.ra = ps_return['ra']
+                self.currentStatus.dec = ps_return['dec']
                 if error_rate<MAX_PLATESOLVE_ERROR:
-                    self.last_error = 0
+                    self.currentStatus.last_error = 0
                     self.qout.put('3.GOTO FINISHED')
                     logger.debug('++++ GOTO FINISHED')
                     self._operating = False
-                    self.currentOperation = 'TRACKING %s' % object 
+                    self.currentStatus.current_task = 'TRACKING'
+                    self.currentStatus.object = object 
                     self.lock.release()
                     return 
             else:
                     logger.error("Error during platesolve (error, ra, dec) (%i), (%f), (%f)", ps_return['error'], ra, dec)
-                    self.qout.put('   Solving failed - retrying')
+                    self.qout.put('7.PLATESOLVE %i FAILED, RETRYING' % retry) 
                     exposition = exposition + 0.5
                      
             retry += 1
         logger.debug('GOTO FAILED DUE TO MAX RETRY REACHED')
-        self.last_error = error.ERROR_GOTO_FAILED
+        self.currentStatus.last_error = error.ERROR_GOTO_FAILED
         self._operating = False
-        self.qout.put('4.GOTO FAILED')
-        self.currentOperation = 'IDLE'
+        self.qout.put('9.GOTO FAILED')
+        self.currentStatus.current_task = 'IDLE'
         self.lock.release()
 
     def stack(self, ra : float, dec : float, obj: str):
         self._job_queue.append({'action':'stack','ra':ra,'dec':dec,'object':obj})
 
     def stop_stacking(self):
-        self.stacking = False
+        self.currentStatus.stacking = False
 
     def _stack(self, ra : float, dec : float, object: str):
         if self._operating:
             self._operating = False
         self.lock.acquire()
-        self.stacking = True
+        self.currentStatus.stacking = True
         logger.debug(' --- START STACKING')
         picture = 0
         today = datetime.now().strftime("%Y-%m-%d_%H%M%S")
@@ -279,24 +298,29 @@ class TelescopeOrchestrator:
         
 
         logger.debug(' --- TAKE REFERENCE')
-        self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),100)
+        self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),self.gain)
         self.image_processor.init_stacking(working_dir+str(picture)+'.fits')
         
         logger.debug(' --- STACKING LOOP')
-        while self.stacking:
+        while self.currentStatus.stacking:
             logger.debug(' --- SHOOTING')
-            self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),100)
+            self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),self.gain)
             logger.debug(' --- TREATING FITS')
             if self.image_processor.stack(working_dir+str(picture)+'.fits'):
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                self.qout.put('4. IMAGE ADDED TO STACK;%i,%i' % (self.image_processor.onStack, self.image_processor.discard))
+                self.qout.put('4. IMAGE ADDED TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded))
+
             else:
-                self.qout.put('5. IMPOSSIBLE TO ADD IMAGE TO STACK;%i,%i' % (self.image_processor.onStack, self.image_processor.discard)) 
+                self.qout.put('5. IMPOSSIBLE TO ADD IMAGE TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded)) 
+            self.currentStatus.discarded = self.image_processor.discarded
+            self.currentStatus.stacked = self.image_processor.stacked
+
             picture += 1
             if picture % 8 == 0 : 
                 logger.debug(' --- MOVE TO FOR REALIGN')
                 self.lock.release()
                 self._move_to(ra, dec,True, object, False)
                 self.lock.acquire()
+        self.currentStatus.current_task = 'TRACKING'
         self.lock.release()
-        self.currentOperation = 'IDLE'
+        

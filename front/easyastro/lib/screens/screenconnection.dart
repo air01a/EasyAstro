@@ -3,8 +3,8 @@ import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/database/persistentdatahelper.dart';
 import 'package:easyastro/services/telescope/telescopeHelper.dart';
 import 'package:easy_localization/easy_localization.dart';
-class ConnectionPage extends StatefulWidget {
 
+class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
   @override
   State<ConnectionPage> createState() => _ConnectionPage();
@@ -13,17 +13,17 @@ class ConnectionPage extends StatefulWidget {
 class _ConnectionPage extends State<ConnectionPage> {
   final _formKey = GlobalKey<FormState>();
   PersistentData localData = PersistentData();
-  late String? _server ='';
+  late String? _server = '';
   final TextEditingController _controller = TextEditingController();
-  String _error='';
+  String _error = '';
 
-Future<void> _loadSavedIpAddress() async {
+  Future<void> _loadSavedIpAddress() async {
     String? savedIpAddress = await localData.getValue('host');
     if (savedIpAddress != null) {
       _controller.text = savedIpAddress;
     }
   }
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -32,21 +32,21 @@ Future<void> _loadSavedIpAddress() async {
   }
 
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Connection'),  
+        title: const Text('Connection'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
               TextFormField(
                 validator: (value) {
-                  if (value==null || value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'Please enter the server URL';
                   }
                   return null;
@@ -57,9 +57,13 @@ Future<void> _loadSavedIpAddress() async {
                 decoration: const InputDecoration(
                   labelText: 'Server',
                 ),
-                controller : _controller,
+                controller: _controller,
               ),
-              if (_error!='') Text(_error.tr(),  style: const TextStyle(fontSize: 10, color:Colors.red),),
+              if (_error != '')
+                Text(
+                  _error.tr(),
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
@@ -67,16 +71,19 @@ Future<void> _loadSavedIpAddress() async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       // Save the data to a database or process it in some other way
-                      
+
                       ServerInfo().host = _server ?? '';
-                      localData.saveValue('host', _server??'');
-                      TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
+                      localData.saveValue('host', _server ?? '');
+                      TelescopeHelper checkHelper =
+                          TelescopeHelper(ServerInfo().host);
                       await checkHelper.updateAPILocation();
-                      if (checkHelper.helper.lastError==0) {
+                      if (checkHelper.helper.lastError == 0) {
                         ServerInfo().connected = true;
-                        Navigator.pushNamed(context, '/capture');
+                        Navigator.pushReplacementNamed(context, '/capture');
                       } else {
-                        setState(() => _error=checkHelper.helper.lastErrorStr,);
+                        setState(
+                          () => _error = checkHelper.helper.lastErrorStr,
+                        );
                       }
                     }
                   },

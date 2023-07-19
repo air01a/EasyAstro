@@ -28,8 +28,7 @@ class ImageProcessor:
 
         jpg = [file for file in os.listdir('static/images/messier/') if file.endswith(".jpg")]
         random_file = random.choice(jpg)
-        print(random_file)
-        self.last_image = cv2.imread('static/images/messier/'+random_file)
+        self.last_image = Image(cv2.imread('static/images/messier/'+random_file))
         self.last_image_processed = None
         self.image_stacking = None
 
@@ -68,9 +67,9 @@ class ImageProcessor:
 
     def init_stacking(self, filename):
         self.ref = open_process_fits(filename)
-        self.stacked = self.ref.clone()
-        self.onStack = 1
-        self.discard = 0
+        self.image_stack = self.ref.clone()
+        self.stacked = 1
+        self.discarded = 0
 
     def stack(self, filename):
         image = open_process_fits(filename)
@@ -78,13 +77,13 @@ class ImageProcessor:
         transformation = find_transformation(image, self.ref)
         if transformation==None:
             logger.error("... No alignment point, skipping image %s ..." % (filename))
-            self.discard += 1
+            self.discarded += 1
             return False
         else:
             logger.debug(' --- STACKING')
             apply_transformation(image, transformation, self.ref)
-            stack_image(image, self.stacked, self.onStack, 1)
-            self.stacked = image.clone()
-            self.last_image = self.stacked
-            self.onStack += 1
+            stack_image(image, self.image_stack, self.stacked, 1)
+            self.image_stack = image.clone()
+            self.last_image = self.image_stack
+            self.stacked += 1
             return True

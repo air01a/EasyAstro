@@ -1,3 +1,5 @@
+#NOT USED ANYMORE, FULL IMPLEMENTED IN FRONT
+
 from fastapi import APIRouter, Query, Body
 from ..lib import Coordinates
 from ..lib import LoadCatalog
