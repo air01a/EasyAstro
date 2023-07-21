@@ -63,6 +63,21 @@ class TelescopeHelper {
     await helper.get(server, "/telescope/take_dark");
   }
 
+  Future<List<dynamic>> getDarkLibrary() async {
+    List<dynamic> ret =
+        await helper.get(server, "/telescope/get_darks_library");
+    return ret;
+  }
+
+  Future<String> getCurrentLibrary() async {
+    String ret = await helper.get(server, "/telescope/get_current_dark");
+    return ret;
+  }
+
+  Future<void> changeDark(String dark) async {
+    await helper.post(server, "/telescope/current_dark", {"path": dark});
+  }
+
   Future<TelescopeStatus> getCurrentObject() async {
     TelescopeStatus telescopeStatus =
         TelescopeStatus.fromJson(await helper.get(server, "/telescope/status"));

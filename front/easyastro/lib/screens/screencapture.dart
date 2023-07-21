@@ -15,6 +15,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:easyastro/components/loadingindicatordialog.dart';
 import 'dart:async';
 import 'package:easyastro/models/telescopestatus.dart';
+import 'package:easyastro/screens/screenconfigtelescope.dart';
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -337,7 +338,15 @@ class _ScreenCapture extends State<ScreenCapture> {
   //# Display Options panel
   //#########################################################################################################
 
-  void showOptions(dynamic context) {}
+  void showOptions(dynamic context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConfigTelescopeScreen(),
+      ),
+    );
+  }
+
   //#########################################################################################################
   //# Force reload image with modification of URL to avoid cache
   //#########################################################################################################

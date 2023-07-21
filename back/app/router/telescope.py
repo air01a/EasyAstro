@@ -10,7 +10,7 @@ import os
 import asyncio
 import logging
 from ..models.coordinates import Exposition, Movement
-from ..models.processing import ImageProcessing
+from ..models.processing import ImageProcessing,darkModel
 from ..imageprocessor.processor import ImageProcessor
 from datetime import datetime,date
 from ..models.coordinates import TimeObject
@@ -80,7 +80,27 @@ def take_dark():
 @router.get('/get_dark_progress')
 def get_dark_progress():
     return telescope.get_dark_progress()
+
+@router.get('/get_darks_library')
+async def get_dark_library():
+    library = telescope.image_processor.get_dark_library()
+    ret = []
+    for element in library:
+        ret.append(os.path.basename(element))
+    return ret
+
+
+@router.get('/get_current_dark')
+async def get_current_dark():
+    library = os.path.basename(telescope.image_processor.current_dark)
+
+    return library
     
+
+@router.post('/current_dark')
+async def set_current_dark(dark: darkModel):
+    telescope.image_processor.set_dark_library(dark.path)
+
 @router.post('/stop_stacking')
 def get_dark_progress():
     return telescope.stop_stacking()

@@ -10,3 +10,6 @@ class ImageProcessing(BaseModel):
     blacks : int
     midtones : float
     stretchAlgo: int
+
+class DarkModel(BaseModel):
+    path: str
