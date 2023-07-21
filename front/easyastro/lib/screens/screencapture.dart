@@ -123,6 +123,8 @@ class _ScreenCapture extends State<ScreenCapture> {
         const Icon(Icons.zoom_out_map), 'move'.tr(), activateMoveTelescope);
     bbar.addItem(const Icon(Icons.palette), 'modify_image'.tr(), modifyImage);
 
+    bbar.addItem(const Icon(Icons.settings), 'option'.tr(), showOptions);
+
     channel = WebSocketChannel.connect(
         Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
@@ -331,6 +333,11 @@ class _ScreenCapture extends State<ScreenCapture> {
     expoSelector.showExpositionSelector(context, service.changeExposition);
   }
 
+  //#########################################################################################################
+  //# Display Options panel
+  //#########################################################################################################
+
+  void showOptions(dynamic context) {}
   //#########################################################################################################
   //# Force reload image with modification of URL to avoid cache
   //#########################################################################################################

@@ -8,5 +8,5 @@ class ImageProcessing(BaseModel):
     b : float
     whites : int
     blacks : int
-    midtones : int
+    midtones : float
     stretchAlgo: int

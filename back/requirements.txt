@@ -7,9 +7,7 @@ pytz
 uvicorn
 pyjwt
 pyindi-client
-cv2
 opencv-python
-scipy
-skimage
+scikit-image
 scikit-image
 astroalign

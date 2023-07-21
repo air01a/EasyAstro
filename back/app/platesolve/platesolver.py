@@ -59,7 +59,8 @@ class PlateSolveAstroSolver(object):
 class PlateSolveAstap(object):
 
     ASTAP_POSSIBLE_PATHS =  [
-        'C:/Program Files/astap/astap_cli.exe'
+        'C:/Program Files/astap/astap_cli.exe',
+        '/usr/bin/astap_cli'
     ]
 
     def __init__(self, astap_path = ""):

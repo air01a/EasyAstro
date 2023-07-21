@@ -97,10 +97,6 @@ class TelescopeOrchestrator:
     def shutdown(self):
         self._end = True
 
-    def get_dark_progress(self):
-        if self.dark_total==0:
-            return 0
-        return int(100*self.dark_progress/self.dark_total)
 
     def _move_short(self, ra : float,  dec : float):
         self.lock.acquire()
@@ -168,6 +164,12 @@ class TelescopeOrchestrator:
         self.currentStatus.dec = dec
 
 
+    def get_dark_progress(self):
+        if self.dark_total==0:
+            return 0
+        return int(100*self.dark_progress/self.dark_total)
+    
+
     def take_dark(self):
         self._job_queue.append({'action':'take_dark'})
 
@@ -177,12 +179,12 @@ class TelescopeOrchestrator:
         self.dark_total = sum(expositions) * len(gains)
         self.dark_progress=0
         logger.debug(' --- START SHOOTING DARK LIBRARY')
-        today = datetime.now().strftime("%Y-%m-%d")
-        working_dir = config.CONFIG["WORKFLOW"]["STORAGE_DIR"] + "/"+today+"/"
+        today = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        working_dir = config.CONFIG["WORKFLOW"]["STORAGE_DIR"] + "/dark/"
         logger.debug(' --- WORKING DIR %s' % working_dir)
         if not os.path.isdir(working_dir):
             os.mkdir(working_dir)
-        working_dir += '/dark/'
+        working_dir += today+"/"
         if not os.path.isdir(working_dir):
             os.mkdir(working_dir)
         for expo in expositions:
@@ -298,29 +300,32 @@ class TelescopeOrchestrator:
         
 
         logger.debug(' --- TAKE REFERENCE')
-        self.indi.take_picture(working_dir+str(picture)+'.fits',self.get_exposition(ra, dec),self.gain)
-        self.image_processor.init_stacking(working_dir+str(picture)+'.fits')
-        
+        expo = self.get_exposition(ra, dec)
+        self.indi.take_picture(working_dir+str(picture)+'.fits',expo,self.gain)
+        self.image_processor.init_stacking(working_dir+str(picture)+'.fits', expo, self.gain)
+        stacking_error = 0
         logger.debug(' --- STACKING LOOP')
-        while self.currentStatus.stacking:
+        while self.currentStatus.stacking and stacking_error<6:
             logger.debug(' --- SHOOTING')
-            self.indi.take_picture(working_dir+str(picture)+'.fits', self.get_exposition(ra, dec),self.gain)
+            self.indi.take_picture(working_dir+str(picture)+'.fits', expo,self.gain)
             logger.debug(' --- TREATING FITS')
             if self.image_processor.stack(working_dir+str(picture)+'.fits'):
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
                 self.qout.put('4. IMAGE ADDED TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded))
-
+                stacking_error=0
             else:
                 self.qout.put('5. IMPOSSIBLE TO ADD IMAGE TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded)) 
+                stacking_error+=1
             self.currentStatus.discarded = self.image_processor.discarded
             self.currentStatus.stacked = self.image_processor.stacked
 
             picture += 1
-            if picture % 8 == 0 : 
+            if stacking_error % 4 == 0 : 
                 logger.debug(' --- MOVE TO FOR REALIGN')
                 self.lock.release()
                 self._move_to(ra, dec,True, object, False)
                 self.lock.acquire()
+                
         self.currentStatus.current_task = 'TRACKING'
         self.lock.release()
         

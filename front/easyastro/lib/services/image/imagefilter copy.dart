@@ -212,45 +212,73 @@ class ImageFilters {
       {num blacks = 0,
       num whites = 255,
       num midtones = 1,
-      num contrast = 1,
+      num? contrast,
       num rFactor = 1,
       num gFactor = 1,
       num bFactor = 1}) {
     if (blacks >= whites) blacks = whites - 1;
     if (midtones <= 0) midtones = 0.1;
-
-    List<List<num>> minMax = getMinMax(src);
-    var mm = minMax[3];
+    
     for (final frame in src.frames) {
       for (final p in frame) {
-        num median = mm[1] - mm[0];
-        num or =
-            (((p.r - mm[0]) / median - 0.5) * contrast + 0.5) * median + mm[0];
-        num og =
-            (((p.g - mm[0]) / median - 0.5) * contrast + 0.5) * median + mm[0];
-        num ob =
-            (((p.b - mm[0]) / median - 0.5) * contrast + 0.5) * median + mm[0];
+      
 
-        num r = rFactor *
-            (255 * pow(or, (1 / midtones)) ~/ pow(255, (1 / midtones)));
-        num g =
-            gFactor * 255 * pow(og, (1 / midtones)) ~/ pow(255, (1 / midtones));
-        num b =
-            bFactor * 255 * pow(ob, (1 / midtones)) ~/ pow(255, (1 / midtones));
+        num or = p.r;
+        num og = p.g;
+        num ob =p.b;
 
-        r = r.clamp(blacks, whites);
-        // print("$r");
-        g = g.clamp(blacks, whites);
-        b = b.clamp(blacks, whites);
+        num r = rFactor * (255*pow(or,(1/midtones)) ~/ pow(255,(1/midtones)));
+        num g = gFactor * 255*pow(og,(1/midtones)) ~/ pow(255,(1/midtones));
+        num b = bFactor * 255*pow(ob,(1/midtones)) ~/ pow(255,(1/midtones));
+        //print("$r $blacks $whites");
 
-        r = 255 * (r - mm[0]) / (mm[1] - mm[0]);
-        g = 255 * (g - mm[0]) / (mm[1] - mm[0]);
-        b = 255 * (b - mm[0]) / (mm[1] - mm[0]);
+        r=r.clamp(blacks, whites);
+       // print("$r");
+        g=g.clamp(blacks,whites);
+        b=b.clamp(blacks, whites);
 
+       // src.setPixel(x,y, img.ColorRgb8(r.toInt(), g.toInt(), b.toInt()));
         p
           ..r = r
           ..g = g
-          ..b = b;
+          ..b = b ;
+
+
+      }
+    }
+  
+
+    List<List<num>> minMax = getMinMax(src);
+    num minR = minMax[0][0];
+    num maxR = minMax[0][1];
+    num minG = minMax[1][0];
+    num maxG = minMax[1][1];
+    num minB = minMax[2][0];
+    num maxB = minMax[2][1];
+    num alphaR = 255 / (maxR - minR);
+    num betaR = -alphaR * minR;
+    num alphaG = 255 / (maxG - minG);
+    num betaG = -alphaG * minG;
+    num alphaB = 255 / (maxB - minB);
+    num betaB = -alphaB * minB;
+
+    final num minV = minMax[3][0];
+    final num maxV = minMax[3][1];
+
+    final num median = maxV - minV;
+
+    for (final frame in src.frames) {
+      for (final p in frame) {
+        final or =
+            (((p.r - minV) / median - 0.5) * contrast! + 0.5) * median + minV;
+        final og =
+            (((p.g - minV) / median - 0.5) * contrast + 0.5) * median + minV;
+        final ob =
+            (((p.b - minV) / median - 0.5) * contrast + 0.5) * median + minV;
+        p
+          ..r = (or * alphaR + betaR).clamp(0, 255)
+          ..g = (og * alphaG + betaG).clamp(0, 255)
+          ..b = (ob * alphaB + betaB).clamp(0, 255);
       }
     }
 
