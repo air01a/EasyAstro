@@ -191,6 +191,8 @@ class TelescopeOrchestrator:
             for gain in gains:
                 self.indi.take_picture(working_dir+'dark_'+str(expo)+'_'+str(gain)+'.fits',expo,gain)
                 self.dark_progress += expo
+
+        self.image_processor.load_dark_library()
         
 
     def get_expo_auto(self, ra, dec):

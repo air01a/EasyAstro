@@ -35,7 +35,7 @@ class ImageProcessor:
         self.last_image = Image(cv2.imread('static/images/messier/'+random_file))
         self.last_image_processed = None
         self.image_stacking = None
-        self.dark_library = self.load_dark_library()
+        self.load_dark_library()
 
 
 

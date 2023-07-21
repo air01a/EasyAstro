@@ -96,6 +96,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
                   }).toList(),
                 )))
       ])
-    ]));
+    ]), showDrawer: false,
+        title: "telescope_option".tr());
   }
 }

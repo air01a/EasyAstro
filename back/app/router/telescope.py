@@ -10,7 +10,7 @@ import os
 import asyncio
 import logging
 from ..models.coordinates import Exposition, Movement
-from ..models.processing import ImageProcessing,darkModel
+from ..models.processing import ImageProcessing,DarkModel
 from ..imageprocessor.processor import ImageProcessor
 from datetime import datetime,date
 from ..models.coordinates import TimeObject
@@ -98,7 +98,7 @@ async def get_current_dark():
     
 
 @router.post('/current_dark')
-async def set_current_dark(dark: darkModel):
+async def set_current_dark(dark: DarkModel):
     telescope.image_processor.set_dark_library(dark.path)
 
 @router.post('/stop_stacking')
