@@ -408,7 +408,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   Widget build(BuildContext context) {
     return Center(
         child: Scaffold(
-            body: Stack(alignment: Alignment.center, children: [
+            body: Center(child:Stack(alignment: Alignment.center, children: [
               InteractiveViewer(
                 boundaryMargin:
                     const EdgeInsets.all(20.0), // Marge autour de l'image
@@ -464,7 +464,7 @@ class _ScreenCapture extends State<ScreenCapture> {
                     ),
                   ),
                 ),
-            ]),
+            ])),
             bottomNavigationBar: bbar));
   }
 }

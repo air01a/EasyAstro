@@ -20,6 +20,7 @@ class ObjectBox extends StatefulWidget {
 
 
 class _ObjectBox extends State<ObjectBox> {
+
    Color getColor(bool isVisible, double height) {
     if (!isVisible) return Colors.red.shade800;
     if (height<20) return Colors.grey.shade800;
@@ -27,24 +28,28 @@ class _ObjectBox extends State<ObjectBox> {
 
 
    }
+
    @override
    Widget build(BuildContext context) {
       Image currentImage;
       double imageSize;
       if (kIsWeb) {
           currentImage = Image.network(widget.object.image);
-          imageSize=200;
+        //  imageSize=200;
       } else {
           currentImage = Image(image:AssetImage(widget.object.image));
-          //imageSize=MediaQuery.of(context).size.width*0.2;
-          imageSize=120;
+       //   imageSize=MediaQuery.of(context).size.width*0.15;
+          //imageSize=120;
       }
-
+      imageSize = MediaQuery.of(context).size.width*0.15;
+      print(imageSize);
+      if (imageSize>200) imageSize = 200;
+      print(imageSize);
       //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
       return Container(
         
          padding: const EdgeInsets.all(2), 
-         height: 140, 
+         height: 160, 
          child: Card(
             color:  getColor(widget.object.visible, widget.object.height),//Theme.of(context).primaryColor,
             child: Row(

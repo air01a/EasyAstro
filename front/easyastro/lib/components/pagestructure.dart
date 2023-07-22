@@ -24,7 +24,7 @@ class PageStructure extends StatelessWidget {
                                   decoration: BoxDecoration( 
                                     color: Colors.black,
                                     image: DecorationImage( 
-                                      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
+                                      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), 
                                       BlendMode.dstATop),
                                       image: AssetImage
                                         ("assets/appimages/background_dark.jpg"
