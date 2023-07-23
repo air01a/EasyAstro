@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/models/catalogs.dart';
-import 'package:easyastro/components/objectlist.dart';
-import 'package:easyastro/components/objectbox.dart';
+import 'package:easyastro/components/elements/objectlist.dart';
+import 'package:easyastro/components/elements/objectbox.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/components/rating.dart';
+import 'package:easyastro/components/elements/rating.dart';
 import 'package:easyastro/services/location/locationHelper.dart';
-import 'package:easyastro/components/bottombar.dart';
+import 'package:easyastro/components/structure/bottombar.dart';
 import 'package:easyastro/services/database/localstoragehelper.dart';
-import 'package:easyastro/components/storeselection.dart';
+import 'package:easyastro/components/forms/storeselection.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/models/selection.dart';
 

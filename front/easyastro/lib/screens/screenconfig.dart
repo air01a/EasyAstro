@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/telescope/telescopeHelper.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easyastro/models/configmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:easyastro/components/optionsforms.dart';
+import 'package:easyastro/components/forms/optionsforms.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ConfigScreen extends StatefulWidget {
   @override
@@ -15,6 +16,14 @@ class ConfigScreen extends StatefulWidget {
 class _ConfigScreen extends State<ConfigScreen> {
   final TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
   bool _isSaveDisabled = true;
+  PackageInfo _packageInfo = PackageInfo(
+      appName: 'Unknown',
+      packageName: 'Unknown',
+      version: 'Unknown',
+      buildNumber: 'Unknown',
+      buildSignature: 'Unknown',
+      installerStore: 'Unknown',
+  );
 
   Future<dynamic> update() async {
     return await checkHelper.getDarkProgession();
@@ -25,6 +34,19 @@ class _ConfigScreen extends State<ConfigScreen> {
 
     setState(() {
       _isSaveDisabled = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
     });
   }
 
@@ -46,11 +68,14 @@ class _ConfigScreen extends State<ConfigScreen> {
                       _isSaveDisabled = true;
                     });
                   })));
+    configReturn.add(SizedBox(height: 20));
+    configReturn.add(Center(child:Text('Version : ${_packageInfo.version} (2023)')));
     return configReturn;
   }
 
   @override
   Widget build(BuildContext context) {
+
     return PageStructure(
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

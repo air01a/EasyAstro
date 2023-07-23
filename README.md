@@ -1,27 +1,38 @@
 
 # EasyAstro
-Plan your observations, pilot your telescope, stack your images easily
-This project will permit to plan observation and to pilot a telescope easily, through a responsive web page. 
-Compatible with indi (linux) and astap (windows)
-Use Astap of local Astrometry.net for platesolving.
+EasyAstro is designed to simplify access to astronomy. This application allows you to plan your astronomy sessions by indicating which objects (planets and deep sky) will be visible on a specific date and at a precise location.
 
+Once your session is scheduled, if you have a telescope that can be controlled by INDI or ASCOM, the application will take care of piloting your telescope to go to the objects and then allow you to photograph them. A basic live stacking model will be displayed, enabling you to immediately enjoy a pleasing result from the captured images. If you wish to delve deeper, you will have access to the FITS files.
+
+The EasyAstro application currently offers the following features:
+
+-  Knowing which celestial objects are visible based on the time, location, and current conditions.
+-  Selecting and saving objects for later use.
+-  Controlling your telescope to point towards these objects (using plate solving for orientation and then navigating towards the target).
+-  Capturing images of the objects while controlling the gain and exposure settings.
+-  Adjust image processing settings.
+-  Display live stacking of photos with the selected treatments.
+-  Manage Dark libraries.
+
+The application currently supports two languages: French (FR) and English (EN/US).
 
 # CurrentState
 Planification is fully operationnal. Piloting telescope still have some issues, and still require a lot of developpement. But, if you are patient, it is possible to use it.
 It supports INDI and ASCAM.
 
-FRONT:
-- Display visible messier object at current time
-- Can select messier object to plan an observation night
-- Can tap long on an object to make a telescope goto
-- Can change observation time
 
-
-# Todo
+Todo: 
 - Improve front ui 
 - Improve stacking
 - Image processing with front
 - Installation process
+
+# Installation and configuration
+
+Everything is explained in the wiki : 
+
+[Wiki](https://github.com/air01a/EasyAstro/wiki)
+
 
 # Screenshot
 

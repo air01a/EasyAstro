@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/components/selectexposition.dart';
+import 'package:easyastro/components/forms/selectexposition.dart';
 import 'package:easyastro/services/telescope/telescopehelper.dart';
-import 'package:easyastro/components/bottombar.dart';
-import 'package:easyastro/components/coloradujstement.dart';
+import 'package:easyastro/components/structure/bottombar.dart';
+import 'package:easyastro/components/graphics/coloradujstement.dart';
 import 'dart:typed_data';
 import 'package:easyastro/services/image/imagehelper.dart';
 import 'package:easyastro/services/image/processingHelper.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ScreenProcessingImage extends StatefulWidget {
@@ -236,16 +236,23 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
             child: Scaffold(
                 body: Stack(alignment: Alignment.center, children: [
                   if (imageHelper.encoded != null)
-                    InteractiveViewer(
-                      boundaryMargin:
-                          const EdgeInsets.all(20.0), // Marge autour de l'image
-                      minScale: 0.1, // Échelle minimale de zoom
-                      maxScale: 4.0, // Échelle maximale de zoom
-                      child: Image.memory(
-                        imageHelper.encoded!,
-                        gaplessPlayback: true,
-                      ), // Image à afficher
-                    ),
+                   Container(
+                    // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: 
+                      InteractiveViewer(
+                        boundaryMargin:
+                          EdgeInsets.all(double.infinity), // Marge autour de l'image
+                        minScale: 0.9, // Échelle minimale de zoom
+                        maxScale: 4.0, // Échelle maximale de zoom
+                        constrained : true,
+                        child: Image.memory(
+                          
+                          imageHelper.encoded!,
+                          gaplessPlayback: true,
+                        ), // Image à afficher
+                   )),
 
                   if (_rgbVisible) colorAdjustement,
                   if (_stretchVisible) stretchAdjustement,

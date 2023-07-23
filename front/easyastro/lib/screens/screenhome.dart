@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/services/database/globals.dart';
 import 'package:sweph/sweph.dart';
-import 'package:easyastro/components/selectdate.dart'; 
-import 'package:easyastro/components/setlocation.dart'; 
+import 'package:easyastro/components/forms/selectdate.dart'; 
+import 'package:easyastro/components/forms/setlocation.dart'; 
 import 'package:easyastro/models/weathermodel.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:easyastro/services/database/configmanager.dart';

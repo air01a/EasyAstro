@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/services/telescope/telescopeHelper.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/components/progression.dart';
+import 'package:easyastro/components/loader/progression.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ConfigTelescopeScreen extends StatefulWidget {
@@ -16,14 +16,16 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
   String currentDark = '';
 
   Future<dynamic> update() async {
-    return await checkHelper.getDarkProgession();
+    dynamic progression =  await checkHelper.getDarkProgession();
+    print(progression);
+    if (progression==100) {
+      updateLibrary();
+    }
+    return progression;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void updateLibrary() {
     checkHelper.getDarkLibrary().then((value) {
-      print(value);
       darkLibrary = value;
       checkHelper.getCurrentLibrary().then((value) {
         setState(() {
@@ -33,10 +35,17 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    updateLibrary();
+  }
+
   void changeLib(String value) {
     checkHelper.changeDark(value).then((value2) {
       setState(
         () => currentDark = value,
+
       );
     });
   }
@@ -60,6 +69,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
                     onPressed: () async {
                       checkHelper.takeDark();
                       showDialog(
+                        barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(

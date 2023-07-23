@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/components/bottombar.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/bottombar.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/models/catalogs.dart';
-import 'package:easyastro/components/objectlist.dart';
-import 'package:easyastro/components/objectbox.dart';
+import 'package:easyastro/components/elements/objectlist.dart';
+import 'package:easyastro/components/elements/objectbox.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/components/rating.dart';
-import 'package:easyastro/components/selectdate.dart';
-import 'package:easyastro/components/searchbar.dart';
-import 'package:easyastro/components/filterbar.dart';
+import 'package:easyastro/components/elements/rating.dart';
+import 'package:easyastro/components/forms/selectdate.dart';
+import 'package:easyastro/components/forms/searchbar.dart';
+import 'package:easyastro/components/forms/filterbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ScreenObjectList extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/components/pagestructure.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/models/weathermodel.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/astro/astrocalc.dart';

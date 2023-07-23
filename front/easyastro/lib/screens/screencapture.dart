@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:easyastro/services/network/protocolHelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easyastro/components/scrollabletextfield.dart';
+import 'package:easyastro/components/forms/scrollabletextfield.dart';
 import 'dart:math';
-import 'package:easyastro/components/selectexposition.dart';
+import 'package:easyastro/components/forms/selectexposition.dart';
 import 'package:easyastro/services/telescope/telescopehelper.dart';
-import 'package:easyastro/components/bottombar.dart';
-import 'package:easyastro/components/coloradujstement.dart';
+import 'package:easyastro/components/structure/bottombar.dart';
+import 'package:easyastro/components/graphics/coloradujstement.dart';
 import 'package:easyastro/services/image/processingHelper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:easyastro/components/loadingindicatordialog.dart';
+import 'package:easyastro/components/loader/loadingindicatordialog.dart';
 import 'dart:async';
 import 'package:easyastro/models/telescopestatus.dart';
 import 'package:easyastro/screens/screenconfigtelescope.dart';
@@ -409,12 +409,18 @@ class _ScreenCapture extends State<ScreenCapture> {
     return Center(
         child: Scaffold(
             body: Center(child:Stack(alignment: Alignment.center, children: [
+             Container(
+          // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
+          width: double.infinity,
+          height: double.infinity,
+          child: 
               InteractiveViewer(
                 boundaryMargin:
-                    const EdgeInsets.all(20.0), // Marge autour de l'image
-                minScale: 0.1, // Échelle minimale de zoom
+                    EdgeInsets.all(double.infinity), // Marge autour de l'image
+                minScale: 0.9, // Échelle minimale de zoom
                 maxScale: 4.0, // Échelle maximale de zoom
-                child: ExtendedImage.network(_imageUrl, gaplessPlayback: true,
+            constrained : true,
+                child: ExtendedImage.network(_imageUrl, gaplessPlayback: true,  
                     loadStateChanged: (ExtendedImageState state) {
                   switch (state.extendedImageLoadState) {
                     case LoadState.loading:
@@ -427,7 +433,7 @@ class _ScreenCapture extends State<ScreenCapture> {
                       break;
                   }
                 }),
-              ),
+              )),
               controlButton(_isConfigVisible, Icons.chevron_left, 0, null, null,
                   null, moveTelescope, 0),
               controlButton(_isConfigVisible, Icons.expand_less, null, null,

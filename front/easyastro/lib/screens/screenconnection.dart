@@ -3,6 +3,9 @@ import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/database/persistentdatahelper.dart';
 import 'package:easyastro/services/telescope/telescopeHelper.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/components/structure/pagestructure.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConnectionPage extends StatefulWidget {
   const ConnectionPage({super.key});
@@ -16,11 +19,19 @@ class _ConnectionPage extends State<ConnectionPage> {
   late String? _server = '';
   final TextEditingController _controller = TextEditingController();
   String _error = '';
+  final Uri _url = Uri.parse('https://github.com/air01a/EasyAstro');
+
 
   Future<void> _loadSavedIpAddress() async {
     String? savedIpAddress = await localData.getValue('host');
     if (savedIpAddress != null) {
       _controller.text = savedIpAddress;
+    }
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
     }
   }
 
@@ -33,10 +44,8 @@ class _ConnectionPage extends State<ConnectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Connection'),
-      ),
+    return
+    PageStructure(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -47,15 +56,15 @@ class _ConnectionPage extends State<ConnectionPage> {
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the server URL';
+                    return 'error_server_url'.tr();
                   }
                   return null;
                 },
                 onSaved: (String? value) {
                   _server = value;
                 },
-                decoration: const InputDecoration(
-                  labelText: 'Server',
+                decoration:  InputDecoration(
+                  labelText: 'server'.tr(),
                 ),
                 controller: _controller,
               ),
@@ -87,9 +96,21 @@ class _ConnectionPage extends State<ConnectionPage> {
                       }
                     }
                   },
-                  child: const Text('Submit'),
+                  child: const Text('submit').tr(),
                 ),
               ),
+              Center(child:GestureDetector(
+              onTap: () {
+                _launchUrl();
+              },
+              child: Text(
+              'click_doc'.tr(),
+              style: TextStyle(
+                color: Colors.blue, // Couleur du lien
+                decoration: TextDecoration.underline, // Soulignement du lien
+              ),
+              ),
+              )),
             ],
           ),
         ),
