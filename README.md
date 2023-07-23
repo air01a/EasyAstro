@@ -4,6 +4,10 @@ EasyAstro is designed to simplify access to astronomy. This application allows y
 
 Once your session is scheduled, if you have a telescope that can be controlled by INDI or ASCOM, the application will take care of piloting your telescope to go to the objects and then allow you to photograph them. A basic live stacking model will be displayed, enabling you to immediately enjoy a pleasing result from the captured images. If you wish to delve deeper, you will have access to the FITS files.
 
+The front is written in dart with flutter framework, therefore, it is compatible with Windows, Linux, Web, Android and ios. As I don't have any macos device, I have not tested the ios compilation.
+
+The back is written with python, and include drivers for indi and ascom software. You can use it on Linux or Windows. 
+
 The EasyAstro application currently offers the following features:
 
 -  Knowing which celestial objects are visible based on the time, location, and current conditions.
