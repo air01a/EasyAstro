@@ -23,9 +23,9 @@ class FilterField {
     callback = cb;
   }
 
-  List<String> getType() {
+  List<String> getType( List<ObservableObject> results) {
     Set<String> ret = {};
-    List<ObservableObject> results = ObjectSelection().selection;
+   // List<ObservableObject> results = ObjectSelection().selection.toList();
     ret.add('all');
     for (ObservableObject object in results) {
       ret.add(object.type);
@@ -33,9 +33,10 @@ class FilterField {
     return ret.toList();
   }
 
-  Widget buildFilterTextField() {
+  Widget buildFilterTextField( List<ObservableObject> objects) {
+
     if (isFilterActive) {
-      final values = getType();
+      final values = getType(objects);
       return Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             direction: Axis.horizontal,

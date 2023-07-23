@@ -22,6 +22,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String searchValue = '';
   String filterValue = 'all';
+
   SearchField sf = SearchField();
   FilterField ff = FilterField();
   bool onlyVisible = true;
@@ -104,6 +105,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   @override
   void initState() {
     super.initState();
+
     sf.setCallBack(search);
     ff.setCallBack(filter);
     _getNewCatalog();
@@ -116,12 +118,13 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
   @override
   Widget build(BuildContext context) {
+
     return PageStructure(
         body: Container(
             padding: EdgeInsets.only(left: 8.0),
             child: Column(children: [
               sf.buildSearchTextField(),
-              ff.buildFilterTextField(),
+              ff.buildFilterTextField(ObjectSelection().selection.toList()),
               Expanded(
                   child: ListView.builder(
                       itemCount: _catalog.length,
