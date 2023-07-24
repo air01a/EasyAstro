@@ -10,16 +10,22 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ObjectPage extends StatefulWidget {
   final ObservableObject item;
-  final RatingBox rating;
-
-  const ObjectPage({super.key, required this.item, required this.rating});
+  final int index;
+  final Function(int, bool) onValueChanged;
+  bool initialValue;
+  ObjectPage(
+      {super.key,
+      required this.item,
+      required this.index,
+      required this.onValueChanged,
+      required this.initialValue});
   @override
   State<ObjectPage> createState() => _ObjectPage();
 }
 
 class _ObjectPage extends State<ObjectPage> {
   Map<double, double> azimuthalChart = {};
-
+  late RatingBox ratingBox;
   @override
   void initState() {
     super.initState();
@@ -27,6 +33,10 @@ class _ObjectPage extends State<ObjectPage> {
       azimuthalChart = ObjectSelection().astro!.getAzimutalChart(widget.item.ra,
           widget.item.dec, ObjectSelection().astro!.getSiderealTime());
     }
+    ratingBox = RatingBox(
+        onValueChanged: widget.onValueChanged,
+        index: widget.index,
+        initialValue: widget.initialValue);
   }
 
   @override
@@ -87,12 +97,18 @@ class _ObjectPage extends State<ObjectPage> {
                                       textAlign: TextAlign.left,
                                       maxLines: 10,
                                     ).tr()),
-                                Text('rise').tr(args: [
-                                  ConvertAngle.hourToString(widget.item.rise)
-                                ]), //"Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
-                                Text('set').tr(args: [
-                                  ConvertAngle.hourToString(widget.item.set)
-                                ]), //"Set : ${ConvertAngle.hourToString(widget.item.set)}"),
+                                if (widget.item.rise != widget.item.set)
+                                  Text('rise').tr(args: [
+                                    ConvertAngle.hourToString(widget.item.rise)
+                                  ])
+                                else
+                                  Text('circumpolar').tr(),
+                                if (widget.item.rise !=
+                                    widget.item
+                                        .set) //"Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
+                                  Text('set').tr(args: [
+                                    ConvertAngle.hourToString(widget.item.set)
+                                  ]), //"Set : ${ConvertAngle.hourToString(widget.item.set)}"),
                                 Text('culmination').tr(args: [
                                   ConvertAngle.hourToString(
                                       widget.item.meridian)
@@ -106,7 +122,7 @@ class _ObjectPage extends State<ObjectPage> {
                                     .tr(args: [
                                   widget.item.height.toInt().toString()
                                 ]), //"Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left),
-                                widget.rating,
+                                ratingBox,
                                 ServerInfo().connected
                                     ? ElevatedButton(
                                         onPressed: () {

@@ -14,9 +14,8 @@ class ASCOMPilot():
     SLEW_MODE_SYNC = 2
 
 
-    def __init__(self, queue_in : SimpleQueue, queue_out:SimpleQueue ):
-        self.queue_in = queue_in
-        self.queue_out = queue_out
+    def __init__(self, communication_callback  ):
+        self.communication_callback = communication_callback
         self.moving = False
         self.shooting = False
         self.lock = threading.Lock()
@@ -54,7 +53,9 @@ class ASCOMPilot():
         
 
     def goto(self, ra, dec):
+        self.communication_callback(1,"Scope Moving %f %f" % (ra, dec),0)
         self.telescope.SlewToCoordinates(ra,dec) 
+        self.communication_callback(1,"MOVING IS FINISHED",0)
         return
 
     def ccd_connect(self):

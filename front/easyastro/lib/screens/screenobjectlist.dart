@@ -118,7 +118,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
   @override
   Widget build(BuildContext context) {
-
     return PageStructure(
         body: Container(
             padding: EdgeInsets.only(left: 8.0),
@@ -146,7 +145,10 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ObjectPage(
-                                      item: _catalog[index], rating: rating),
+                                      item: _catalog[index],
+                                      index: index,
+                                      onValueChanged: update,
+                                      initialValue: _catalog[index].selected),
                                 ),
                               );
                             },

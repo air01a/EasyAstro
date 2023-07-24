@@ -1,6 +1,5 @@
 import time
 import threading
-from queue import SimpleQueue
 from app.dependencies import config
 import logging
 import PyIndi
@@ -67,9 +66,8 @@ class IndiPilot():
     COORD_J2000 = "EQUATORIAL_COORD"
     TARGET_EOD = "TARGET_EOD_COORD"
 
-    def __init__(self, queue_in : SimpleQueue, queue_out:SimpleQueue ):
-        self.queue_in = queue_in
-        self.queue_out = queue_out
+    def __init__(self, communication_callback ):
+        self.communication_callback = communication_callback
         self.moving = False
         self.shooting = False
         self.lock = threading.Lock()
@@ -189,12 +187,11 @@ class IndiPilot():
         self.indiclient.sendNewProperty(telescope_radec)
         # and wait for the scope has finished moving
         while telescope_radec.getState() == PyIndi.IPS_BUSY:
-            print("* busy")
-            self.queue_out.put("Scope Moving %f %f" % (telescope_radec[0].value, telescope_radec[1].value))
+            self.communication_callback(1,"Scope Moving %f %f" % (telescope_radec[0].value, telescope_radec[1].value),0)
             time.sleep(2)
-        print("* END")
+
         self.moving = False
-        self.queue_out.put('1.MOVING IS FINISHED')
+        self.communication_callback(1,"MOVING IS FINISHED",0)
 
 
     def ccd_connect(self):

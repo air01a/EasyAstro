@@ -11,6 +11,7 @@ from datetime import datetime
 from signal import signal, SIGINT
 from ..lib import Coordinates
 from ..models.constants import DEG_TO_RAD
+import json
 
 if config.PLATFORM==config.LINUX:
     from .drivers.indi import IndiPilot
@@ -38,9 +39,9 @@ class TelescopeOrchestrator:
         self.image_processor = image_processor
         
         if config.PLATFORM==config.LINUX:
-            self.indi = IndiPilot(self.qin, self.qout)
+            self.indi = IndiPilot(self.send_message)
         else:
-            self.indi = ASCOMPilot(self.qin, self.qout)
+            self.indi = ASCOMPilot(self.send_message)
         self._operating = False
         if config.CONFIG['PLATESOLVER']['PROGRAM']=='ASTRO.NET':
             self.platesolver = platesolver.PlateSolveAstroSolver()
@@ -117,7 +118,8 @@ class TelescopeOrchestrator:
                 if self.capture_image:
                     self.indi.take_picture('/tmp/current'+str(i)+'.fits',self.get_exposition(),self.gain)
                     self.image_processor.set_last_image('/tmp/current'+str(i)+'.fits')
-                    self.qout.put('2.SHOOTING IS FINISHED')
+
+                    self.send_message(2,"SHOOTING IS FINISHED",0)
                     if self.get_exposition() < 5:
                         time.sleep(3)
                     i=(i+1) % 10
@@ -163,7 +165,6 @@ class TelescopeOrchestrator:
         self.currentStatus.ra = ra
         self.currentStatus.dec = dec
 
-
     def get_dark_progress(self):
         if self.dark_total==0:
             return 0
@@ -193,6 +194,15 @@ class TelescopeOrchestrator:
                 self.dark_progress += expo
 
         self.image_processor.load_dark_library()
+    
+    def send_message(self, num, msg, error, **kwargs):
+        message = {}
+        message['message'] = msg
+        message['type'] = num
+        message['error'] = error
+        for (key,value) in kwargs.items():
+            message[key]=value
+        self.qout.put(json.dumps(message))
         
 
     def get_expo_auto(self, ra, dec):
@@ -228,6 +238,7 @@ class TelescopeOrchestrator:
         ra = ra * 24/360
         logger.debug(' --- Current Position '+str(cra)+" ; "+str(cdec))
         logger.debug(' --- going to '+str(ra)+" ; "+str(dec))
+        self.send_message(7,"MOVING TELESCOPE TO %f,%f" % (ra,dec),0)
         exposition = 1.5
 
         while retry<10 and self._operating:
@@ -238,9 +249,10 @@ class TelescopeOrchestrator:
             self.indi.take_picture('/tmp/platesolve'+str(retry)+'.fits',exposition,self.gain)
             self.image_processor.set_last_image('/tmp/platesolve'+str(retry)+'.fits')
             if refresh:
-                self.qout.put('2.SHOOTING IS FINISHED')
+                self.send_message(2,"SHOOTING IS FINISHED",0)
 
             logger.debug(' --- PICTURE OK, SOLVING')
+            self.send_message(7,"SOLVING IMAGE",0)
             ps_return = self.platesolver.resolve('/tmp/platesolve'+str(retry)+'.fits',ra,dec)
 
             logger.debug(' SOLVER ERROR %i', ps_return['error'])
@@ -251,17 +263,17 @@ class TelescopeOrchestrator:
 
 
             if ps_return['error']==0:
-                self.qout.put('   Solving solution %f,%f,%f' % (ps_return['ra'],ps_return['dec'], ps_return['orientation']))
+                self.send_message(20,'   Solving solution %f,%f,%f' % (ps_return['ra'],ps_return['dec'], ps_return['orientation']),0)
                 logger.debug('Syncing telescope to new coordinates')
                 self.indi.sync(ps_return['ra'],ps_return['dec'] )
                 error_rate = sqrt((ps_return['ra']-ra)*(ps_return['ra']-ra)+(ps_return['dec']-dec)*(ps_return['dec']-dec))
-                self.qout.put('6.PLATESOLVE DONE;%f' % error_rate)
+                self.send_message(6,'PLATESOLVE DONE',0,error_rate=error_rate)
                 logger.debug(' SOLVER ERROR RATE %f', error_rate)
                 self.currentStatus.ra = ps_return['ra']
                 self.currentStatus.dec = ps_return['dec']
                 if error_rate<MAX_PLATESOLVE_ERROR:
                     self.currentStatus.last_error = 0
-                    self.qout.put('3.GOTO FINISHED')
+                    self.send_message(3,'GOTO FINISHED',0)
                     logger.debug('++++ GOTO FINISHED')
                     self._operating = False
                     self.currentStatus.current_task = 'TRACKING'
@@ -270,14 +282,14 @@ class TelescopeOrchestrator:
                     return 
             else:
                     logger.error("Error during platesolve (error, ra, dec) (%i), (%f), (%f)", ps_return['error'], ra, dec)
-                    self.qout.put('7.PLATESOLVE %i FAILED, RETRYING' % retry) 
+                    self.send_message(7,'PLATESOLVE %i FAILED, RETRYING' % retry,1)
                     exposition = exposition + 0.5
                      
             retry += 1
         logger.debug('GOTO FAILED DUE TO MAX RETRY REACHED')
         self.currentStatus.last_error = error.ERROR_GOTO_FAILED
         self._operating = False
-        self.qout.put('9.GOTO FAILED')
+        self.send_message(9,'GOTO FAILED',2)
         self.currentStatus.current_task = 'IDLE'
         self.lock.release()
 
@@ -313,10 +325,10 @@ class TelescopeOrchestrator:
             logger.debug(' --- TREATING FITS')
             if self.image_processor.stack(working_dir+str(picture)+'.fits'):
                 logger.debug(' --- UPDATING STATUS FOR CLIENT')
-                self.qout.put('4. IMAGE ADDED TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded))
+                self.send_message(4,'IMAGE ADDED TO STACK',0,stacked=self.image_processor.stacked, discarded=self.image_processor.discarded)
                 stacking_error=0
             else:
-                self.qout.put('5. IMPOSSIBLE TO ADD IMAGE TO STACK;%i,%i' % (self.image_processor.stacked, self.image_processor.discarded)) 
+                self.send_message(5,'IMAGE ADDED TO STACK',6,stacked=self.image_processor.stacked, discarded=self.image_processor.discarded)
                 stacking_error+=1
             self.currentStatus.discarded = self.image_processor.discarded
             self.currentStatus.stacked = self.image_processor.stacked

@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:easyastro/screens/screenprocessimage.dart';
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/network/protocolHelper.dart';
+import 'package:easyastro/services/network/protocolhelper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/forms/scrollabletextfield.dart';
@@ -77,8 +79,8 @@ class _ScreenCapture extends State<ScreenCapture> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("current_task").tr(args: [current]),
-          content: Text('confirm switch').tr(args: [object]),
+          title: const Text("current_task").tr(args: [current]),
+          content: const Text('confirm switch').tr(args: [object]),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -88,14 +90,14 @@ class _ScreenCapture extends State<ScreenCapture> {
                 _isStackable = false;
                 this.object = object;
               },
-              child: Text('confirm').tr(),
+              child: const Text('confirm').tr(),
             ),
             TextButton(
               onPressed: () {
                 // Action lorsque l'utilisateur annule
                 Navigator.of(context).pop(); // Ferme la boîte de dialogue
               },
-              child: Text('cancel').tr(),
+              child: const Text('cancel').tr(),
             ),
           ],
         );
@@ -130,8 +132,9 @@ class _ScreenCapture extends State<ScreenCapture> {
         Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
     channel.stream.listen((message) async {
+      print(message);
       // Mettre à jour l'image en allant la chercher sur l'API
-      final info = protocol.analyseMessage(message);
+      final info = protocol.analyseMessage(jsonDecode(message));
 
       if (info['displayMessage']) {
         setState(() {
@@ -179,7 +182,7 @@ class _ScreenCapture extends State<ScreenCapture> {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     service.getCurrentObject().then((value) {
       telescopeStatus = value;
-      Timer(Duration(seconds: 4), () {
+      Timer(const Duration(seconds: 4), () {
         _statusVisible = false;
       });
       setState(() {
@@ -221,7 +224,15 @@ class _ScreenCapture extends State<ScreenCapture> {
   //# Go back to plan page
   //#########################################################################################################
   void close(dynamic object) {
-    Navigator.pushReplacementNamed(context, '/plan');
+    if (ObjectSelection()
+        .selection
+        .where((line) => line.selected == true)
+        .toList()
+        .isNotEmpty) {
+      Navigator.pushReplacementNamed(context, '/selection');
+    } else {
+      Navigator.pushReplacementNamed(context, '/plan');
+    }
   }
 
   //#########################################################################################################
@@ -320,7 +331,6 @@ class _ScreenCapture extends State<ScreenCapture> {
   //#########################################################################################################
 
   void stack(dynamic object) {
-    print("stacking : ${object.toString()}");
     service.stackImage(object.toString());
     _setStackable(false);
     LoadingIndicatorDialog().show(context);
@@ -382,8 +392,8 @@ class _ScreenCapture extends State<ScreenCapture> {
   //# Get icons according to download state
   //#########################################################################################################
   Icon getLoadingIcons() {
-    if (!_imageLoading) return Icon(Icons.check_box);
-    if (_imageLoading) return Icon(Icons.restart_alt);
+    if (!_imageLoading) return const Icon(Icons.check_box);
+    if (_imageLoading) return const Icon(Icons.restart_alt);
     return const Icon(Icons.check_box);
   }
 
@@ -408,32 +418,33 @@ class _ScreenCapture extends State<ScreenCapture> {
   Widget build(BuildContext context) {
     return Center(
         child: Scaffold(
-            body: Center(child:Stack(alignment: Alignment.center, children: [
-             Container(
-          // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
-          width: double.infinity,
-          height: double.infinity,
-          child: 
-              InteractiveViewer(
-                boundaryMargin:
-                    EdgeInsets.all(double.infinity), // Marge autour de l'image
-                minScale: 0.9, // Échelle minimale de zoom
-                maxScale: 4.0, // Échelle maximale de zoom
-            constrained : true,
-                child: ExtendedImage.network(_imageUrl, gaplessPlayback: true,  
-                    loadStateChanged: (ExtendedImageState state) {
-                  switch (state.extendedImageLoadState) {
-                    case LoadState.loading:
-                      break;
-                    case LoadState.completed:
-                      _imageLoading = false;
-                      break;
-                    case LoadState.failed:
-                      _imageLoading = false;
-                      break;
-                  }
-                }),
-              )),
+            body: Center(
+                child: Stack(alignment: Alignment.center, children: [
+              Container(
+                  // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: InteractiveViewer(
+                    boundaryMargin: const EdgeInsets.all(
+                        double.infinity), // Marge autour de l'image
+                    minScale: 0.9, // Échelle minimale de zoom
+                    maxScale: 4.0, // Échelle maximale de zoom
+                    constrained: true,
+                    child:
+                        ExtendedImage.network(_imageUrl, gaplessPlayback: true,
+                            loadStateChanged: (ExtendedImageState state) {
+                      switch (state.extendedImageLoadState) {
+                        case LoadState.loading:
+                          break;
+                        case LoadState.completed:
+                          _imageLoading = false;
+                          break;
+                        case LoadState.failed:
+                          _imageLoading = false;
+                          break;
+                      }
+                    }),
+                  )),
               controlButton(_isConfigVisible, Icons.chevron_left, 0, null, null,
                   null, moveTelescope, 0),
               controlButton(_isConfigVisible, Icons.expand_less, null, null,
@@ -461,7 +472,8 @@ class _ScreenCapture extends State<ScreenCapture> {
                           child: Column(children: [
                         Text(
                           telescopeStatus?.currentTask ?? 'Initializing',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                         Text("Object: ${telescopeStatus?.object ?? ''}"),
                         Text("RA: ${telescopeStatus?.ra ?? ''}"),

@@ -122,8 +122,11 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ObjectPage(item: _catalog[index], rating: rating),
+                      builder: (context) => ObjectPage(
+                          item: _catalog[index],
+                          index: index,
+                          onValueChanged: update,
+                          initialValue: _catalog[index].selected),
                     ),
                   );
                 },

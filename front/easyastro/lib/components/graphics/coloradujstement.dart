@@ -143,7 +143,7 @@ class _StretchAdjustement extends State<StretchAdjustement> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: widget.size,
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               color: Colors.black.withOpacity(0.8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,7 +231,7 @@ class _LevelAdjustement extends State<LevelAdjustement> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: widget.size,
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               color: Colors.black.withOpacity(0.8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
