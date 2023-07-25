@@ -30,8 +30,10 @@ jobs:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
     
-    - run: echo $GRADLE > ./local.properties
-    - run: echo $NUTELLA_JKS > ./nutella.jks
+    - run: echo $GRADLE > ./android/local.properties
+    - run: echo $NUTELLA_JKS > ./android/nutella.jks
+    - run: cat ./android/local.properties
+    - run: cat ./android/nutella.jks
     # Get flutter dependencies.
     - run: flutter pub get
     
