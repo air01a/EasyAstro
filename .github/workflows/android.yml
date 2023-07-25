@@ -32,7 +32,7 @@ jobs:
         
     - run: echo ${{ secrets.GRADLE }} > ./android/local.properties
           
-    - run: echo ${{ secrets.NUTELLA_JKS }} > ./android/nutella.jks
+    - run: echo ${{ secrets.NUTELLA_JKS }} | echo "test" | base64 -d > ./android/nutella.jks
    
     - run: cat ./android/local.properties
     - run: cat ./android/nutella.jks
