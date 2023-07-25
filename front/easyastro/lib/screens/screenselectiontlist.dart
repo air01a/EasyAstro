@@ -5,7 +5,7 @@ import 'package:easyastro/components/elements/objectlist.dart';
 import 'package:easyastro/components/elements/objectbox.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/elements/rating.dart';
-import 'package:easyastro/services/location/locationHelper.dart';
+import 'package:easyastro/services/location/locationhelper.dart';
 import 'package:easyastro/components/structure/bottombar.dart';
 import 'package:easyastro/services/database/localstoragehelper.dart';
 import 'package:easyastro/components/forms/storeselection.dart';

@@ -4,7 +4,6 @@ import 'package:easyastro/services/database/persistentdatahelper.dart';
 import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
-import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ConnectionPage extends StatefulWidget {

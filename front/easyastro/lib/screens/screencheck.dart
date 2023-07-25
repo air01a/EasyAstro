@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/repositories/observablerepositories.dart';
-import 'package:easyastro/services/location/locationHelper.dart';
+import 'package:easyastro/services/location/locationhelper.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
