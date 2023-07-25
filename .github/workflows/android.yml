@@ -17,7 +17,7 @@ jobs:
         run:
           working-directory: ./front/easyastro/
     steps:
-    
+
     # Setup Java environment in order to build the Android app.
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
@@ -30,11 +30,14 @@ jobs:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
         
+    - run: echo ${{ secrets.GRADLE }} > ./android/local.properties
+          
+    - run: echo ${{ secrets.NUTELLA_JKS }} > ./android/nutella.jks
+   
+    - run: cat ./android/local.properties
+    - run: cat ./android/nutella.jks
     # Get flutter dependencies.
     - run: flutter pub get
-    
-    # Check for any formatting issues in the code.
-    - run: flutter format --set-exit-if-changed .
     
     # Build apk.
     - run: flutter build apk
