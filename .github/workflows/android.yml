@@ -30,13 +30,9 @@ jobs:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
         
-    - env:
-          GRADLE: ${{ secrets.GRADLE }}
-          run: echo $GRADLE > ./android/local.properties
+    - run: echo ${{ secrets.GRADLE }} > ./android/local.properties
           
-    - env:
-          GRADLE: ${{ secrets.NUTELLA_JKS }}
-          run: echo $NUTELLA_JKS > ./android/nutella.jks
+    - run: echo ${{ secrets.NUTELLA_JKS }} > ./android/nutella.jks
    
     - run: cat ./android/local.properties
     - run: cat ./android/nutella.jks
