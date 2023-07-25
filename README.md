@@ -42,31 +42,45 @@ Everything is explained in the wiki :
 
 *Web interface* 
 
+The application will show you what are the visible object at a date, and give you information about the visibility (green border, the object height will be more than 20°, orange, it will be below 20°, and red is not visible).
+
 ![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web.jpg?raw=true "Web interface")
 
 *Display information about object (time of rise, set and culmination) with altazimutal chart :* 
 
 ![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web2.jpg?raw=true "Web interface")
 
-*Mobile interface*
+*Mobile application*
 
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/android.png?raw=true "Plan your observation")
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/1.jpg?raw=true "Plan your observation")
 
 *Plan your observation (modify time and location, to see visible objects for your next session, select them and save your list for later)*
 
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/expogain.jpg?raw=true "Plan your observation")
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/plan.jpg?raw=true "Plan your observation")
 
-*Select objects*
-
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/list.png?raw=true "Plan your observation")
 
 *Connect to the easyastro backend to pilot your telescope*
 
 ![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/server.png?raw=true "Pilot your telescope")
 
+*Once connected, you can go back to your planned session and select objects to point the telescope to*
+
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/goto.jpg?raw=true "Plan your observation")
+
+*The software will plate solve the pictures and sync the telescope to be sure that the target is right in the center of the frame*
+
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/gotoend.jpg?raw=true "Plan your observation")
+
 *Choose exposition, move your scope to one of your target (the backend will platesolve to automatically sync your mount and center the object)*
 
 ![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/telescop2.png?raw=true "Pilot your telescope")
+
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/expogain.jpg?raw=true "Plan your observation")
+
+*Change image processing*
+
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/imageprocessing.jpg?raw=true "Process your image")
+
 
 *The backend will stack your pictures to get an enhanced result*
 
