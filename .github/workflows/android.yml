@@ -29,9 +29,14 @@ jobs:
       with:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
-    
-    - run: echo $GRADLE > ./android/local.properties
-    - run: echo $NUTELLA_JKS > ./android/nutella.jks
+    - name: Access GRADLE Key
+      env:
+        GRADLE: $
+        run: echo $GRADLE > ./android/local.properties
+    - name: Access NUTELLA_JKS Key
+      env:
+        NUTELLA_JKS: $
+        run: echo $NUTELLA_JKS > ./android/nutella.jks
     - run: cat ./android/local.properties
     - run: cat ./android/nutella.jks
     # Get flutter dependencies.
