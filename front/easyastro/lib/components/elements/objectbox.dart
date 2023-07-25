@@ -40,7 +40,6 @@ class _ObjectBox extends State<ObjectBox> {
     //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
     return Container(
         padding: const EdgeInsets.all(2),
-        height: 160,
         child: Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -49,7 +48,6 @@ class _ObjectBox extends State<ObjectBox> {
             borderRadius: const BorderRadius.all(Radius.circular(12)),
           ),
           color: Theme.of(context).primaryColor,
-
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -74,13 +72,14 @@ class _ObjectBox extends State<ObjectBox> {
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold))
                                 .tr(),
-                            if (widget.object.rise!=widget.object.set)
-                            Text("rise_set").tr(args: [
-                              ConvertAngle.hourToString(widget.object.rise),
-                              ConvertAngle.hourToString(widget.object.set)
-                            ])
+                            if (widget.object.rise != widget.object.set)
+                              Text("rise_set").tr(args: [
+                                ConvertAngle.hourToString(widget.object.rise),
+                                ConvertAngle.hourToString(widget.object.set)
+                              ])
                             else
-                            Text("circumpolar").tr(), //"Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "),
+                              Text("circumpolar")
+                                  .tr(), //"Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "),
                             Text("culmination").tr(args: [
                               ConvertAngle.hourToString(widget.object.meridian)
                             ]), //"Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"),

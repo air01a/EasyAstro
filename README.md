@@ -42,11 +42,11 @@ Everything is explained in the wiki :
 
 *Web interface* 
 
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web.png?raw=true "Web interface")
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web.jpg?raw=true "Web interface")
 
 *Display information about object (time of rise, set and culmination) with altazimutal chart :* 
 
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web2.png?raw=true "Web interface")
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/web2.jpg?raw=true "Web interface")
 
 *Mobile interface*
 
@@ -54,7 +54,7 @@ Everything is explained in the wiki :
 
 *Plan your observation (modify time and location, to see visible objects for your next session, select them and save your list for later)*
 
-![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/selecthour.png?raw=true "Plan your observation")
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/expogain.jpg?raw=true "Plan your observation")
 
 *Select objects*
 
