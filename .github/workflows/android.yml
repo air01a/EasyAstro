@@ -30,12 +30,10 @@ jobs:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
         
-    - run: echo ${{ secrets.GRADLE }} > ./android/local.properties
+    - run: echo ${{ secrets.GRADLE }} | base64 -d > ./android/local.properties
           
-    - run: echo ${{ secrets.NUTELLA_JKS }} | echo "test" | base64 -d > ./android/nutella.jks
+    - run: echo ${{ secrets.NUTELLA_JKS }} | base64 -d > ./android/nutella.jks
    
-    - run: cat ./android/local.properties
-    - run: cat ./android/nutella.jks
     # Get flutter dependencies.
     - run: flutter pub get
     
@@ -46,4 +44,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: release-apk
-        path: build/app/outputs/apk/release/app-release.apk
+        path: build/app/outputs/apk/release/easyastro-release.apk
