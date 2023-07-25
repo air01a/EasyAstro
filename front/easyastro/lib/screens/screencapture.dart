@@ -11,7 +11,7 @@ import 'package:easyastro/components/forms/selectexposition.dart';
 import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easyastro/components/structure/bottombar.dart';
 import 'package:easyastro/components/graphics/coloradujstement.dart';
-import 'package:easyastro/services/image/processingHelper.dart';
+import 'package:easyastro/services/image/processinghelper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:easyastro/components/loader/loadingindicatordialog.dart';

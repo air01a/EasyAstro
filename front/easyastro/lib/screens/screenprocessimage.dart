@@ -6,7 +6,7 @@ import 'package:easyastro/components/structure/bottombar.dart';
 import 'package:easyastro/components/graphics/coloradujstement.dart';
 import 'dart:typed_data';
 import 'package:easyastro/services/image/imagehelper.dart';
-import 'package:easyastro/services/image/processingHelper.dart';
+import 'package:easyastro/services/image/processinghelper.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -236,23 +236,21 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
             child: Scaffold(
                 body: Stack(alignment: Alignment.center, children: [
                   if (imageHelper.encoded != null)
-                   Container(
-                    // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: 
-                      InteractiveViewer(
-                        boundaryMargin:
-                          EdgeInsets.all(double.infinity), // Marge autour de l'image
-                        minScale: 0.9, // Échelle minimale de zoom
-                        maxScale: 4.0, // Échelle maximale de zoom
-                        constrained : true,
-                        child: Image.memory(
-                          
-                          imageHelper.encoded!,
-                          gaplessPlayback: true,
-                        ), // Image à afficher
-                   )),
+                    Container(
+                        // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: InteractiveViewer(
+                          boundaryMargin: EdgeInsets.all(
+                              double.infinity), // Marge autour de l'image
+                          minScale: 0.9, // Échelle minimale de zoom
+                          maxScale: 4.0, // Échelle maximale de zoom
+                          constrained: true,
+                          child: Image.memory(
+                            imageHelper.encoded!,
+                            gaplessPlayback: true,
+                          ), // Image à afficher
+                        )),
 
                   if (_rgbVisible) colorAdjustement,
                   if (_stretchVisible) stretchAdjustement,
