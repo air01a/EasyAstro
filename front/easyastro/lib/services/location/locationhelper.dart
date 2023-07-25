@@ -1,4 +1,4 @@
-import 'package:easyastro/repositories/ObservableRepositories.dart';
+import 'package:easyastro/repositories/observablerepositories.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:geolocator/geolocator.dart';
 

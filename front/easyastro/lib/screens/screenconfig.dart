@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/telescope/telescopeHelper.dart';
+import 'package:easyastro/services/telescope/telescopehelper.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/services/database/configmanager.dart';
@@ -17,12 +17,12 @@ class _ConfigScreen extends State<ConfigScreen> {
   final TelescopeHelper checkHelper = TelescopeHelper(ServerInfo().host);
   bool _isSaveDisabled = true;
   PackageInfo _packageInfo = PackageInfo(
-      appName: 'Unknown',
-      packageName: 'Unknown',
-      version: 'Unknown',
-      buildNumber: 'Unknown',
-      buildSignature: 'Unknown',
-      installerStore: 'Unknown',
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+    installerStore: 'Unknown',
   );
 
   Future<dynamic> update() async {
@@ -69,13 +69,13 @@ class _ConfigScreen extends State<ConfigScreen> {
                     });
                   })));
     configReturn.add(SizedBox(height: 20));
-    configReturn.add(Center(child:Text('Version : ${_packageInfo.version} (2023)')));
+    configReturn
+        .add(Center(child: Text('Version : ${_packageInfo.version} (2023)')));
     return configReturn;
   }
 
   @override
   Widget build(BuildContext context) {
-
     return PageStructure(
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
