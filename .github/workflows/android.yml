@@ -34,6 +34,9 @@ jobs:
           
     - run: echo ${{ secrets.NUTELLA_JKS }} | base64 -d > ./android/nutella.jks
    
+    - run: ls 
+
+    - run: ls ./android/
     # Get flutter dependencies.
     - run: flutter pub get
     
