@@ -1,5 +1,9 @@
 
 def localProperties = new Properties()
+println  "Root project:   ${project.rootProject}"
+println  "  rootDir:      ${project.rootDir}"
+println  "  projectDir:   ${project.projectDir}"
+println  "  project dir:  ${System.getProperty("user.dir")}"
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
