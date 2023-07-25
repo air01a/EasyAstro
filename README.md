@@ -37,7 +37,6 @@ Everything is explained in the wiki :
 
 [Wiki](https://github.com/air01a/EasyAstro/wiki)
 
-
 # Screenshot
 
 *Web interface* 
