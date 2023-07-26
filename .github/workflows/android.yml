@@ -47,4 +47,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: appbundle
-        path: ./build/app/outputs/bundle/release
+        path: ./front/easyastro/build/app/outputs/bundle/release
