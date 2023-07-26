@@ -31,7 +31,7 @@ jobs:
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
         
     - run: flutter config --enable-windows-desktop
-   
+    - run: flutter create --platforms=windows
     
     # Get flutter dependencies.
     - run: flutter pub get
@@ -43,4 +43,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: windows
-        path: build\windows\runner\Release\
+        path: .\build\windows\runner\Release\
