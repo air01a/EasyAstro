@@ -1,2 +1,2 @@
-scripts\activate
-python start.py
+call scripts\activate
+python easyastro.py
