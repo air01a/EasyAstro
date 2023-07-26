@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from fastapi.staticfiles import StaticFiles
 
-
+import uvicorn
 
 from .router import (
     platesolver,
@@ -42,3 +42,7 @@ async def redirect():
 app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+def run():
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8001, reload=False)
