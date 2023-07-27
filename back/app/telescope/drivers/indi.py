@@ -151,15 +151,13 @@ class IndiPilot():
         test[1].setState(PyIndi.ISS_ON)
         self.indiclient.sendNewProperty(test)'''
         (ra,dec) = self.get_current_coordinates()
-        print("Current Coordonnate ra,dec", ra, dec)
-        print("GOTO ", ra+delta_ra, dec+delta_dec)
+
         self.goto(ra+delta_ra, dec+delta_dec)
         
 
     def goto(self, ra, dec):
         self.moving = True
 
-        print(ra,dec)
         # Now let's make a goto to vega
         # Beware that ra/dec are in decimal hours/degrees
         #vega = {"ra": (279.23473479 * 24.0) / 360.0, "dec": +38.78368896}
@@ -200,14 +198,14 @@ class IndiPilot():
         logger.debug(' --- Device CCD get connection ')
         while not (self.device_ccd):
             time.sleep(0.5)
-            print('CCD GET CONNECTION')
+
             self.device_ccd = self.indiclient.getDevice(self.ccd)
 
         logger.debug(' --- Device CCD Connection ')
         self.ccd_connect = self.device_ccd.getSwitch("CONNECTION")
         while not (self.ccd_connect):
             time.sleep(0.5)
-            print('DEVICE GET CONNECTION')
+
 
             self.ccd_connect = self.device_ccd.getSwitch("CONNECTION")
         if not (self.device_ccd.isConnected()):
@@ -226,7 +224,7 @@ class IndiPilot():
         self.ccd_active_devices = self.device_ccd.getText("ACTIVE_DEVICES")
         while not (self.ccd_active_devices):
             time.sleep(0.5)
-            print('GET ACTIVE')
+
 
             self.ccd_active_devices = self.device_ccd.getText("ACTIVE_DEVICES")
         self.ccd_active_devices[0].setText(self.telescope)
