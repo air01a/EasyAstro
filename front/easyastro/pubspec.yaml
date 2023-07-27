@@ -58,6 +58,7 @@ dependencies:
   geolocator: ^9.0.2
   package_info_plus: ^4.0.2
   url_launcher: ^6.1.12
+  syncfusion_flutter_gauges: ^22.1.39
 dev_dependencies:
   flutter_test:
     sdk: flutter
