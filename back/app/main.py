@@ -5,6 +5,10 @@ import logging
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 from uvicorn.main import Server
+import sys
+import asyncio
+import os
+import signal
 
 from .dependencies import config
 
@@ -41,6 +45,12 @@ app.add_middleware(
 async def redirect():
     response = RedirectResponse(url='/static/index.html')
     return response
+
+@app.get("/stop")
+def stop():
+    os.kill(os.getpid(), signal.SIGINT)
+
+
 
 app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')

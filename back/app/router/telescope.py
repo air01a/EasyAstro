@@ -147,4 +147,4 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             data = telescope.qout.get()
             await manager.broadcast(f"{data}")
         await asyncio.sleep(1)
-    websocket.close()
+    await websocket.close()
