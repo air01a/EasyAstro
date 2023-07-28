@@ -394,3 +394,5 @@ front/easyastro/android/app/src/main/AndroidManifest.xml
 front/easyastro/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 front/easyastro/linux/flutter/generated_plugin_registrant.h
 front/easyastro/web/manifest.json
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+linux/flutter/generated_plugin_registrant.h
