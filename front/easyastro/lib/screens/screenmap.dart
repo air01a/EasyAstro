@@ -29,9 +29,9 @@ class ScreenMap extends StatelessWidget {
           child: InteractiveViewer(
               boundaryMargin: const EdgeInsets.all(
                   double.infinity), // Marge autour de l'image
-              
+
               minScale: 0.9, // Échelle minimale de zoom
-              maxScale: 6.0, // Échelle maximale de zoom
+              maxScale: 10.0, // Échelle maximale de zoom
               constrained: true,
               child: currentImage))
     ])))));
