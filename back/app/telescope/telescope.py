@@ -31,6 +31,10 @@ class TelescopeOrchestrator:
     def signal_handler(self, signal_received, frame):
         self._end = True
 
+    def stop(self):
+        self._end=True
+        self.currentStatus.stacking = False
+        self._operating = False
 
     def __init__(self, image_processor, capture_image=True):
         self.qin = SimpleQueue()
@@ -151,17 +155,14 @@ class TelescopeOrchestrator:
         if self._operating:
             return
         
-        movement = 0.1
+        movement = 0.01
         axis1 = movement * axis1
-        axis2 = axis2 * movement
+        axis2 = -1 * axis2 * movement
         angle = self.ccd_orientation * pi/180
         ra = cos(angle)*axis1 - sin(angle)*axis2
         dec = sin(angle)*axis1 + cos(angle)*axis2
-        if ra<0.09:
-            ra = 0
-        if dec<0.09:
-            dec = 0
-        self._job_queue.append({'action':'move_to_short','ra':ra,'dec':dec})
+
+        self._job_queue.append({'action':'move_to_short','ra':ra/15,'dec':dec})
         self.currentStatus.ra = ra
         self.currentStatus.dec = dec
 
@@ -214,11 +215,9 @@ class TelescopeOrchestrator:
         pixel_size = float(config.CONFIG['DEVICE']['PIXELSIZE']) 
         pixel_traversed = 0.0000729 *float(config.CONFIG['DEVICE']['SENSORDIAG']) * 1000 /pixel_size * cos(self.coordinates.get_location().lat.rad)*cos(az.rad)/cos(alt.rad)
         expo = 8 / pixel_traversed
-        print(expo)
         return min(expo,float(config.CONFIG['IMAGING']['MAX_EXPO_AUTO']))
     
     def get_exposition(self,ra=None, dec = None):
-        print(self.currentStatus.exposition)
         if self.currentStatus.exposition==-1:
             exposition = self.get_expo_auto(ra, dec)
         else:

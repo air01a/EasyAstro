@@ -18,6 +18,7 @@ import 'package:easyastro/components/loader/loadingindicatordialog.dart';
 import 'dart:async';
 import 'package:easyastro/models/telescopestatus.dart';
 import 'package:easyastro/screens/screenconfigtelescope.dart';
+import 'package:easyastro/components/forms/speedgauge.dart';
 
 class ScreenCapture extends StatefulWidget {
   @override
@@ -43,6 +44,7 @@ class _ScreenCapture extends State<ScreenCapture> {
   double _messageHandlerHeight = 10.0;
   double _defaultFontSize = 10.0;
   late WebSocketChannel channel;
+  double _speed = 20.0;
 
   final bbar = BottomBar();
   late RGBAdjustement colorAdjustement;
@@ -57,18 +59,22 @@ class _ScreenCapture extends State<ScreenCapture> {
   void moveTelescope(dynamic axis) {
     switch (axis) {
       case 0:
-        service.moveTelescope(-1, 0);
+        service.moveTelescope(-1 * _speed, 0);
         break;
       case 1:
-        service.moveTelescope(0, -1);
+        service.moveTelescope(0, -1 * _speed);
         break;
       case 2:
-        service.moveTelescope(1, 0);
+        service.moveTelescope(1 * _speed, 0);
         break;
       case 3:
-        service.moveTelescope(0, 1);
+        service.moveTelescope(0, 1 * _speed);
         break;
     }
+  }
+
+  void changeSpeed(double speed) {
+    _speed = speed;
   }
 
   //#########################################################################################################
@@ -456,6 +462,12 @@ class _ScreenCapture extends State<ScreenCapture> {
               controlButton(_isStackable, Icons.library_add, null, 0, 0, null,
                   stack, object),
               Positioned(right: 0, bottom: 0, child: getLoadingIcons()),
+              if (_isConfigVisible)
+                Positioned(
+                    bottom: 100,
+                    right: 0,
+                    child: SpeedGauge(
+                        initialValue: _speed, onValueChanged: changeSpeed)),
               Positioned(
                   left: 0, bottom: 0, child: Row(children: getStatusIcons())),
               controlButton(true, Icons.close, null, null, 0, 0, close, 0),

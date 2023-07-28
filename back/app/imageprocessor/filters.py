@@ -43,9 +43,8 @@ def hot_pixel_remover(image: Image):
 
     if not image.is_color():
         means = _neighbors_average(image.data)
-        #if means!=0:
         try:
-            image.data = numpy.where(image.data / means > HOT_PIXEL_RATIO, means, image.data)
+            image.data = numpy.where(image.data / (means+0.00001) > HOT_PIXEL_RATIO, means, image.data)
         except Exception as exc:
             logger.error("Error during hotpixelremover :( %s"%str(exc))
     else:
@@ -101,7 +100,7 @@ def levels(image : Image, blacks: float, midtones: float, whites: float, contras
     max = image.data.max()
     median = max - min
 
-    if midtones <= 0:
+    if midtones <= 0.1:
         midtones = 0.1
     # midtones
     image.data = I16_BITS_MAX_VALUE *((((image.data-min)/median - 0.5) * contrast + 0.5)  * median + min ) ** (1 / midtones) / I16_BITS_MAX_VALUE ** (1 / midtones)

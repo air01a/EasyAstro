@@ -54,6 +54,10 @@ class TelescopeHelper {
     await helper.post(server, "/telescope/stop_stacking", {});
   }
 
+  Future<void> stopTelescope() async {
+    await helper.get(server, "/stop");
+  }
+
   Future<int> getDarkProgession() async {
     int ret = await helper.get(server, "/telescope/get_dark_progress");
     return ret;

@@ -1,5 +1,5 @@
 name: easyastro
-description: A new Flutter project.
+description: Make astrophotography easy
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.1+7
+version: 1.0.1+8
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -58,6 +58,7 @@ dependencies:
   geolocator: ^9.0.2
   package_info_plus: ^4.0.2
   url_launcher: ^6.1.12
+  syncfusion_flutter_gauges: ^22.1.39
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -114,6 +115,7 @@ flutter:
   assets: 
     - web/assets/appimages/
     - assets/appimages/
+    - assets/appimages/location/
     - assets/data/deepsky.lst
     - assets/data/description_en
     - assets/translations/

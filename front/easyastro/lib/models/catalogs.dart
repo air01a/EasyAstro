@@ -5,24 +5,23 @@ class ObservableObjects {
 
   ObservableObjects();
 
-  static int getObjectIndex(String object, List<ObservableObject> catalog){
-    return catalog.indexWhere((element) =>  element.name == object);
+  static int getObjectIndex(String object, List<ObservableObject> catalog) {
+    return catalog.indexWhere((element) => element.name == object);
   }
 
-  static ObservableObject? getObjectWithIndex(String object, List<ObservableObject> catalog){
+  static ObservableObject? getObjectWithIndex(
+      String object, List<ObservableObject> catalog) {
     int index = getObjectIndex(object, catalog);
-    if (index<0) {
+    if (index < 0) {
       return null;
     }
     return catalog[index];
   }
 
   ObservableObjects.fromJson(List<dynamic> json) {
-      
-      json.forEach((v) {
-        results.add(ObservableObject.fromJson(v));
-      });
-      
+    json.forEach((v) {
+      results.add(ObservableObject.fromJson(v));
+    });
   }
 
   List<ObservableObject> get catalog {
@@ -30,29 +29,38 @@ class ObservableObjects {
   }
 }
 
-
 class ObservableObject {
-  String name='';
-  String ngc='';
-  String type='';
-  String season='';
-  double magnitude=10;
+  String name = '';
+  String ngc = '';
+  String type = '';
+  String season = '';
+  double magnitude = 10;
   double timeToMeridian = 0;
-  double ra=0;
-  double dec=0;
-  String description='';
-  String image='';
+  double ra = 0;
+  double dec = 0;
+  String description = '';
+  String image = '';
   bool selected = false;
   double meridian = 0;
   double rise = 0;
   double set = 0;
   double height = 0;
-  bool visible=false;
+  bool visible = false;
+  String location = '';
 
-  ObservableObject({required this.name, required this.ngc, required this.type, required this.season, required this.magnitude, required this.ra, required this.dec, required this.description, required this.image});
+  ObservableObject(
+      {required this.name,
+      required this.ngc,
+      required this.type,
+      required this.season,
+      required this.magnitude,
+      required this.ra,
+      required this.dec,
+      required this.description,
+      required this.image,
+      required this.location});
 
-  ObservableObject.fromJson(Map<String, dynamic> json ) {
-
+  ObservableObject.fromJson(Map<String, dynamic> json) {
     name = json['NAME'] ?? 'N/A';
 
     ra = json['RA deg'] ?? 0;
@@ -70,9 +78,9 @@ class ObservableObject {
     rise = json['rise'] ?? -1;
     set = json['set'] ?? -1;
     meridian = json['meridian_time'] ?? -1;
-    timeToMeridian=json['timeToMeridian'] ?? 0;
+    timeToMeridian = json['timeToMeridian'] ?? 0;
     height = json['height'];
     visible = json['visible'];
+    location = json['Location'];
   }
-
 }

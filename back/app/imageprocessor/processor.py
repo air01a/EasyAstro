@@ -74,20 +74,15 @@ class ImageProcessor:
 
         self.ref = open_process_fits(filename)
         self.image_stack = self.ref.clone()
-        print(self._dark)
         if self._dark!=None:
-            print("substract dark")
             self.image_stack.data -= self._dark.data
-            print("done")
         self.stacked = 1
         self.discarded = 0
 
     def stack(self, filename):
         image = open_process_fits(filename)
-        print("substract dark")
         if self._dark!=None:
             image.data -= self._dark.data
-        print("done")
         logger.debug(' --- TRANSFORMING')
         transformation = find_transformation(image, self.ref)
         if transformation==None:
@@ -126,7 +121,6 @@ class ImageProcessor:
 
         for i in range(0,len(tab)):
             std_tmp = abs(tab[i]**2-value**2)**0.5
-            print(std_tmp)
             if (std_tmp)<std:
                 std=std_tmp
                 indice = i
@@ -140,8 +134,6 @@ class ImageProcessor:
         selected_expo = self._select_best_option(expo_t, exposition)
         selected_gain = self._select_best_option(gain_t, gain)
         path = working_dir+'/dark_'+str(selected_expo)+'_'+str(selected_gain)+'.fits'
-        print(""+str(exposition)+' '+str(gain))
-        print("Selected Dark : " + path)
         if (os.path.isfile(path)):
             return open_process_fits(path)
 
@@ -153,10 +145,8 @@ class ImageProcessor:
         working_dir = config.CONFIG["WORKFLOW"]["STORAGE_DIR"] + "/dark/"
         dark_dir = [os.path.join(working_dir, name) for name in os.listdir(working_dir) if os.path.isdir(os.path.join(working_dir, name))]
         dark_dir.sort()  # Triez les sous-répertoires par ordre alphanumérique
-        print(dark_dir)
         if len(dark_dir)>0:
             self.current_dark = dark_dir[-1]
-            print("Current dark" + self.current_dark)
         else:
             self.current_dark = None
         self.dark_lib = dark_dir

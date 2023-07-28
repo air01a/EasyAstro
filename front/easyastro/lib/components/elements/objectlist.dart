@@ -39,13 +39,28 @@ class _ObjectPage extends State<ObjectPage> {
         initialValue: widget.initialValue);
   }
 
+  Widget title(String text) {
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Text(text.tr(),
+            style: const TextStyle(
+                color: Colors.red, fontWeight: FontWeight.bold, fontSize: 17)));
+  }
+
   @override
   Widget build(BuildContext context) {
     Image currentImage;
+    Image? locationImage;
     if (kIsWeb) {
       currentImage = Image.network(widget.item.image);
+      if (widget.item.location != '') {
+        locationImage = Image.network(widget.item.location);
+      }
     } else {
       currentImage = Image(image: AssetImage(widget.item.image));
+      if (widget.item.location != '') {
+        locationImage = Image(image: AssetImage(widget.item.location));
+      }
     }
 
     final mediaQueryData = MediaQuery.of(context);
@@ -81,22 +96,17 @@ class _ObjectPage extends State<ObjectPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Text(widget.item.name,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15))
-                                        .tr()),
+                                title(widget.item.name),
+
                                 Container(
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 10.0),
                                     child: Text(
                                       "_${widget.item.name}",
-                                      textAlign: TextAlign.left,
+                                      textAlign: TextAlign.center,
                                       maxLines: 10,
                                     ).tr()),
+                                title("information"),
                                 if (widget.item.rise != widget.item.set)
                                   Text('rise').tr(args: [
                                     ConvertAngle.hourToString(widget.item.rise)
@@ -123,6 +133,11 @@ class _ObjectPage extends State<ObjectPage> {
                                   widget.item.height.toInt().toString()
                                 ]), //"Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left),
                                 ratingBox,
+                                if (locationImage != null) ...[
+                                  title('location'),
+                                  locationImage,
+                                ],
+
                                 ServerInfo().connected
                                     ? ElevatedButton(
                                         onPressed: () {
@@ -137,6 +152,7 @@ class _ObjectPage extends State<ObjectPage> {
                                         child: const Icon(Icons.mode_standby,
                                             size: 48.0))
                                     : const SizedBox(width: 0, height: 0),
+                                title('azimut_graph'),
                                 SizedBox(
                                     width: screenWidth * 0.8,
                                     height: screenWidth * 0.4,

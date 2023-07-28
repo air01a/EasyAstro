@@ -5,8 +5,9 @@ name: Flutter CI Android
 on:
     push:
       branches:
-      - main
-    
+        - main
+      paths:
+        - 'front/easyastro/**'
 # on: push    # Default will running for every branch.
     
 jobs:
@@ -33,12 +34,11 @@ jobs:
     - run: echo ${{ secrets.GRADLE }} | base64 -d > ./android/key.properties
           
     - run: echo ${{ secrets.NUTELLA_JKS }} | base64 -d > ./android/nutella.jks
-   
-    - run: ls -l
-
-    - run: ls -l ./android/
+    
     # Get flutter dependencies.
     - run: flutter pub get
+    # Generate icons
+    - run: flutter pub run flutter_launcher_icons
     
     # Build apk.
     - run: flutter build appbundle

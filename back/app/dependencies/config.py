@@ -17,4 +17,3 @@ if PLATFORM==LINUX:
     CONFIG.read('/etc/easyastro.conf')
 else:
     CONFIG.read('.\easyastro.conf')
-print(PLATFORM)

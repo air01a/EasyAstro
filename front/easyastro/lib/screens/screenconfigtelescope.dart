@@ -49,6 +49,34 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
     });
   }
 
+  void stopTelescope() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("confirms_stop").tr(),
+          content: const Text('confirms_stop').tr(),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                ServerInfo().connected = false;
+                Navigator.pushReplacementNamed(context, '/home');
+                checkHelper.stopTelescope();
+              },
+              child: const Text('confirm').tr(),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la boîte de dialogue
+              },
+              child: const Text('cancel').tr(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageStructure(
@@ -105,6 +133,23 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
                         );
                       }).toList(),
                     )))
+          ]),
+          Row(children: [
+            Expanded(
+                flex: 5,
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    alignment: Alignment.centerLeft,
+                    child: const Text('stop_telescope').tr())),
+            Expanded(
+                flex: 5,
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          stopTelescope();
+                        },
+                        child: const Text('stop').tr()))),
           ])
         ]),
         showDrawer: false,

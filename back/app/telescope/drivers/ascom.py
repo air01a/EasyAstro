@@ -49,6 +49,8 @@ class ASCOMPilot():
         
 
     def move_short(self, delta_ra, delta_dec):
+        (ra, dec) = self.get_current_coordinates()
+        self.goto(ra+delta_ra, dec + delta_dec)
         return 
         
 
