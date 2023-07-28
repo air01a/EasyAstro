@@ -48,6 +48,16 @@ class AppDrawer extends Drawer {
               Navigator.pushReplacementNamed(context, '/selection');
             },
           ),
+          ListTile(
+            leading: const Icon(
+              Icons.map,
+            ),
+            title: const Text('map').tr(),
+            onTap: () {
+              //Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/map');
+            },
+          ),
           if (ConfigManager().configuration?["manageTelescope"]?.value == true)
             ServerInfo().connected
                 ? ListTile(
