@@ -3,14 +3,20 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from fastapi.staticfiles import StaticFiles
-
 import uvicorn
+from uvicorn.main import Server
+
+from .dependencies import config
+
 
 from .router import (
     platesolver,
     telescope,
 )   
 
+
+
+original_handler = Server.handle_exit
 level = logging.DEBUG
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler) 
@@ -20,10 +26,7 @@ logger.info('STARTING')
 
 app = FastAPI()
 origins = [
-    "*",
-    "http://localhost:5173",
-    "http://localhost:8000",
-    "http://localhost:3000",
+    "*"
 ]   
 
 app.add_middleware(
@@ -43,6 +46,13 @@ app.include_router(platesolver.router, prefix='/platesolver')
 app.include_router(telescope.router, prefix='/telescope')
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+def handle_exit(*args, **kwargs):
+    print("stopping server")
+    telescope.telescope.stop()
+    telescope.continue_job=False
+    original_handler(*args, **kwargs)
+
 
 def run():
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8001, reload=False)
+    Server.handle_exit = handle_exit
+    uvicorn.run("app.main:app", host=config.CONFIG['HTTP']['HOST'], port=int(config.CONFIG['HTTP']['PORT']), reload=False)

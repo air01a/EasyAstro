@@ -1,10 +1,8 @@
 from fastapi import APIRouter, WebSocket,  Body
 from ..telescope import telescope
 from ..dependencies import error
-from ..lib import fitsutils
-from PIL import Image, ImageFile
+from PIL import ImageFile
 from fastapi.responses import Response
-from io import BytesIO
 from ..lib import Coordinates
 import os
 import asyncio
@@ -12,13 +10,13 @@ import logging
 from ..models.coordinates import Exposition, Movement
 from ..models.processing import ImageProcessing,DarkModel
 from ..imageprocessor.processor import ImageProcessor
-from datetime import datetime,date
+from datetime import datetime
 from ..models.coordinates import TimeObject
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
+continue_job=True
 
 processor = ImageProcessor()
 telescope = telescope.TelescopeOrchestrator(processor,True)
@@ -144,9 +142,9 @@ manager = ConnectionManager()
 @router.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
-    while True:
+    while continue_job:
         if not telescope.qout.empty():
             data = telescope.qout.get()
-        #data =  await asyncio.get_running_loop().run_in_executor(None, )()
             await manager.broadcast(f"{data}")
         await asyncio.sleep(1)
+    websocket.close()

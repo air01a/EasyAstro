@@ -31,6 +31,10 @@ class TelescopeOrchestrator:
     def signal_handler(self, signal_received, frame):
         self._end = True
 
+    def stop(self):
+        self._end=True
+        self.currentStatus.stacking = False
+        self._operating = False
 
     def __init__(self, image_processor, capture_image=True):
         self.qin = SimpleQueue()
