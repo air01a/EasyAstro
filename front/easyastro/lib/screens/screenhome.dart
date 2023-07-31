@@ -189,7 +189,7 @@ class _ScreenHome extends State<ScreenHome> {
                 child: Text(
                     style: TextStyle(fontSize: getSize() / 2),
                     lWeather!.getWeatherIcon(weather["weather"][0]["id"])))),
-        Text(lWeather!.getMessage(weather["weather"][0]["id"])).tr()
+        Container(width:180, child:Text(lWeather!.getMessage(weather["weather"][0]["id"]), maxLines: 2, textAlign: TextAlign.center).tr())
       ])
     ];
   }
