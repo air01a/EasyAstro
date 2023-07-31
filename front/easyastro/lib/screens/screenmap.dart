@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/components/structure/pagestructure.dart';
 
 class ScreenMap extends StatelessWidget {
+  const ScreenMap({super.key});
+
   @override
   Widget build(BuildContext context) {
     Image currentImage;
@@ -12,7 +14,7 @@ class ScreenMap extends StatelessWidget {
         repeat: ImageRepeat.repeatX,
       );
     } else {
-      currentImage = Image(
+      currentImage = const Image(
           image: AssetImage('assets/appimages/messier.png'),
           repeat: ImageRepeat.repeatX,
           width: 10000);
@@ -22,7 +24,7 @@ class ScreenMap extends StatelessWidget {
             child: Scaffold(
                 body: Center(
                     child: Stack(alignment: Alignment.center, children: [
-      Container(
+      SizedBox(
           // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
           width: double.infinity,
           height: double.infinity,

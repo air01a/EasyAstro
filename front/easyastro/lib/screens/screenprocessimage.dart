@@ -11,6 +11,8 @@ import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ScreenProcessingImage extends StatefulWidget {
+  const ScreenProcessingImage({super.key});
+
   @override
   _ScreenProcessingImage createState() => _ScreenProcessingImage();
 }
@@ -236,12 +238,12 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
             child: Scaffold(
                 body: Stack(alignment: Alignment.center, children: [
                   if (imageHelper.encoded != null)
-                    Container(
+                    SizedBox(
                         // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
                         width: double.infinity,
                         height: double.infinity,
                         child: InteractiveViewer(
-                          boundaryMargin: EdgeInsets.all(
+                          boundaryMargin: const EdgeInsets.all(
                               double.infinity), // Marge autour de l'image
                           minScale: 0.9, // Échelle minimale de zoom
                           maxScale: 4.0, // Échelle maximale de zoom

@@ -23,10 +23,10 @@ class SearchField {
       
 
       return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        margin: const EdgeInsets.symmetric(horizontal: 20.0),
         child: TextField(
           focusNode: myFocusNode,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Enter your search query...',
           ),
           onChanged: (value) {
@@ -36,7 +36,7 @@ class SearchField {
         ),
       );
     } else {
-      return Container(width: 0, height: 0);
+      return const SizedBox(width: 0, height: 0);
     }
   }
 /*

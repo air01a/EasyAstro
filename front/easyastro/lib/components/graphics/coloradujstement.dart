@@ -40,7 +40,7 @@ class _RGBAdjustement extends State<RGBAdjustement> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: widget.size,
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               color: Colors.black.withOpacity(0.8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

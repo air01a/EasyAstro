@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ProgressIndicator extends StatefulWidget {
   final  Future<dynamic> Function()  controller ;
-  const ProgressIndicator(this.controller );
+  const ProgressIndicator(this.controller, {super.key} );
 
   @override
   State<ProgressIndicator> createState() =>
@@ -76,7 +76,7 @@ class _ProgressIndicatorState extends State<ProgressIndicator>
 
 
 class LoadingIndicator extends StatelessWidget{
-  LoadingIndicator({this.text = '', required this.controller});
+  const LoadingIndicator({super.key, this.text = '', required this.controller});
 
   final String text;
   final Future<dynamic> Function() controller;
@@ -86,7 +86,7 @@ class LoadingIndicator extends StatelessWidget{
     var displayedText = text;
 
     return Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         color: Colors.black87,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -101,23 +101,23 @@ class LoadingIndicator extends StatelessWidget{
 
   Padding _getLoadingIndicator() {
     return Padding(
-        child: Container(width:200,height:200, child:ProgressIndicator(controller)),
-        padding: EdgeInsets.only(bottom: 16)
+        padding: const EdgeInsets.only(bottom: 16),
+        child: SizedBox(width:200,height:200, child:ProgressIndicator(controller))
     );
   }
 
   Widget _getHeading(context, text) {
     return
       Padding(
+          padding: const EdgeInsets.only(bottom: 4),
           child: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16
             ),
             textAlign: TextAlign.center,
-          ),
-          padding: EdgeInsets.only(bottom: 4)
+          )
       );
   }
 

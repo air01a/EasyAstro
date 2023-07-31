@@ -17,8 +17,9 @@ class ConfigManager {
   }
 
   Iterable<String> getKey() {
-    if (configuration == null)
+    if (configuration == null) {
       return [];
+    }
     return configuration!.keys;
   }
 

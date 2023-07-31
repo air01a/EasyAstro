@@ -19,9 +19,9 @@ class ObservableObjects {
   }
 
   ObservableObjects.fromJson(List<dynamic> json) {
-    json.forEach((v) {
+    for (var v in json) {
       results.add(ObservableObject.fromJson(v));
-    });
+    }
   }
 
   List<ObservableObject> get catalog {

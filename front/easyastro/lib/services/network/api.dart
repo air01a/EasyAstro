@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:easyastro/services/network/apiexception.dart';
-import 'package:easyastro/services/database/globals.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
@@ -14,7 +13,7 @@ class ApiBaseHelper {
 
   Uri getUri(String host, String url, bool? ssl, {Map<String,dynamic>? queryParameters}) {
     var function = Uri.http;
-    if (queryParameters == null) queryParameters = {};
+    queryParameters ??= {};
     if (ssl!=null && ssl) {
       function = Uri.https;
     }

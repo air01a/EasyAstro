@@ -4,12 +4,13 @@ import 'package:easyastro/models/weathermodel.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/configmanager.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 
 
 class  ScreenWeather extends StatefulWidget {
+  const ScreenWeather({super.key});
+
   @override
    _ScreenWeather createState() => _ScreenWeather();
 }
@@ -24,7 +25,7 @@ class _ScreenWeather extends State<ScreenWeather> {
   void initState() {
     super.initState();
     String? openWeatherKey = ConfigManager().configuration?["openWeatherKey"]?.value;
-    if (openWeatherKey!=null && openWeatherKey.length>0) {
+    if (openWeatherKey!=null && openWeatherKey.isNotEmpty) {
 
 
       lWeather = WeatherModel(openWeatherKey);
@@ -52,10 +53,10 @@ class _ScreenWeather extends State<ScreenWeather> {
                     
                     Text(formattedDate),
                     Text(formattedHour),
-                    Container(width: 20, child: 
+                    SizedBox(width: 20, child: 
                     Align(
                       alignment: Alignment.center,
-                      child: Text(style: TextStyle(fontSize: 20), lWeather!.getWeatherIcon(condition)))),
+                      child: Text(style: const TextStyle(fontSize: 20), lWeather!.getWeatherIcon(condition)))),
            ]));
 
     });

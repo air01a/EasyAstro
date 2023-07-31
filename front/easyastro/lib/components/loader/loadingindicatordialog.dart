@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LoadingIndicatorDialog {
   static final LoadingIndicatorDialog _singleton =
@@ -32,9 +31,9 @@ class LoadingIndicatorDialog {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
+                      const Padding(
                         padding:
-                            const EdgeInsets.only(left: 16, top: 16, right: 16),
+                            EdgeInsets.only(left: 16, top: 16, right: 16),
                         child: CircularProgressIndicator(),
                       ),
                       Padding(

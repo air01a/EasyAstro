@@ -4,8 +4,6 @@ import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/services/database/globals.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 
 double raToDouble(String ra) {
   double ret = 0.0;

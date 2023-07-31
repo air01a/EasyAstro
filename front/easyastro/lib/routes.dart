@@ -13,13 +13,13 @@ import 'package:easyastro/screens/screenmap.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   //"/" : (BuildContext context) => Test(),
-  "/": (BuildContext context) => CheckScreen(),
-  "/check": (BuildContext context) => CheckScreen(),
-  "/home": (BuildContext context) => ScreenHome(),
-  "/plan": (BuildContext context) => ScreenObjectList(),
-  "/map": (BuildContext context) => ScreenMap(),
-  "/selection": (BuildContext context) => ScreenSelectionList(),
-  "/capture": (BuildContext context) => ScreenCapture(),
-  "/connect": (BuildContext context) => ConnectionPage(),
-  "/config": (BuildContext context) => ConfigScreen(),
+  "/": (BuildContext context) => const CheckScreen(),
+  "/check": (BuildContext context) => const CheckScreen(),
+  "/home": (BuildContext context) => const ScreenHome(),
+  "/plan": (BuildContext context) => const ScreenObjectList(),
+  "/map": (BuildContext context) => const ScreenMap(),
+  "/selection": (BuildContext context) => const ScreenSelectionList(),
+  "/capture": (BuildContext context) => const ScreenCapture(),
+  "/connect": (BuildContext context) => const ConnectionPage(),
+  "/config": (BuildContext context) => const ConfigScreen(),
 };

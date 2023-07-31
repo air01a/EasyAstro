@@ -4,7 +4,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 class SpeedGauge extends StatefulWidget {
   final double initialValue;
   final Function(double) onValueChanged;
-  const SpeedGauge({required this.initialValue, required this.onValueChanged});
+  const SpeedGauge({super.key, required this.initialValue, required this.onValueChanged});
 
   @override
   _SpeedGauge createState() => _SpeedGauge();

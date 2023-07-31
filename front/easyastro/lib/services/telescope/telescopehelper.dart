@@ -2,7 +2,6 @@ import 'package:easyastro/services/network/api.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:intl/intl.dart';
 import 'package:easyastro/models/catalogs.dart';
-import 'dart:convert';
 import 'package:easyastro/models/telescopestatus.dart';
 
 class TelescopeHelper {
@@ -27,9 +26,10 @@ class TelescopeHelper {
   Future<void> changeObject(String object) async {
     ObservableObject? obj = ObservableObjects.getObjectWithIndex(
         object, ObjectSelection().selection);
-    if (obj != null)
+    if (obj != null) {
       await helper.post(server, "/telescope/goto",
           {"ra": obj.ra, "dec": obj.dec, "object": obj.name});
+    }
   }
 
   Future<void> changeExposition(double exposition, int gain) async {
@@ -45,9 +45,10 @@ class TelescopeHelper {
   Future<void> stackImage(String object) async {
     ObservableObject? obj = ObservableObjects.getObjectWithIndex(
         object, ObjectSelection().selection);
-    if (obj != null)
+    if (obj != null) {
       await helper.post(server, "/telescope/stacking",
           {"ra": obj.ra, "dec": obj.dec, "object": object});
+    }
   }
 
   Future<void> stopStacking(String object) async {

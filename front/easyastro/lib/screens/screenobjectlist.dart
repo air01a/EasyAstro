@@ -12,6 +12,8 @@ import 'package:easyastro/components/forms/filterbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ScreenObjectList extends StatefulWidget {
+  const ScreenObjectList({super.key});
+
   @override
   _ScreenObjectList createState() => _ScreenObjectList();
 }
@@ -43,13 +45,15 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     }
 
     if (ff.isFilterActive) {
-      if (filterValue.toLowerCase() != 'all')
+      if (filterValue.toLowerCase() != 'all') {
         temp = temp
             .where((object) =>
                 object.type.toLowerCase() == filterValue.toLowerCase())
             .toList();
-      if (onlyVisible == true)
+      }
+      if (onlyVisible == true) {
         temp = temp.where((object) => object.visible == true).toList();
+      }
     } else {
       temp = temp.where((object) => object.visible == true).toList();
     }
@@ -120,7 +124,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   Widget build(BuildContext context) {
     return PageStructure(
         body: Container(
-            padding: EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 8.0),
             child: Column(children: [
               sf.buildSearchTextField(),
               ff.buildFilterTextField(ObjectSelection().selection.toList()),

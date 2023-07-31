@@ -21,6 +21,8 @@ import 'package:easyastro/screens/screenconfigtelescope.dart';
 import 'package:easyastro/components/forms/speedgauge.dart';
 
 class ScreenCapture extends StatefulWidget {
+  const ScreenCapture({super.key});
+
   @override
   _ScreenCapture createState() => _ScreenCapture();
 }
@@ -248,7 +250,7 @@ class _ScreenCapture extends State<ScreenCapture> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScreenProcessingImage(),
+        builder: (context) => const ScreenProcessingImage(),
       ),
     );
   }
@@ -358,7 +360,7 @@ class _ScreenCapture extends State<ScreenCapture> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ConfigTelescopeScreen(),
+        builder: (context) => const ConfigTelescopeScreen(),
       ),
     );
   }
@@ -426,7 +428,7 @@ class _ScreenCapture extends State<ScreenCapture> {
         child: Scaffold(
             body: Center(
                 child: Stack(alignment: Alignment.center, children: [
-              Container(
+              SizedBox(
                   // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
                   width: double.infinity,
                   height: double.infinity,
@@ -449,6 +451,7 @@ class _ScreenCapture extends State<ScreenCapture> {
                           _imageLoading = false;
                           break;
                       }
+                      return null;
                     }),
                   )),
               controlButton(_isConfigVisible, Icons.chevron_left, 0, null, null,

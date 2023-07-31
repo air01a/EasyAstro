@@ -16,7 +16,7 @@ class PageStructure extends StatelessWidget {
                   return 
                       Scaffold(
                               appBar: AppBar(title: const Text("Easy Astro")),
-                              drawer:AppDrawer() ,
+                              drawer:const AppDrawer() ,
                               body : 
                               Container( 
                                 height: double.infinity,
@@ -26,7 +26,7 @@ class PageStructure extends StatelessWidget {
                                     image: DecorationImage( 
                                       colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), 
                                       BlendMode.dstATop),
-                                      image: AssetImage
+                                      image: const AssetImage
                                         ("assets/appimages/background_dark.jpg"
                                       ), 
                                   fit: BoxFit.cover, ), 
@@ -49,7 +49,7 @@ class PageStructure extends StatelessWidget {
                                     image: DecorationImage( 
                                       colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
                                       BlendMode.dstATop),
-                                      image: AssetImage
+                                      image: const AssetImage
                                         ("assets/appimages/background_dark.jpg"
                                       ), 
                                   fit: BoxFit.cover, ), 

@@ -11,10 +11,11 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easyastro/services/location/locationhelper.dart';
 import 'package:easyastro/screens/screenweather.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ScreenHome extends StatefulWidget {
+  const ScreenHome({super.key});
+
   @override
   _ScreenHome createState() => _ScreenHome();
 }
@@ -23,7 +24,7 @@ class _ScreenHome extends State<ScreenHome> {
   AstroCalc? astro = ObjectSelection().astro;
   LocationHelper locationHelper = LocationHelper();
   dynamic weather;
-  WeatherModel? lWeather = null;
+  WeatherModel? lWeather;
   double longitude = 0;
   double latitude = 0;
   double altitude = 0;
@@ -58,7 +59,7 @@ class _ScreenHome extends State<ScreenHome> {
           Image.network("assets/appimages/Sun.jpg", width: getSize());
     } else {
       currentImage = Image(
-          image: AssetImage("assets/appimages/Sun.jpg"), width: getSize());
+          image: const AssetImage("assets/appimages/Sun.jpg"), width: getSize());
     }
     return currentImage;
   }
@@ -68,7 +69,7 @@ class _ScreenHome extends State<ScreenHome> {
         width: 400,
         height: getSize(),
         child: Card(
-            shape: StadiumBorder(
+            shape: const StadiumBorder(
               side: BorderSide(
                 // border color
                 color: Color.fromARGB(255, 43, 46, 48),
@@ -89,21 +90,21 @@ class _ScreenHome extends State<ScreenHome> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScreenWeather(),
+        builder: (context) => const ScreenWeather(),
       ),
     );
   }
 
   List<Widget> getTimeText() {
     List<Widget> display = [];
-    display.add(Text('date').tr(args: [ObjectSelection().astro!.getDate()]));
-    display.add(Text('hour')
+    display.add(const Text('date').tr(args: [ObjectSelection().astro!.getDate()]));
+    display.add(const Text('hour')
         .tr(args: [ConvertAngle.hourToString(ObjectSelection().astro!.hour)]));
-    display.add(Text('sidereal').tr(args: [
+    display.add(const Text('sidereal').tr(args: [
       ConvertAngle.hourToString(ObjectSelection().astro!.getSiderealTime())
     ]));
-    display.add(Text("\n"));
-    display.add(Text('click_to_change').tr());
+    display.add(const Text("\n"));
+    display.add(const Text('click_to_change').tr());
     return [
       SizedBox(
           width: getSize(), child: Icon(Icons.schedule, size: getSize() / 2)),
@@ -132,7 +133,7 @@ class _ScreenHome extends State<ScreenHome> {
     var p = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LocationSearchPage(),
+        builder: (context) => const LocationSearchPage(),
       ),
     );
 
@@ -154,21 +155,19 @@ class _ScreenHome extends State<ScreenHome> {
   void initState() {
     super.initState();
 
-    if (ConfigManager() != null) {
-      String? openWeatherKey =
-          ConfigManager().configuration?["openWeatherKey"]?.value;
-      if (openWeatherKey != null && openWeatherKey.length > 0) {
-        lWeather = WeatherModel(openWeatherKey);
-        lWeather!
-            .getLocationWeather(astro!.longitude, astro!.latitude)
-            .then((value) => setState(() => weather = value));
-      }
+    String? openWeatherKey =
+        ConfigManager().configuration?["openWeatherKey"]?.value;
+    if (openWeatherKey != null && openWeatherKey.isNotEmpty) {
+      lWeather = WeatherModel(openWeatherKey);
+      lWeather!
+          .getLocationWeather(astro!.longitude, astro!.latitude)
+          .then((value) => setState(() => weather = value));
+    }
 
-      if (CurrentLocation().timeChanged == false) {
-        locationHelper.updateTime(
-            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-            changeDate: false);
-      }
+    if (CurrentLocation().timeChanged == false) {
+      locationHelper.updateTime(
+          DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+          changeDate: false);
     }
     if (astro != null) {
       latitude = astro!.latitude;
@@ -178,11 +177,12 @@ class _ScreenHome extends State<ScreenHome> {
   }
 
   List<Widget> getWeather() {
-    if ((weather == null) || (lWeather == null))
-      return [Container(width: 0, height: 0)];
+    if ((weather == null) || (lWeather == null)) {
+      return [const SizedBox(width: 0, height: 0)];
+    }
     return [
       Row(children: [
-        Container(
+        SizedBox(
             width: getSize(),
             child: Align(
                 alignment: Alignment.center,
@@ -208,16 +208,16 @@ class _ScreenHome extends State<ScreenHome> {
       List<Widget> displayMoon = [];
       AstroCoordinates moon = astro.getObjectCoord(HeavenlyBody.SE_MOON);
       final ephemeris =
-          astro!.calculateEphemeris(moon.ra, moon.dec, astro.getSiderealTime());
+          astro.calculateEphemeris(moon.ra, moon.dec, astro.getSiderealTime());
       display.add(getMoonImage(moonPhase[1]));
-      displayMoon.add(Text('illumination').tr(args: [
+      displayMoon.add(const Text('illumination').tr(args: [
         moonPhase[0].toString()
       ])); //"Illumination : ${moonPhase[0]} %"));
       displayMoon.add(
-          Text('rise').tr(args: [ConvertAngle.hourToString(ephemeris.rising)]));
+          const Text('rise').tr(args: [ConvertAngle.hourToString(ephemeris.rising)]));
       displayMoon.add(
-          Text('set').tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
-      displayMoon.add(Text('culmination')
+          const Text('set').tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
+      displayMoon.add(const Text('culmination')
           .tr(args: [ConvertAngle.hourToString(ephemeris.culmination)]));
       display.add(SizedBox(
           width: 350 - getSize(),
@@ -228,16 +228,16 @@ class _ScreenHome extends State<ScreenHome> {
           ))));
 
       // Get Sun card with all informations
-      AstroCoordinates sun = astro!.getObjectCoord(HeavenlyBody.SE_SUN);
+      AstroCoordinates sun = astro.getObjectCoord(HeavenlyBody.SE_SUN);
       final ephemerisSun =
-          astro!.calculateEphemeris(sun.ra, sun.dec, astro!.getSiderealTime());
+          astro.calculateEphemeris(sun.ra, sun.dec, astro.getSiderealTime());
       displaySun.add(SizedBox(width: getSize(), child: getSunImage()));
       List<Widget> displaySunText = [];
-      displaySunText.add(Text('rise')
+      displaySunText.add(const Text('rise')
           .tr(args: [ConvertAngle.hourToString(ephemerisSun.rising)]));
-      displaySunText.add(Text('set')
+      displaySunText.add(const Text('set')
           .tr(args: [ConvertAngle.hourToString(ephemerisSun.setting)]));
-      displaySunText.add(Text('culmination')
+      displaySunText.add(const Text('culmination')
           .tr(args: [ConvertAngle.hourToString(ephemerisSun.culmination)]));
       displaySun.add(SizedBox(
           width: 350 - getSize(),
@@ -253,13 +253,13 @@ class _ScreenHome extends State<ScreenHome> {
           child: Icon(Icons.location_on, size: getSize() / 2)));
       List<Widget> displayLocationText = [];
       displayLocationText
-          .add(Text('longitude').tr(args: [longitude.toStringAsFixed(5)]));
+          .add(const Text('longitude').tr(args: [longitude.toStringAsFixed(5)]));
       displayLocationText
-          .add(Text('latitude').tr(args: [latitude.toStringAsFixed(5)]));
+          .add(const Text('latitude').tr(args: [latitude.toStringAsFixed(5)]));
       displayLocationText
-          .add(Text('altitude').tr(args: [altitude.toStringAsFixed(0)]));
-      displayLocationText.add(Text("\n"));
-      displayLocationText.add(Text('click_to_change').tr());
+          .add(const Text('altitude').tr(args: [altitude.toStringAsFixed(0)]));
+      displayLocationText.add(const Text("\n"));
+      displayLocationText.add(const Text('click_to_change').tr());
       displayLocation.add(SizedBox(
           width: 350 - getSize(),
           child: Center(
@@ -277,7 +277,7 @@ class _ScreenHome extends State<ScreenHome> {
         body: Center(
             child: SingleChildScrollView(
                 child: IntrinsicHeight(
-                    child: Container(
+                    child: SizedBox(
                         width: double.infinity,
                         child: Wrap(
                             alignment: WrapAlignment.center,

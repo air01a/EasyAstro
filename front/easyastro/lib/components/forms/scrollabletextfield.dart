@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ScrollableTextField extends StatefulWidget {
   final TextEditingController controller;
 
-  ScrollableTextField({required this.controller});
+  const ScrollableTextField({super.key, required this.controller});
 
   @override
   _ScrollableTextFieldState createState() => _ScrollableTextFieldState();
@@ -24,7 +24,7 @@ class _ScrollableTextFieldState extends State<ScrollableTextField> {
         readOnly: true,
         controller: widget.controller,
         maxLines: 10,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.all(8.0),
         ),
