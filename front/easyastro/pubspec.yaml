@@ -119,6 +119,7 @@ flutter:
     - assets/data/deepsky.lst
     - assets/data/description_en
     - assets/translations/
+    - assets/astro/
 
 flutter_launcher_icons:
   android: "launcher_icon"

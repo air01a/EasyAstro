@@ -81,31 +81,6 @@ class _ConfigScreen extends State<ConfigScreen> {
     return PageStructure(
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-
-                //onPressed: () => { ConfigManager().saveConfig() }
-                getConfigItems()
-
-            /*
-                           const Text('Take darks'),
-                           ElevatedButton(
-                              onPressed: () async { 
-                                checkHelper.takeDark();
-                                showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              content: LoadingIndicator(
-                                                text: 'Taking dark', controller: update
-                                              ),
-                                            );
-                                          },
-                                        );
-                              },
-                              child: const Text('Go')
-                           ),
-                          
-                           getConfigItems(), */
-            ));
+            children: getConfigItems()));
   }
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/components/structure/pagestructure.dart';
+import 'package:easyastro/components/skymap.dart';
+import 'package:easyastro/services/database/globals.dart';
+import 'package:easyastro/models/catalogs.dart';
+import 'package:easyastro/models/dso.dart';
+import 'package:easyastro/astro/astrocalc.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 
 class ScreenMap extends StatefulWidget {
   @override
@@ -9,12 +14,98 @@ class ScreenMap extends StatefulWidget {
 
 class _ScreenMap extends State<ScreenMap> {
   final viewTransformationController = TransformationController();
+  List<DSO> dsoList = [];
+  AstroCalc? astro = ObjectSelection().astro;
+  SkyMap? skyMap;
+
+  int getPlanetColor(String name) {
+    switch (name) {
+      case 'Mars':
+        {
+          return 0xFFFF5733;
+        }
+      case 'Jupiter':
+        {
+          return 0xFFFFD700;
+        }
+      case 'Saturn':
+        {
+          return 0xFFFFD700;
+        }
+      case 'Venus':
+        {
+          return 0xFFFFC300;
+        }
+    }
+    return 0xFFFFFFFF;
+  }
+
+  void loadDSO() {
+    int type;
+    int color;
+    List<ObservableObject> temp;
+    if (ConfigManager().configuration?["mapShowDSO"]?.value) {
+      if (ConfigManager().configuration?["mapShowOnlySelected"]?.value) {
+        temp = ObjectSelection()
+            .selection
+            .where((line) =>
+                (line.selected == true) ||
+                (line.name == 'Moon') ||
+                (line.type == 'planet') ||
+                (line.type == 'star'))
+            .toList();
+      } else {
+        temp = ObjectSelection().selection.toList();
+      }
+    } else {
+      temp = ObjectSelection()
+          .selection
+          .where((line) =>
+              (line.selected == true) ||
+              (line.name == 'Moon') ||
+              (line.type == 'planet') ||
+              (line.type == 'star'))
+          .toList();
+    }
+    dsoList = [];
+    for (final object in temp) {
+      Map<String, dynamic> pos = {
+        'ra': object.ra * 0.0174532925199,
+        'dec': object.dec * 0.0174532925199
+      };
+      switch (object.type) {
+        case 'star':
+          {
+            type = 11;
+            color = 0xFFFFFFFF;
+          }
+          break;
+        case 'satellite':
+          {
+            type = 11;
+            color = 0xFFFFFFFF;
+          }
+          break;
+        case 'planet':
+          {
+            type = 10;
+            color = getPlanetColor(object.name);
+          }
+          break;
+        default:
+          {
+            type = 1;
+            color = 4294967040;
+          }
+      }
+      ;
+      DSO dso = DSO(pos, object.name, type, 0, color);
+      dsoList.add(dso);
+    }
+  }
 
   @override
   void initState() {
-    // Faites des actions initiales ici si nécessaire
-    // myVariable = 'New Value';
-
     super.initState();
     //viewTransformationController.value = Matrix4.diagonal3Values(4.0, 4.0, 1.0);
     final zoomFactor = 2.0;
@@ -25,40 +116,27 @@ class _ScreenMap extends State<ScreenMap> {
     viewTransformationController.value.setEntry(2, 2, zoomFactor);
     viewTransformationController.value.setEntry(0, 3, -xTranslate);
     viewTransformationController.value.setEntry(1, 3, -yTranslate);
+
+    loadDSO();
+    skyMap = SkyMap(astro!.longitude, astro!.latitude, astro!.getDateTime(),
+        customDSO: dsoList,
+        loadDSO: false,
+        showLines: ConfigManager().configuration?["mapShowLines"]?.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    Image currentImage;
-    if (kIsWeb) {
-      currentImage = Image.network(
-        'assets/appimages/map/starmap.jpg',
-        repeat: ImageRepeat.repeatX,
-      );
-    } else {
-      currentImage = Image(
-          image: AssetImage('assets/appimages/map/starmap.jpg'),
-          repeat: ImageRepeat.repeatX,
-          width: 10000);
-    }
     return PageStructure(
         body: Center(
             child: Scaffold(
                 body: Center(
-                    child: Stack(alignment: Alignment.center, children: [
-      SizedBox(
-          // Utiliser un container pour permettre à l'InteractiveViewer de prendre toute la place disponible
-          width: double.infinity,
-          height: double.infinity,
-          child: InteractiveViewer(
-              transformationController: viewTransformationController,
-              boundaryMargin: const EdgeInsets.all(
-                  double.infinity), // Marge autour de l'image
-
-              minScale: 0.9, // Échelle minimale de zoom
-              maxScale: 10.0, // Échelle maximale de zoom
-              constrained: true,
-              child: currentImage))
-    ])))));
+      child: InteractiveViewer(
+          boundaryMargin:
+              const EdgeInsets.all(double.infinity), // Marge autour de l'image
+          minScale: 0.9, // Échelle minimale de zoom
+          maxScale: 4.0, // Échelle maximale de zoom
+          constrained: true,
+          child: skyMap!),
+    ))));
   }
 }
