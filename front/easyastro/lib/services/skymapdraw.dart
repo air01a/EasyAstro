@@ -11,8 +11,6 @@ class SkyMapCreator {
   Function() callBack;
 
   SkyMapTransform skyMapTransform = SkyMapTransform();
-  int _width;
-  int _height;
   double maxMag;
   double lon;
   double lat;
@@ -23,13 +21,38 @@ class SkyMapCreator {
   List<List<Map<String, dynamic>>> skyMapLines = [];
   List<DSO> DSOPosition = [];
   Observer observer = Observer();
+  List<Star> starsCatalog = [];
+  List<List<int>> constellationsLines = [];
 
-  Future<void> _loadConfig(int width, int height, double maxMag, double lon,
-      double lat, DateTime date, bool loadDSO) async {
-    List<Star> starsCatalog = [];
+  void reloadStars() {
+    for (final star in starsCatalog) {
+      if (star.mag < maxMag) {
+        skyMapTransform.skyposTransform(star, observer, 1, 1);
+        if (star.visible) {
+          skyMapPositions.add(star);
+        }
+      }
+    }
+
+    for (final line in constellationsLines) {
+      var skyPos1 = starsCatalog[line[0]];
+      var skyPos2 = starsCatalog[line[1]];
+
+      if (skyPos1.visible && skyPos2.visible) {
+        skyMapLines.add([skyPos1.pos, skyPos2.pos]);
+      }
+    }
+  }
+
+  void changeMaxMag(double newMag) {
+    maxMag = newMag;
+  }
+
+  Future<void> _loadConfig(double maxMag, double lon, double lat, DateTime date,
+      bool loadDSO) async {
     List<Constellation> constellationsCatalog = [];
-    List<List<int>> constellationsLines = [];
 
+    starsCatalog = [];
     observer.setDate(date);
     observer.setLonDegrees(lon);
     observer.setLatDegrees(lat);
@@ -39,22 +62,19 @@ class SkyMapCreator {
     );
     starsCatalog = Stars.fromJson(result).getStars();
     skyMapTransform.initStars(starsCatalog);
-
-    for (final star in starsCatalog) {
-      if (star.mag < maxMag) {
-        skyMapTransform.skyposTransform(star, observer, width, height);
-        if (star.visible) {
-          skyMapPositions.add(star);
-        }
-      }
-    }
+    result = await rootBundle.loadString(
+      "assets/astro/constellationlines.json",
+    );
+    constellationsLines =
+        ConstellationLines.fromJson(result).getConstellationLines();
+    reloadStars();
 
     result = await rootBundle.loadString(
       "assets/astro/constellations.json",
     );
     constellationsCatalog = Constellations.fromJson(result).getConstellation();
     for (final constellation in constellationsCatalog) {
-      skyMapTransform.skyposTransform(constellation, observer, width, height);
+      skyMapTransform.skyposTransform(constellation, observer, 1, 1);
 
       if (constellation.visible) {
         constellation.name = constellation.name;
@@ -63,19 +83,6 @@ class SkyMapCreator {
       }
     }
 
-    result = await rootBundle.loadString(
-      "assets/astro/constellationlines.json",
-    );
-    constellationsLines =
-        ConstellationLines.fromJson(result).getConstellationLines();
-    for (final line in constellationsLines) {
-      var skyPos1 = starsCatalog[line[0]];
-      var skyPos2 = starsCatalog[line[1]];
-
-      if (skyPos1.visible && skyPos2.visible) {
-        skyMapLines.add([skyPos1.pos, skyPos2.pos]);
-      }
-    }
     if (loadDSO) await loadDefaultDSO();
   }
 
@@ -84,16 +91,14 @@ class SkyMapCreator {
   }
 
   Future<void> loadDSO(List<DSO> dsos) async {
-    print("Loading DSO");
+    DSOPosition.clear();
     for (final dso in dsos) {
-      skyMapTransform.skyposTransform(dso, observer, _width, _height);
-      print("${dso.name}");
+      skyMapTransform.skyposTransform(dso, observer, 1, 1);
       if (dso.visible) DSOPosition.add(dso);
     }
   }
 
   Future<void> loadDefaultDSO() async {
-    print("Loading default DSO");
     List<DSO> dsos = [];
     var result = await rootBundle.loadString(
       "assets/astro/dso.json",
@@ -127,11 +132,10 @@ class SkyMapCreator {
     return DSOPosition;
   }
 
-  SkyMapCreator(this.callBack, this._width, this._height, this.maxMag, this.lon,
-      this.lat, this.date);
+  SkyMapCreator(this.callBack, this.maxMag, this.lon, this.lat, this.date);
 
   void loadConfig(bool loadDSO) {
-    _loadConfig(_width, _height, maxMag, lon, lat, date, loadDSO).then((value) {
+    _loadConfig(maxMag, lon, lat, date, loadDSO).then((value) {
       callBack();
     });
   }

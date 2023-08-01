@@ -17,6 +17,8 @@ class _ScreenMap extends State<ScreenMap> {
   List<DSO> dsoList = [];
   AstroCalc? astro = ObjectSelection().astro;
   SkyMap? skyMap;
+  late bool showDso;
+  late bool showOnlySelected;
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -44,8 +46,8 @@ class _ScreenMap extends State<ScreenMap> {
     int type;
     int color;
     List<ObservableObject> temp;
-    if (ConfigManager().configuration?["mapShowDSO"]?.value) {
-      if (ConfigManager().configuration?["mapShowOnlySelected"]?.value) {
+    if (showDso) {
+      if (showOnlySelected) {
         temp = ObjectSelection()
             .selection
             .where((line) =>
@@ -104,6 +106,17 @@ class _ScreenMap extends State<ScreenMap> {
     }
   }
 
+  void changeConstellation() {
+    skyMap!.showConstellation(!skyMap!.showLines);
+    skyMap!.reload();
+  }
+
+  void changeDso() {
+    showDso = !showDso;
+    loadDSO();
+    skyMap!.reloadDSO(dsoList);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +130,9 @@ class _ScreenMap extends State<ScreenMap> {
     viewTransformationController.value.setEntry(0, 3, -xTranslate);
     viewTransformationController.value.setEntry(1, 3, -yTranslate);
 
+    showDso = ConfigManager().configuration?["mapShowDSO"]?.value;
+    showOnlySelected =
+        ConfigManager().configuration?["mapShowOnlySelected"]?.value;
     loadDSO();
     skyMap = SkyMap(astro!.longitude, astro!.latitude, astro!.getDateTime(),
         customDSO: dsoList,
@@ -130,13 +146,34 @@ class _ScreenMap extends State<ScreenMap> {
         body: Center(
             child: Scaffold(
                 body: Center(
-      child: InteractiveViewer(
+                    child: Stack(children: [
+      InteractiveViewer(
           boundaryMargin:
               const EdgeInsets.all(double.infinity), // Marge autour de l'image
-          minScale: 0.9, // Échelle minimale de zoom
+          minScale: 0.3, // Échelle minimale de zoom
           maxScale: 4.0, // Échelle maximale de zoom
-          constrained: true,
+          constrained: false,
           child: skyMap!),
-    ))));
+      Positioned(
+        top: 0,
+        left: 0,
+        child: GestureDetector(
+            onTap: () => {skyMap!.setMaxMagnitude(10)},
+            child: Icon(Icons.access_alarm)),
+      ),
+      Positioned(
+        top: 20,
+        left: 0,
+        child: GestureDetector(
+            onTap: () => {changeConstellation()},
+            child: Icon(Icons.access_alarm)),
+      ),
+      Positioned(
+        top: 30,
+        left: 0,
+        child: GestureDetector(
+            onTap: () => {changeDso()}, child: Icon(Icons.access_alarm)),
+      )
+    ])))));
   }
 }
