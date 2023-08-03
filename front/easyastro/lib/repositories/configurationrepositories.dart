@@ -15,6 +15,8 @@ class ConfigurationRepository {
         ConfigItem('mapShowDSO', 'map_show_dso', 'checkbox', true, []),
     'mapShowOnlySelected': ConfigItem(
         'mapShowOnlySelected', 'map_show_only_selected', 'checkbox', false, []),
+    'mapShowStarNames':
+        ConfigItem('mapShowLines', 'map_show_starname', 'checkbox', false, []),
     'mapShowLines':
         ConfigItem('mapShowLines', 'map_show_lines', 'checkbox', false, [])
   };
