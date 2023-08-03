@@ -75,10 +75,15 @@ class AstroCalc {
     return "${year.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}";
   }
 
-  DateTime getDateTime() {
+  String getDateTimeString() {
     int minute = ((hour - hour.floor()) * 60).floor();
-    return DateTime.parse(
-        "${year.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')} ${hour.floor().toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00");
+    String tmp =
+        "${year.toString().padLeft(2, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')} ${hour.floor().toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00";
+    return tmp;
+  }
+
+  DateTime getDateTime({bool stringFormat = false}) {
+    return DateTime.parse(getDateTimeString());
   }
 
   // Set observation date

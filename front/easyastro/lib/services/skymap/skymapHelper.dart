@@ -19,12 +19,14 @@ class SkyMapCreator {
   List<Star> skyMapPositions = [];
   List<Constellation> skyMapConstellationPositions = [];
   List<List<Map<String, dynamic>>> skyMapLines = [];
+  //List<StarName> skyMapStarNames = [];
   List<DSO> DSOPosition = [];
   Observer observer = Observer();
   List<Star> starsCatalog = [];
   List<List<int>> constellationsLines = [];
 
   void reloadStars() {
+    skyMapPositions.clear();
     for (final star in starsCatalog) {
       if (star.mag < maxMag) {
         skyMapTransform.skyposTransform(star, observer, 1, 1);
@@ -34,6 +36,7 @@ class SkyMapCreator {
       }
     }
 
+    skyMapLines.clear();
     for (final line in constellationsLines) {
       var skyPos1 = starsCatalog[line[0]];
       var skyPos2 = starsCatalog[line[1]];
@@ -67,12 +70,14 @@ class SkyMapCreator {
     );
     constellationsLines =
         ConstellationLines.fromJson(result).getConstellationLines();
+
     reloadStars();
 
     result = await rootBundle.loadString(
       "assets/astro/constellations.json",
     );
     constellationsCatalog = Constellations.fromJson(result).getConstellation();
+
     for (final constellation in constellationsCatalog) {
       skyMapTransform.skyposTransform(constellation, observer, 1, 1);
 

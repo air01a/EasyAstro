@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
-import 'package:easyastro/components/skymap.dart';
+import 'package:easyastro/components/elements/skymap.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/models/dso.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/configmanager.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ScreenMap extends StatefulWidget {
   @override
@@ -13,12 +15,17 @@ class ScreenMap extends StatefulWidget {
 }
 
 class _ScreenMap extends State<ScreenMap> {
-  final viewTransformationController = TransformationController();
+  final _transformationController = TransformationController();
   List<DSO> dsoList = [];
   AstroCalc? astro = ObjectSelection().astro;
   SkyMap? skyMap;
   late bool showDso;
   late bool showOnlySelected;
+  late bool showStarsName;
+  bool _isMenuOpen = false;
+  late double maxMag;
+  late bool showConstellation;
+  double skyMapSize = 1400;
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -107,37 +114,140 @@ class _ScreenMap extends State<ScreenMap> {
   }
 
   void changeConstellation() {
-    skyMap!.showConstellation(!skyMap!.showLines);
+    skyMap!.showConstellation(showConstellation);
     skyMap!.reload();
   }
 
   void changeDso() {
-    showDso = !showDso;
+    //showDso = !showDso;
     loadDSO();
     skyMap!.reloadDSO(dsoList);
+  }
+
+  void changeStarName() {
+    skyMap!.showStarsNames(showStarsName);
+  }
+
+  Widget buildMenu() {
+    return Positioned(
+      top: 100, // Ajustez cette valeur pour positionner le menu correctement
+      left: 20, // Ajustez cette valeur pour positionner le menu correctement
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 2500),
+        width: 200, // Ajustez cette valeur pour régler la largeur du menu
+        height: 400, // Ajustez cette valeur pour régler la hauteur du menu
+        color: Colors.blue,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('mag').tr(),
+            SfLinearGauge(
+              maximum: 8,
+              minimum: 0,
+              orientation: LinearGaugeOrientation.horizontal,
+              markerPointers: [
+                LinearShapePointer(
+                  value: maxMag,
+                  height: 25,
+                  width: 25,
+                  shapeType: LinearShapePointerType.invertedTriangle,
+                  dragBehavior: LinearMarkerDragBehavior.free,
+                  onChangeEnd: (value) => {skyMap!.setMaxMagnitude(maxMag)},
+                  onChanged: (double newValue) {
+                    setState(() {
+                      maxMag = newValue;
+                    });
+                  },
+                ),
+              ],
+              barPointers: [LinearBarPointer(value: maxMag)],
+            ),
+            CheckboxListTile(
+              value: showConstellation,
+              onChanged: (bool? value) {
+                setState(() {
+                  showConstellation = value!;
+                  changeConstellation();
+                });
+              },
+              title: Text('map_show_lines').tr(),
+            ),
+            CheckboxListTile(
+              value: showStarsName,
+              onChanged: (bool? value) {
+                setState(() {
+                  showStarsName = value!;
+                  changeStarName();
+                });
+              },
+              title: Text('map_show_starname').tr(),
+            ),
+            // Ajoutez votre jauge ici, par exemple : LinearProgressIndicator()
+            CheckboxListTile(
+              value: showDso,
+              onChanged: (bool? value) {
+                setState(() {
+                  showDso = value!;
+                  if (!showDso) showOnlySelected = false;
+                  changeDso();
+                });
+              },
+              title: Text('dso').tr(),
+            ),
+            CheckboxListTile(
+              value: showOnlySelected,
+              onChanged: (bool? value) {
+                setState(() {
+                  showOnlySelected = value!;
+                  if (value) showDso = true;
+                  changeDso();
+                });
+              },
+              title: Text('only_selected').tr(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
     //viewTransformationController.value = Matrix4.diagonal3Values(4.0, 4.0, 1.0);
-    final zoomFactor = 2.0;
-    final xTranslate = 300.0;
-    final yTranslate = 300.0;
-    viewTransformationController.value.setEntry(0, 0, zoomFactor);
-    viewTransformationController.value.setEntry(1, 1, zoomFactor);
-    viewTransformationController.value.setEntry(2, 2, zoomFactor);
-    viewTransformationController.value.setEntry(0, 3, -xTranslate);
-    viewTransformationController.value.setEntry(1, 3, -yTranslate);
 
     showDso = ConfigManager().configuration?["mapShowDSO"]?.value;
     showOnlySelected =
         ConfigManager().configuration?["mapShowOnlySelected"]?.value;
+    showConstellation = ConfigManager().configuration?["mapShowLines"]?.value;
+    showStarsName = ConfigManager().configuration?["mapShowStarNames"]?.value;
     loadDSO();
     skyMap = SkyMap(astro!.longitude, astro!.latitude, astro!.getDateTime(),
         customDSO: dsoList,
         loadDSO: false,
-        showLines: ConfigManager().configuration?["mapShowLines"]?.value);
+        showLines: showConstellation,
+        showStarNames: showStarsName,
+        size: skyMapSize);
+    maxMag = 5;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var size = MediaQuery.of(context).size;
+    double minSize = size.width;
+    if (size.height < size.width) {
+      minSize = size.height;
+    }
+    final zoomFactor = minSize / skyMapSize;
+    final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
+
+    final yTranslate = 0.0; //-(size.height * zoomFactor) / 2;
+    _transformationController.value.setEntry(0, 0, zoomFactor);
+    _transformationController.value.setEntry(1, 1, zoomFactor);
+    _transformationController.value.setEntry(2, 2, zoomFactor);
+    _transformationController.value.setEntry(0, 3, xTranslate);
+    _transformationController.value.setEntry(1, 3, -yTranslate);
   }
 
   @override
@@ -148,32 +258,31 @@ class _ScreenMap extends State<ScreenMap> {
                 body: Center(
                     child: Stack(children: [
       InteractiveViewer(
+          transformationController: _transformationController,
           boundaryMargin:
               const EdgeInsets.all(double.infinity), // Marge autour de l'image
           minScale: 0.3, // Échelle minimale de zoom
           maxScale: 4.0, // Échelle maximale de zoom
           constrained: false,
           child: skyMap!),
+      if (_isMenuOpen) buildMenu(),
       Positioned(
         top: 0,
         left: 0,
+        height: 30,
         child: GestureDetector(
-            onTap: () => {skyMap!.setMaxMagnitude(10)},
-            child: Icon(Icons.access_alarm)),
+            onTap: () => {
+                  setState(() {
+                    _isMenuOpen = !_isMenuOpen;
+                  })
+                }, //skyMap!.setMaxMagnitude(10)},
+            child: Icon(Icons.settings, size: 48.0)),
       ),
       Positioned(
-        top: 20,
-        left: 0,
-        child: GestureDetector(
-            onTap: () => {changeConstellation()},
-            child: Icon(Icons.access_alarm)),
-      ),
-      Positioned(
-        top: 30,
-        left: 0,
-        child: GestureDetector(
-            onTap: () => {changeDso()}, child: Icon(Icons.access_alarm)),
-      )
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Center(child: Text(astro!.getDateTimeString())))
     ])))));
   }
 }
