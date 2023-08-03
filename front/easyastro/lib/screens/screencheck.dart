@@ -9,6 +9,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 
 class CheckScreen extends StatefulWidget {
+  const CheckScreen({super.key});
+
   @override
   _CheckScreen createState() => _CheckScreen();
 }
@@ -19,21 +21,21 @@ class _CheckScreen extends State<CheckScreen> {
   bool _catalogUpdated = false;
 
   Future<void> updateDescription() async {
-    ObjectSelection().selection.forEach((element) {
+    for (var element in ObjectSelection().selection) {
       element.description = element.name.tr();
-    });
+    }
   }
 
   void updateLocale(String key, dynamic value) async {
     switch (value) {
       case ('FR'):
         {
-          await context.setLocale(Locale('fr', 'FR'));
+          await context.setLocale(const Locale('fr', 'FR'));
         }
         break;
       case ('EN'):
         {
-          await context.setLocale(Locale('en', 'US'));
+          await context.setLocale(const Locale('en', 'US'));
         }
         break;
       default:
@@ -65,11 +67,9 @@ class _CheckScreen extends State<CheckScreen> {
     });
 
     locationData = await locationHelper.getLocation();
-    if (locationData != null) {
-      CurrentLocation().longitude = locationData.longitude;
-      CurrentLocation().latitude = locationData.latitude;
-      CurrentLocation().altitude = locationData.altitude;
-    }
+    CurrentLocation().longitude = locationData.longitude;
+    CurrentLocation().latitude = locationData.latitude;
+    CurrentLocation().altitude = locationData.altitude;
 
     setState(() {
       _locationData = locationData; // Afficher la position GPS
@@ -119,7 +119,7 @@ class _CheckScreen extends State<CheckScreen> {
               child: _locationData != null &&
                       _locationData?.latitude != null &&
                       _locationData?.longitude != null
-                  ? Text('position').tr(args: [
+                  ? const Text('position').tr(args: [
                       _locationData!.latitude.toString(),
                       _locationData!.longitude.toString(),
                       _locationData!.altitude.toString()

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 class BottomBar extends StatelessWidget {
-  BottomBar({this.index});
+  BottomBar({super.key, this.index});
 
   final int? index;
   final List<BottomNavigationBarItem> items = [];

@@ -73,20 +73,20 @@ class _ObjectBox extends State<ObjectBox> {
                                         fontWeight: FontWeight.bold))
                                 .tr(),
                             if (widget.object.rise != widget.object.set)
-                              Text("rise_set").tr(args: [
+                              const Text("rise_set").tr(args: [
                                 ConvertAngle.hourToString(widget.object.rise),
                                 ConvertAngle.hourToString(widget.object.set)
                               ])
                             else
-                              Text("circumpolar")
+                              const Text("circumpolar")
                                   .tr(), //"Rise : ${ConvertAngle.hourToString(widget.object.rise)} - Set : ${ConvertAngle.hourToString(widget.object.set)} "),
-                            Text("culmination").tr(args: [
+                            const Text("culmination").tr(args: [
                               ConvertAngle.hourToString(widget.object.meridian)
                             ]), //"Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"),
-                            Text("type").tr(args: [
+                            const Text("type").tr(args: [
                               widget.object.type.tr()
                             ]), //"Type: ${widget.object.type}"),
-                            Text("magnitude").tr(args: [
+                            const Text("magnitude").tr(args: [
                               widget.object.magnitude.toString()
                             ]), //"Magnitude: ${widget.object.magnitude.toString()}"),
                           ],

@@ -6,6 +6,8 @@ import 'package:easyastro/components/loader/progression.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ConfigTelescopeScreen extends StatefulWidget {
+  const ConfigTelescopeScreen({super.key});
+
   @override
   _ConfigTelescopeScreen createState() => _ConfigTelescopeScreen();
 }
@@ -85,7 +87,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
             Expanded(
                 flex: 5,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     alignment: Alignment.centerLeft,
                     child: const Text('take_darks').tr())),
             Expanded(
@@ -113,7 +115,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
             Expanded(
                 flex: 5,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     alignment: Alignment.centerLeft,
                     child: const Text('dark_library').tr())),
             Expanded(
@@ -138,7 +140,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
             Expanded(
                 flex: 5,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     alignment: Alignment.centerLeft,
                     child: const Text('stop_telescope').tr())),
             Expanded(

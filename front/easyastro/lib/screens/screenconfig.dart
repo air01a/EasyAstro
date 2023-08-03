@@ -9,6 +9,8 @@ import 'package:easyastro/components/forms/optionsforms.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class ConfigScreen extends StatefulWidget {
+  const ConfigScreen({super.key});
+
   @override
   _ConfigScreen createState() => _ConfigScreen();
 }
@@ -59,7 +61,6 @@ class _ConfigScreen extends State<ConfigScreen> {
     configReturn.add(Container(height: 10));
     configReturn.add(Center(
         child: ElevatedButton(
-            child: const Text("save").tr(),
             onPressed: _isSaveDisabled
                 ? null
                 : () {
@@ -67,8 +68,9 @@ class _ConfigScreen extends State<ConfigScreen> {
                     setState(() {
                       _isSaveDisabled = true;
                     });
-                  })));
-    configReturn.add(SizedBox(height: 20));
+                  },
+            child: const Text("save").tr())));
+    configReturn.add(const SizedBox(height: 20));
     configReturn
         .add(Center(child: Text('Version : ${_packageInfo.version} (2023)')));
     return configReturn;
@@ -79,31 +81,6 @@ class _ConfigScreen extends State<ConfigScreen> {
     return PageStructure(
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-
-                //onPressed: () => { ConfigManager().saveConfig() }
-                getConfigItems()
-
-            /*
-                           const Text('Take darks'),
-                           ElevatedButton(
-                              onPressed: () async { 
-                                checkHelper.takeDark();
-                                showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              content: LoadingIndicator(
-                                                text: 'Taking dark', controller: update
-                                              ),
-                                            );
-                                          },
-                                        );
-                              },
-                              child: const Text('Go')
-                           ),
-                          
-                           getConfigItems(), */
-            ));
+            children: getConfigItems()));
   }
 }

@@ -6,11 +6,10 @@ import 'package:easyastro/theme/theme.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 //import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/screens/screencheck.dart';
 
 void main() async {
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   ServerInfo(); 
   ObjectSelection();
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
           routes:routes,
           initialRoute: '/' ,
           onGenerateRoute: (settings) {
-              return MaterialPageRoute(builder: (_) => CheckScreen());
+              return MaterialPageRoute(builder: (_) => const CheckScreen());
             },
         );
       

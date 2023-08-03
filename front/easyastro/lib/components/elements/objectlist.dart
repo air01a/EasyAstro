@@ -108,26 +108,26 @@ class _ObjectPage extends State<ObjectPage> {
                                     ).tr()),
                                 title("information"),
                                 if (widget.item.rise != widget.item.set)
-                                  Text('rise').tr(args: [
+                                  const Text('rise').tr(args: [
                                     ConvertAngle.hourToString(widget.item.rise)
                                   ])
                                 else
-                                  Text('circumpolar').tr(),
+                                  const Text('circumpolar').tr(),
                                 if (widget.item.rise !=
                                     widget.item
                                         .set) //"Rise : ${ConvertAngle.hourToString(widget.item.rise)}"),
-                                  Text('set').tr(args: [
+                                  const Text('set').tr(args: [
                                     ConvertAngle.hourToString(widget.item.set)
                                   ]), //"Set : ${ConvertAngle.hourToString(widget.item.set)}"),
-                                Text('culmination').tr(args: [
+                                const Text('culmination').tr(args: [
                                   ConvertAngle.hourToString(
                                       widget.item.meridian)
                                 ]), //"Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"),
-                                Text('magnitude', textAlign: TextAlign.left)
+                                const Text('magnitude', textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.magnitude.toString()
                                 ]), //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left),
-                                Text('current_height',
+                                const Text('current_height',
                                         textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.height.toInt().toString()

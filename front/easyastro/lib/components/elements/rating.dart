@@ -6,7 +6,7 @@ class RatingBox extends StatefulWidget {
   final bool initialValue; 
   final int index; 
 
-  RatingBox({super.key, required this.onValueChanged, required this.index, required this.initialValue});
+  const RatingBox({super.key, required this.onValueChanged, required this.index, required this.initialValue});
    @override 
    State<RatingBox> createState() => RatingBoxState(); 
 } 

@@ -34,7 +34,7 @@ class ExpositionSelector {
         hideHeader: false,
         textAlign: TextAlign.left,
         title: const Text("Expo / Gain"),
-        selectedTextStyle: TextStyle(color: Colors.red),
+        selectedTextStyle: const TextStyle(color: Colors.red),
         columnPadding: const EdgeInsets.all(8.0),
         onConfirm: (Picker picker, List value) {
           print(picker.getSelectedValues());

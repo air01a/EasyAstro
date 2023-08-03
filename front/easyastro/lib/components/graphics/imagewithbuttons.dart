@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ImageWithButton extends StatefulWidget {
+  const ImageWithButton({super.key});
+
   @override
   _ImageWithButtonState createState() => _ImageWithButtonState();
 }
@@ -30,7 +32,7 @@ class _ImageWithButtonState extends State<ImageWithButton> {
                   // Action à effectuer lors du clic sur le bouton
                   print('Bouton cliqué!');
                 },
-                child: Text('Bouton'),
+                child: const Text('Bouton'),
               ),
             ),
         ],

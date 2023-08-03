@@ -103,7 +103,7 @@ class _ConnectionPage extends State<ConnectionPage> {
                 },
                 child: Text(
                   'click_doc'.tr(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.blue, // Couleur du lien
                     decoration:
                         TextDecoration.underline, // Soulignement du lien

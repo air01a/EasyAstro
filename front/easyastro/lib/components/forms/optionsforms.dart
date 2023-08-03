@@ -16,7 +16,7 @@ class ConfigForms {
           Expanded(
               flex: 5,
               child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                   alignment: Alignment.centerLeft,
                   child: Text(ci.description).tr())),
           Expanded(
@@ -34,7 +34,7 @@ class ConfigForms {
           Expanded(
               flex: 5,
               child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                   alignment: Alignment.centerLeft,
                   child: Text(ci.description).tr())),
           Expanded(
@@ -53,7 +53,7 @@ class ConfigForms {
           Expanded(
               flex: 5,
               child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                   alignment: Alignment.centerLeft,
                   child: Text(ci.description).tr())),
           Expanded(

@@ -57,6 +57,11 @@ The application will show you what are the visible object at a date, and give yo
 
 ![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/plan.jpg?raw=true "Plan your observation")
 
+*See the selected object on a interactive skymap*
+
+![Alt text](https://github.com/air01a/EasyAstro/blob/main/doc/skymap.jpg?raw=true "Live Stacking")
+
+On this realtime skymap, you can show constellation, increase/decrease number of visible stars (change max magnitude), see your object on the map.
 
 *Connect to the easyastro backend to pilot your telescope*
 

@@ -64,7 +64,7 @@ class AppDrawer extends Drawer {
                     leading: const Icon(
                       Icons.visibility,
                     ),
-                    title: Text('observe').tr(),
+                    title: const Text('observe').tr(),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/capture');
                     },
@@ -73,7 +73,7 @@ class AppDrawer extends Drawer {
                     leading: const Icon(
                       Icons.visibility,
                     ),
-                    title: Text('connect').tr(),
+                    title: const Text('connect').tr(),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/connect');
                     },
@@ -98,7 +98,7 @@ class AppDrawer extends Drawer {
                     Navigator.pushReplacementNamed(context, '/home');
                   },
                 )
-              : Container(width: 0, height: 0),
+              : const SizedBox(width: 0, height: 0),
         ],
       ),
     );

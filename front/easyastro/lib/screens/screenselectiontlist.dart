@@ -13,6 +13,8 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/models/selection.dart';
 
 class ScreenSelectionList extends StatefulWidget {
+  const ScreenSelectionList({super.key});
+
   @override
   _ScreenSelectionList createState() => _ScreenSelectionList();
 }
@@ -51,15 +53,15 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   void callback(Map<String, dynamic> selection) {
     setState(() {
       String newDate =
-          "${selection!['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
+          "${selection['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
       service.updateTime(newDate).then((value) {
         List<dynamic> selected = selection["selected"];
-        selected.forEach((element) {
+        for (var element in selected) {
           ObjectSelection()
               .selection
               .firstWhere((obj) => obj.name == element)
               .selected = true;
-        });
+        }
         _catalog = ObjectSelection()
             .selection
             .where((line) => line.selected == true)
