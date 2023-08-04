@@ -16,9 +16,9 @@ class ConfigurationRepository {
     'mapShowOnlySelected': ConfigItem(
         'mapShowOnlySelected', 'map_show_only_selected', 'checkbox', false, []),
     'mapShowStarNames':
-        ConfigItem('mapShowLines', 'map_show_starname', 'checkbox', false, []),
+        ConfigItem('mapShowLines', 'map_show_starname', 'checkbox', true, []),
     'mapShowLines':
-        ConfigItem('mapShowLines', 'map_show_lines', 'checkbox', false, [])
+        ConfigItem('mapShowLines', 'map_show_lines', 'checkbox', true, [])
   };
   final _ls = LocalStorage('Configuration');
 

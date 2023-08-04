@@ -242,12 +242,12 @@ class _ScreenMap extends State<ScreenMap> {
     final zoomFactor = minSize / skyMapSize;
     final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
 
-    final yTranslate = 0.0; //-(size.height * zoomFactor) / 2;
+    final yTranslate = (size.height - zoomFactor * skyMapSize) / 2; //-(size.height * zoomFactor) / 2;
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);
     _transformationController.value.setEntry(2, 2, zoomFactor);
     _transformationController.value.setEntry(0, 3, xTranslate);
-    _transformationController.value.setEntry(1, 3, -yTranslate);
+    _transformationController.value.setEntry(1, 3, yTranslate);
   }
 
   @override
@@ -261,7 +261,7 @@ class _ScreenMap extends State<ScreenMap> {
           transformationController: _transformationController,
           boundaryMargin:
               const EdgeInsets.all(double.infinity), // Marge autour de l'image
-          minScale: 0.3, // Échelle minimale de zoom
+          minScale: 0.1, // Échelle minimale de zoom
           maxScale: 4.0, // Échelle maximale de zoom
           constrained: false,
           child: skyMap!),
@@ -269,7 +269,7 @@ class _ScreenMap extends State<ScreenMap> {
       Positioned(
         top: 0,
         left: 0,
-        height: 30,
+        height: 48,
         child: GestureDetector(
             onTap: () => {
                   setState(() {
@@ -279,9 +279,9 @@ class _ScreenMap extends State<ScreenMap> {
             child: Icon(Icons.settings, size: 48.0)),
       ),
       Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
+          top: 12,
+          left: 48,
+        //  right: 0,
           child: Center(child: Text(astro!.getDateTimeString())))
     ])))));
   }

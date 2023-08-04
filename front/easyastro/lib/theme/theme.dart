@@ -9,7 +9,7 @@ class theme {
         brightness: Brightness.dark,
         primaryColor: const Color.fromARGB(140, 1, 7, 10),
         // Define the default font family.
-        fontFamily: 'Georgia',
+        fontFamily: 'Arial',
 
         scaffoldBackgroundColor: const Color.fromARGB(140, 15, 15, 15),
        /* // Define the default `TextTheme`. Use this to specify the default

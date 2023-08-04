@@ -25,7 +25,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String searchValue = '';
   String filterValue = 'all';
-  AstroCalc? astro = ObjectSelection().astro;
   SearchField sf = SearchField();
   FilterField ff = FilterField();
   bool onlyVisible = true;
@@ -128,7 +127,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
         body: Container(
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(children: [
-                            Text(astro!.getDateTimeString()),
+                            Text(ObjectSelection().astro!.getDateTimeString()),
               sf.buildSearchTextField(),
               ff.buildFilterTextField(ObjectSelection().selection.toList()),
               Expanded(
