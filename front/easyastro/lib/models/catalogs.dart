@@ -65,7 +65,7 @@ class ObservableObject {
 
     ra = json['RA deg'] ?? 0;
     dec = json['DEC deg'] ?? 0;
-    description = tr("_$name") ?? 'N/A';
+    description = tr("_$name");
 
     image = json['Image'] ?? '';
     if (json['Magnitude'] is String) {

@@ -15,7 +15,7 @@ class ScreenObjectList extends StatefulWidget {
   const ScreenObjectList({super.key});
 
   @override
-  _ScreenObjectList createState() => _ScreenObjectList();
+  State<ScreenObjectList> createState() => _ScreenObjectList();
 }
 
 class _ScreenObjectList extends State<ScreenObjectList> {
@@ -24,7 +24,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String searchValue = '';
   String filterValue = 'all';
-
   SearchField sf = SearchField();
   FilterField ff = FilterField();
   bool onlyVisible = true;
@@ -126,6 +125,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
         body: Container(
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(children: [
+              Text(ObjectSelection().astro!.getDateTimeString()),
               sf.buildSearchTextField(),
               ff.buildFilterTextField(ObjectSelection().selection.toList()),
               Expanded(
@@ -161,7 +161,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                                   context, '/capture',
                                   arguments: {'object': _catalog[index].name});
                             });
-                      }))
+                      })),
             ])),
         bottom: bbar);
   }

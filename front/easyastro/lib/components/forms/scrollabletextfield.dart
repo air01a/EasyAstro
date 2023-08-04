@@ -6,7 +6,7 @@ class ScrollableTextField extends StatefulWidget {
   const ScrollableTextField({super.key, required this.controller});
 
   @override
-  _ScrollableTextFieldState createState() => _ScrollableTextFieldState();
+  State<ScrollableTextField> createState() => _ScrollableTextFieldState();
 }
 
 class _ScrollableTextFieldState extends State<ScrollableTextField> {

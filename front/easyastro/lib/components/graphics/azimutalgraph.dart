@@ -4,9 +4,8 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/globals.dart';
 
 class AzimutalGraph extends StatefulWidget {
-  final Map<double,double> data; 
-  const AzimutalGraph({super.key,required this.data});
-
+  final Map<double, double> data;
+  const AzimutalGraph({super.key, required this.data});
 
   @override
   State<AzimutalGraph> createState() => _AzimutalGraph();
@@ -40,7 +39,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
         ),
         SizedBox(
           width: 60,
-          height: 15  ,
+          height: 15,
           child: TextButton(
             onPressed: () {
               setState(() {
@@ -61,13 +60,12 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-
     Widget text;
     const style = TextStyle(
       fontSize: 10,
     );
     text = Text(ConvertAngle.hourToString(value), style: style);
-    
+
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: text,
@@ -86,69 +84,63 @@ class _AzimutalGraph extends State<AzimutalGraph> {
   }
 
   LineChartData mainData() {
-
-    List<FlSpot> tab=[];
-    double minX=1000;
-    double maxX=0;
+    List<FlSpot> tab = [];
+    double minX = 1000;
+    double maxX = 0;
     widget.data.forEach((i, value) {
-      tab.add(FlSpot(i,value.floor()+0.0));
-      if (i<minX) minX=i;
-      if (i>maxX) maxX=i;
+      tab.add(FlSpot(i, value.floor() + 0.0));
+      if (i < minX) minX = i;
+      if (i > maxX) maxX = i;
     });
-    
+
     return LineChartData(
       lineTouchData: LineTouchData(
-    enabled: true,
-    touchCallback:
-        (FlTouchEvent event, LineTouchResponse? touchResponse) {
-      // TODO : Utilize touch event here to perform any operation
-    },
-    touchTooltipData: LineTouchTooltipData(
-      tooltipBgColor: Colors.blue,
-      tooltipRoundedRadius: 20.0,
-      showOnTopOfTheChartBoxArea: true,
-      fitInsideHorizontally: true,
-      tooltipMargin: 0,
-      getTooltipItems: (touchedSpots) {
-        return touchedSpots.map(
-          (LineBarSpot touchedSpot) {
-            const textStyle = TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            );
-            return LineTooltipItem(
-              "${ConvertAngle.hourToString(tab[touchedSpot.spotIndex].x)} : ${tab[touchedSpot.spotIndex].y.toStringAsFixed(2)}°",
-              textStyle,
-            );
+          enabled: true,
+          touchCallback:
+              (FlTouchEvent event, LineTouchResponse? touchResponse) {},
+          touchTooltipData: LineTouchTooltipData(
+            tooltipBgColor: Colors.blue,
+            tooltipRoundedRadius: 20.0,
+            showOnTopOfTheChartBoxArea: true,
+            fitInsideHorizontally: true,
+            tooltipMargin: 0,
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map(
+                (LineBarSpot touchedSpot) {
+                  const textStyle = TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  );
+                  return LineTooltipItem(
+                    "${ConvertAngle.hourToString(tab[touchedSpot.spotIndex].x)} : ${tab[touchedSpot.spotIndex].y.toStringAsFixed(2)}°",
+                    textStyle,
+                  );
+                },
+              ).toList();
+            },
+          ),
+          getTouchedSpotIndicator:
+              (LineChartBarData barData, List<int> indicators) {
+            return indicators.map(
+              (int index) {
+                final line = FlLine(
+                    color: Colors.grey, strokeWidth: 1, dashArray: [2, 4]);
+                return TouchedSpotIndicatorData(
+                  line,
+                  FlDotData(show: false),
+                );
+              },
+            ).toList();
           },
-        ).toList();
-      },
-    ),
-    getTouchedSpotIndicator:
-        (LineChartBarData barData, List<int> indicators) {
-      return indicators.map(
-        (int index) {
-          final line = FlLine(
-              color: Colors.grey,
-              strokeWidth: 1,
-              dashArray: [2, 4]);
-          return TouchedSpotIndicatorData(
-            line,
-            FlDotData(show: false),
-          );
-        },
-      ).toList();
-    },
-    getTouchLineEnd: (_, __) => double.infinity
-  ),
-      rangeAnnotations: RangeAnnotations(
-        verticalRangeAnnotations: [
-          VerticalRangeAnnotation(
-            x1: ObjectSelection().astro!.hour,
-            x2: ObjectSelection().astro!.hour+1,
-            color: const Color(0xFF2196F3).withOpacity(0.2),
-          )]),
+          getTouchLineEnd: (_, __) => double.infinity),
+      rangeAnnotations: RangeAnnotations(verticalRangeAnnotations: [
+        VerticalRangeAnnotation(
+          x1: ObjectSelection().astro!.hour,
+          x2: ObjectSelection().astro!.hour + 1,
+          color: const Color(0xFF2196F3).withOpacity(0.2),
+        )
+      ]),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -157,21 +149,20 @@ class _AzimutalGraph extends State<AzimutalGraph> {
         verticalInterval: 15,
         getDrawingHorizontalLine: (value) {
           if (value == 0) {
-              // Style de la ligne y = 0
-              return FlLine(
-                color: Colors.red,
-                strokeWidth: 2.0,
-              );
+            // Style de la ligne y = 0
+            return FlLine(
+              color: Colors.red,
+              strokeWidth: 2.0,
+            );
           }
 
-
-          return  FlLine(
+          return FlLine(
             color: Colors.white10,
             strokeWidth: 0.1,
           );
         },
         getDrawingVerticalLine: (value) {
-          return  FlLine(
+          return FlLine(
             color: Colors.white10,
             strokeWidth: 1,
           );
@@ -179,10 +170,10 @@ class _AzimutalGraph extends State<AzimutalGraph> {
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles:  AxisTitles(
+        rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles:  AxisTitles(
+        topTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         bottomTitles: AxisTitles(
@@ -219,7 +210,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           ),
           barWidth: 5,
           isStrokeCapRound: true,
-          dotData:  FlDotData(
+          dotData: FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(
@@ -237,20 +228,20 @@ class _AzimutalGraph extends State<AzimutalGraph> {
 
   LineChartData avgData() {
     return LineChartData(
-      lineTouchData:  LineTouchData(enabled: false),
+      lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
         verticalInterval: 1,
         horizontalInterval: 1,
         getDrawingVerticalLine: (value) {
-          return  FlLine(
+          return FlLine(
             color: const Color(0xff37434d),
             strokeWidth: 1,
           );
         },
         getDrawingHorizontalLine: (value) {
-          return  FlLine(
+          return FlLine(
             color: const Color(0xff37434d),
             strokeWidth: 1,
           );
@@ -274,10 +265,10 @@ class _AzimutalGraph extends State<AzimutalGraph> {
             interval: 1,
           ),
         ),
-        topTitles:  AxisTitles(
+        topTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        rightTitles:  AxisTitles(
+        rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
       ),
@@ -311,7 +302,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           ),
           barWidth: 5,
           isStrokeCapRound: true,
-          dotData:  FlDotData(
+          dotData: FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(

@@ -14,7 +14,7 @@ class ScreenProcessingImage extends StatefulWidget {
   const ScreenProcessingImage({super.key});
 
   @override
-  _ScreenProcessingImage createState() => _ScreenProcessingImage();
+  State<ScreenProcessingImage> createState() => _ScreenProcessingImage();
 }
 
 class _ScreenProcessingImage extends State<ScreenProcessingImage> {
@@ -24,7 +24,6 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
   final TelescopeHelper service = TelescopeHelper(ServerInfo().host);
   final ExpositionSelector expoSelector = ExpositionSelector();
 
-  bool _isConfigVisible = false;
   bool _rgbVisible = false;
   bool _levelsVisible = false;
   bool _stretchVisible = false;
@@ -70,12 +69,6 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
 
   void close(dynamic object) {
     Navigator.pushReplacementNamed(context, '/home');
-  }
-
-  void _changeMoveState() {
-    setState(
-      () => _isConfigVisible = !_isConfigVisible,
-    );
   }
 
   void changeProcessing() async {
@@ -168,6 +161,7 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
 
   Widget getHistogram() {
     final histo = imageHelper.getHistogram();
+    /*
     List<BarChartGroupData> redBarChartGroups = List.generate(
       256,
       (index) => BarChartGroupData(
@@ -194,7 +188,7 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
           ),
         ],
       ),
-    );
+    );*/
 
     List<BarChartGroupData> blueBarChartGroups = List.generate(
       256,

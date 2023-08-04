@@ -4,7 +4,7 @@ class ImageWithButton extends StatefulWidget {
   const ImageWithButton({super.key});
 
   @override
-  _ImageWithButtonState createState() => _ImageWithButtonState();
+  State<ImageWithButton> createState() => _ImageWithButtonState();
 }
 
 class _ImageWithButtonState extends State<ImageWithButton> {
@@ -22,7 +22,8 @@ class _ImageWithButtonState extends State<ImageWithButton> {
       onTap: _toggleButtonVisibility,
       child: Stack(
         children: [
-          Image.asset('assets/images/image.png'), // Remplacez par le chemin de votre image
+          Image.asset(
+              'assets/images/image.png'), // Remplacez par le chemin de votre image
           if (_isButtonVisible)
             Positioned(
               top: 50,
@@ -30,7 +31,6 @@ class _ImageWithButtonState extends State<ImageWithButton> {
               child: ElevatedButton(
                 onPressed: () {
                   // Action à effectuer lors du clic sur le bouton
-                  print('Bouton cliqué!');
                 },
                 child: const Text('Bouton'),
               ),

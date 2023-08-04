@@ -35,7 +35,6 @@ class _ConnectionPage extends State<ConnectionPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadSavedIpAddress();
   }
@@ -85,7 +84,9 @@ class _ConnectionPage extends State<ConnectionPage> {
                       await checkHelper.updateAPILocation();
                       if (checkHelper.helper.lastError == 0) {
                         ServerInfo().connected = true;
-                        Navigator.pushReplacementNamed(context, '/capture');
+                        if (context.mounted) {
+                          Navigator.pushReplacementNamed(context, '/capture');
+                        }
                       } else {
                         setState(
                           () => _error = checkHelper.helper.lastErrorStr,

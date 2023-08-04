@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
-
 class LocationSearchPage extends StatefulWidget {
   const LocationSearchPage({super.key});
 
@@ -82,8 +81,7 @@ class _LocationSearchPageState extends State<LocationSearchPage> {
                             onTap: () {
                               textEditingController.clear();
                               controller.setSearchableText("");
-                              FocusScope.of(context)
-                                  .requestFocus(FocusNode());
+                              FocusScope.of(context).requestFocus(FocusNode());
                             },
                             child: const Icon(
                               Icons.close,
@@ -121,7 +119,7 @@ class _LocationSearchPageState extends State<LocationSearchPage> {
           child: FloatingActionButton(
             onPressed: () async {
               GeoPoint p = await controller.selectAdvancedPositionPicker();
-              Navigator.pop(context, p);
+              if (context.mounted) Navigator.pop(context, p);
             },
             child: const Icon(Icons.arrow_forward),
           ),
@@ -242,9 +240,11 @@ class _TopSearchWidgetState extends State<TopSearchWidget> {
                       /// hide suggestion card
                       notifierAutoCompletion.value = false;
                       await reInitStream();
-                      FocusScope.of(context).requestFocus(
-                        FocusNode(),
-                      );
+                      if (context.mounted) {
+                        FocusScope.of(context).requestFocus(
+                          FocusNode(),
+                        );
+                      }
                     },
                   ),
                 );

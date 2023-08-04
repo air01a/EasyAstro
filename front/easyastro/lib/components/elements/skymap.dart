@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:easyastro/services/skymap/skymapHelper.dart';
+import 'package:easyastro/services/skymap/skymaphelper.dart';
 import 'package:easyastro/models/stars.dart';
 import 'package:easyastro/models/constellations.dart';
 import 'package:easyastro/models/dso.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:io';
 
+//ignore: must_be_immutable
 class SkyMap extends StatefulWidget {
   double lon;
   double lat;
@@ -34,7 +33,9 @@ class SkyMap extends StatefulWidget {
       this.customDSO = const [],
       this.showLines = true,
       this.showStarNames = false,
-      this.size = 1400});
+      this.size = 1400,
+      Key? key})
+      : super(key: key);
 
   Future<Uint8List> widgetToImage() async {
     if (captureWidgetHandler != null) return await captureWidgetHandler!();
@@ -65,13 +66,13 @@ class SkyMap extends StatefulWidget {
 
   void reloadDSO(List<DSO> dso) {
     if (reloadDSOHandler != null) {
-      this.customDSO = dso;
+      customDSO = dso;
       reloadDSOHandler!();
     }
   }
 
   @override
-  _SkyMap createState() => _SkyMap();
+  State<SkyMap> createState() => _SkyMap();
 }
 
 class _SkyMap extends State<SkyMap> {
@@ -80,7 +81,7 @@ class _SkyMap extends State<SkyMap> {
   SkyMapPainter? skyMapPainter;
   late double size;
   bool _init = false;
-  GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
   final _counter = ValueNotifier<int>(0);
 
   Future<Uint8List> captureWidget() async {
@@ -155,11 +156,6 @@ class _SkyMap extends State<SkyMap> {
     _counter.value++;
   }
 
-  double _min(double a, double b) {
-    if (a < b) return a;
-    return b;
-  }
-
   void changeMagnitude(double magnitude) {
     skyMap.changeMaxMag(magnitude);
     skyMap.reloadStars();
@@ -168,7 +164,7 @@ class _SkyMap extends State<SkyMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: size,
         height: size,
         child: RepaintBoundary(
@@ -178,14 +174,14 @@ class _SkyMap extends State<SkyMap> {
             if (_ready)
               RepaintBoundary(
                   key: _globalKey,
-                  child: Container(
+                  child: SizedBox(
                       width: size,
                       height: size,
                       child: CustomPaint(
                         painter: skyMapPainter,
                       )))
             else
-              Center(child: const CircularProgressIndicator()),
+              const Center(child: CircularProgressIndicator()),
             // Charger l'image depuis les assets
           ],
         )));
@@ -223,7 +219,7 @@ class SkyMapPainter extends CustomPainter {
   }
 
   ui.Paragraph getText(Size size, String text, Color textColor) {
-    final double fontSize = 10.0;
+    const double fontSize = 10.0;
     final ui.TextStyle textStyle = ui.TextStyle(
       color: textColor,
       fontFamily: 'Arial',
@@ -244,7 +240,12 @@ class SkyMapPainter extends CustomPainter {
   }
 
   void drawDSO(Canvas canvas, Size size) {
+    bool highlight = false;
     for (final dso in dsos) {
+      if (dso.color == 0x0) {
+        dso.color = Colors.red.shade900.value;
+        highlight = true;
+      }
       switch (dso.type) {
         case 10:
           {
@@ -278,6 +279,20 @@ class SkyMapPainter extends CustomPainter {
                     dso.pos['y'] * size.height - paragraph.height / 2));
           }
           break;
+      }
+      if (highlight) {
+        highlight = false;
+        var paint1 = Paint()
+          ..color = const Color.fromARGB(255, 243, 34, 34)
+          ..style = PaintingStyle.stroke;
+        canvas.drawCircle(
+            Offset(dso.pos['x'] * size.width, dso.pos['y'] * size.height),
+            10,
+            paint1);
+        canvas.drawCircle(
+            Offset(dso.pos['x'] * size.width, dso.pos['y'] * size.height),
+            30,
+            paint1);
       }
     }
   }

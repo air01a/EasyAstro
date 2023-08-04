@@ -17,7 +17,7 @@ class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
 
   @override
-  _ScreenHome createState() => _ScreenHome();
+  State<ScreenHome> createState() => _ScreenHome();
 }
 
 class _ScreenHome extends State<ScreenHome> {
@@ -59,7 +59,8 @@ class _ScreenHome extends State<ScreenHome> {
           Image.network("assets/appimages/Sun.jpg", width: getSize());
     } else {
       currentImage = Image(
-          image: const AssetImage("assets/appimages/Sun.jpg"), width: getSize());
+          image: const AssetImage("assets/appimages/Sun.jpg"),
+          width: getSize());
     }
     return currentImage;
   }
@@ -97,7 +98,8 @@ class _ScreenHome extends State<ScreenHome> {
 
   List<Widget> getTimeText() {
     List<Widget> display = [];
-    display.add(const Text('date').tr(args: [ObjectSelection().astro!.getDate()]));
+    display
+        .add(const Text('date').tr(args: [ObjectSelection().astro!.getDate()]));
     display.add(const Text('hour')
         .tr(args: [ConvertAngle.hourToString(ObjectSelection().astro!.hour)]));
     display.add(const Text('sidereal').tr(args: [
@@ -189,7 +191,11 @@ class _ScreenHome extends State<ScreenHome> {
                 child: Text(
                     style: TextStyle(fontSize: getSize() / 2),
                     lWeather!.getWeatherIcon(weather["weather"][0]["id"])))),
-        Container(width:180, child:Text(lWeather!.getMessage(weather["weather"][0]["id"]), maxLines: 2, textAlign: TextAlign.center).tr())
+        SizedBox(
+            width: 180,
+            child: Text(lWeather!.getMessage(weather["weather"][0]["id"]),
+                    maxLines: 2, textAlign: TextAlign.center)
+                .tr())
       ])
     ];
   }
@@ -213,10 +219,10 @@ class _ScreenHome extends State<ScreenHome> {
       displayMoon.add(const Text('illumination').tr(args: [
         moonPhase[0].toString()
       ])); //"Illumination : ${moonPhase[0]} %"));
-      displayMoon.add(
-          const Text('rise').tr(args: [ConvertAngle.hourToString(ephemeris.rising)]));
-      displayMoon.add(
-          const Text('set').tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
+      displayMoon.add(const Text('rise')
+          .tr(args: [ConvertAngle.hourToString(ephemeris.rising)]));
+      displayMoon.add(const Text('set')
+          .tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
       displayMoon.add(const Text('culmination')
           .tr(args: [ConvertAngle.hourToString(ephemeris.culmination)]));
       display.add(SizedBox(
@@ -252,8 +258,8 @@ class _ScreenHome extends State<ScreenHome> {
           width: getSize(),
           child: Icon(Icons.location_on, size: getSize() / 2)));
       List<Widget> displayLocationText = [];
-      displayLocationText
-          .add(const Text('longitude').tr(args: [longitude.toStringAsFixed(5)]));
+      displayLocationText.add(
+          const Text('longitude').tr(args: [longitude.toStringAsFixed(5)]));
       displayLocationText
           .add(const Text('latitude').tr(args: [latitude.toStringAsFixed(5)]));
       displayLocationText

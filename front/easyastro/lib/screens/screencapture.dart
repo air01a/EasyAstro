@@ -24,7 +24,7 @@ class ScreenCapture extends StatefulWidget {
   const ScreenCapture({super.key});
 
   @override
-  _ScreenCapture createState() => _ScreenCapture();
+  State<ScreenCapture> createState() => _ScreenCapture();
 }
 
 class _ScreenCapture extends State<ScreenCapture> {
@@ -40,7 +40,6 @@ class _ScreenCapture extends State<ScreenCapture> {
   bool _isConfigVisible = false;
   bool _isStackable = false;
   bool _imageLoading = false;
-  bool _imageToLoad = false;
   bool _isWaiting = false;
   bool _statusVisible = true;
   double _messageHandlerHeight = 10.0;
@@ -140,7 +139,6 @@ class _ScreenCapture extends State<ScreenCapture> {
         Uri.parse("ws://${ServerInfo().host}/telescope/ws/1234"));
 
     channel.stream.listen((message) async {
-      print(message);
       // Mettre à jour l'image en allant la chercher sur l'API
       final info = protocol.analyseMessage(jsonDecode(message));
 
@@ -252,15 +250,6 @@ class _ScreenCapture extends State<ScreenCapture> {
       MaterialPageRoute(
         builder: (context) => const ScreenProcessingImage(),
       ),
-    );
-  }
-
-  //#########################################################################################################
-  //# Display arrow to move telescope
-  //#########################################################################################################
-  void _changeMoveState() {
-    setState(
-      () => _isConfigVisible = !_isConfigVisible,
     );
   }
 
@@ -379,7 +368,6 @@ class _ScreenCapture extends State<ScreenCapture> {
       });
       i += 1;
     } else {
-      _imageToLoad = true;
       Future.delayed(const Duration(milliseconds: 1000), () {
         reloadImage();
       });

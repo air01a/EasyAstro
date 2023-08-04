@@ -8,6 +8,7 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/graphics/azimutalgraph.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+//ignore: must_be_immutable
 class ObjectPage extends StatefulWidget {
   final ObservableObject item;
   final int index;
@@ -123,7 +124,8 @@ class _ObjectPage extends State<ObjectPage> {
                                   ConvertAngle.hourToString(
                                       widget.item.meridian)
                                 ]), //"Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"),
-                                const Text('magnitude', textAlign: TextAlign.left)
+                                const Text('magnitude',
+                                        textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.magnitude.toString()
                                 ]), //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left),
@@ -137,6 +139,26 @@ class _ObjectPage extends State<ObjectPage> {
                                   title('location'),
                                   locationImage,
                                 ],
+                                if (widget.item.height > 15)
+                                  Center(
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(20),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 107, 90, 222),
+                                                elevation: 0,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/map',
+                                                    arguments: {
+                                                      'selectedObject':
+                                                          widget.item.name
+                                                    });
+                                              },
+                                              child: Text("view_map".tr())))),
 
                                 ServerInfo().connected
                                     ? ElevatedButton(

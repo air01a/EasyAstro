@@ -1,6 +1,6 @@
 class AppException implements Exception {
-  final _message;
-  final _prefix;
+  final String? _message;
+  final String? _prefix;
 
   AppException([this._message, this._prefix]);
 
@@ -11,7 +11,7 @@ class AppException implements Exception {
 }
 
 class FetchDataException extends AppException {
-  FetchDataException( [String? message])
+  FetchDataException([String? message])
       : super(message, "Error During Communication: ");
 }
 

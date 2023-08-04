@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//ignore: must_be_immutable
 class RGBAdjustement extends StatefulWidget {
   RGBAdjustement(
       {super.key,
@@ -104,6 +105,7 @@ class _RGBAdjustement extends State<RGBAdjustement> {
   }
 }
 
+//ignore: must_be_immutable
 class StretchAdjustement extends StatefulWidget {
   StretchAdjustement(
       {super.key,
@@ -186,6 +188,7 @@ class _StretchAdjustement extends State<StretchAdjustement> {
   }
 }
 
+//ignore: must_be_immutable
 class LevelAdjustement extends StatefulWidget {
   LevelAdjustement(
       {super.key,
