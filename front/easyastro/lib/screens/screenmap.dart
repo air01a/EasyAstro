@@ -10,8 +10,9 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ScreenMap extends StatefulWidget {
+  const ScreenMap({key}) : super(key: key);
   @override
-  _ScreenMap createState() => _ScreenMap();
+  State<ScreenMap> createState() => _ScreenMap();
 }
 
 class _ScreenMap extends State<ScreenMap> {
@@ -26,6 +27,7 @@ class _ScreenMap extends State<ScreenMap> {
   late double maxMag;
   late bool showConstellation;
   double skyMapSize = 1400;
+  String? highlightObject;
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -55,14 +57,25 @@ class _ScreenMap extends State<ScreenMap> {
     List<ObservableObject> temp;
     if (showDso) {
       if (showOnlySelected) {
-        temp = ObjectSelection()
-            .selection
-            .where((line) =>
-                (line.selected == true) ||
-                (line.name == 'Moon') ||
-                (line.type == 'planet') ||
-                (line.type == 'star'))
-            .toList();
+        if (highlightObject == null) {
+          temp = ObjectSelection()
+              .selection
+              .where((line) =>
+                  (line.selected == true) ||
+                  (line.name == 'Moon') ||
+                  (line.type == 'planet') ||
+                  (line.type == 'star'))
+              .toList();
+        } else {
+          temp = ObjectSelection()
+              .selection
+              .where((line) =>
+                  (line.name == highlightObject) ||
+                  (line.name == 'Moon') ||
+                  (line.type == 'planet') ||
+                  (line.type == 'star'))
+              .toList();
+        }
       } else {
         temp = ObjectSelection().selection.toList();
       }
@@ -107,7 +120,7 @@ class _ScreenMap extends State<ScreenMap> {
             color = 4294967040;
           }
       }
-      ;
+      if (object.name == highlightObject) color = 0x0;
       DSO dso = DSO(pos, object.name, type, 0, color);
       dsoList.add(dso);
     }
@@ -133,14 +146,14 @@ class _ScreenMap extends State<ScreenMap> {
       top: 100, // Ajustez cette valeur pour positionner le menu correctement
       left: 20, // Ajustez cette valeur pour positionner le menu correctement
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 2500),
+        duration: const Duration(milliseconds: 2500),
         width: 200, // Ajustez cette valeur pour régler la largeur du menu
         height: 400, // Ajustez cette valeur pour régler la hauteur du menu
         color: Colors.blue,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('mag').tr(),
+            const Text('mag').tr(),
             SfLinearGauge(
               maximum: 8,
               minimum: 0,
@@ -170,7 +183,7 @@ class _ScreenMap extends State<ScreenMap> {
                   changeConstellation();
                 });
               },
-              title: Text('map_show_lines').tr(),
+              title: const Text('map_show_lines').tr(),
             ),
             CheckboxListTile(
               value: showStarsName,
@@ -180,7 +193,7 @@ class _ScreenMap extends State<ScreenMap> {
                   changeStarName();
                 });
               },
-              title: Text('map_show_starname').tr(),
+              title: const Text('map_show_starname').tr(),
             ),
             // Ajoutez votre jauge ici, par exemple : LinearProgressIndicator()
             CheckboxListTile(
@@ -192,7 +205,7 @@ class _ScreenMap extends State<ScreenMap> {
                   changeDso();
                 });
               },
-              title: Text('dso').tr(),
+              title: const Text('dso').tr(),
             ),
             CheckboxListTile(
               value: showOnlySelected,
@@ -203,7 +216,7 @@ class _ScreenMap extends State<ScreenMap> {
                   changeDso();
                 });
               },
-              title: Text('only_selected').tr(),
+              title: const Text('only_selected').tr(),
             ),
           ],
         ),
@@ -214,14 +227,29 @@ class _ScreenMap extends State<ScreenMap> {
   @override
   void initState() {
     super.initState();
-    //viewTransformationController.value = Matrix4.diagonal3Values(4.0, 4.0, 1.0);
-
     showDso = ConfigManager().configuration?["mapShowDSO"]?.value;
     showOnlySelected =
         ConfigManager().configuration?["mapShowOnlySelected"]?.value;
     showConstellation = ConfigManager().configuration?["mapShowLines"]?.value;
     showStarsName = ConfigManager().configuration?["mapShowStarNames"]?.value;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments != null) {
+      final Map<String, dynamic> args = arguments as Map<String, String>;
+      if (args.containsKey('selectedObject')) {
+        highlightObject = args['selectedObject'];
+      }
+      showOnlySelected = true;
+      showDso = true;
+    }
+
     loadDSO();
+
     skyMap = SkyMap(astro!.longitude, astro!.latitude, astro!.getDateTime(),
         customDSO: dsoList,
         loadDSO: false,
@@ -229,11 +257,6 @@ class _ScreenMap extends State<ScreenMap> {
         showStarNames: showStarsName,
         size: skyMapSize);
     maxMag = 5;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     var size = MediaQuery.of(context).size;
     double minSize = size.width;
     if (size.height < size.width) {
@@ -242,7 +265,8 @@ class _ScreenMap extends State<ScreenMap> {
     final zoomFactor = minSize / skyMapSize;
     final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
 
-    final yTranslate = (size.height - zoomFactor * skyMapSize) / 2; //-(size.height * zoomFactor) / 2;
+    final yTranslate = (size.height - zoomFactor * skyMapSize) /
+        2; //-(size.height * zoomFactor) / 2;
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);
     _transformationController.value.setEntry(2, 2, zoomFactor);
@@ -257,32 +281,35 @@ class _ScreenMap extends State<ScreenMap> {
             child: Scaffold(
                 body: Center(
                     child: Stack(children: [
-      InteractiveViewer(
-          transformationController: _transformationController,
-          boundaryMargin:
-              const EdgeInsets.all(double.infinity), // Marge autour de l'image
-          minScale: 0.1, // Échelle minimale de zoom
-          maxScale: 4.0, // Échelle maximale de zoom
-          constrained: false,
-          child: skyMap!),
-      if (_isMenuOpen) buildMenu(),
-      Positioned(
-        top: 0,
-        left: 0,
-        height: 48,
-        child: GestureDetector(
-            onTap: () => {
-                  setState(() {
-                    _isMenuOpen = !_isMenuOpen;
-                  })
-                }, //skyMap!.setMaxMagnitude(10)},
-            child: Icon(Icons.settings, size: 48.0)),
-      ),
-      Positioned(
-          top: 12,
-          left: 48,
-        //  right: 0,
-          child: Center(child: Text(astro!.getDateTimeString())))
-    ])))));
+          InteractiveViewer(
+              transformationController: _transformationController,
+              boundaryMargin: const EdgeInsets.all(
+                  double.infinity), // Marge autour de l'image
+              minScale: 0.1, // Échelle minimale de zoom
+              maxScale: 4.0, // Échelle maximale de zoom
+              constrained: false,
+              child: skyMap!),
+          if (_isMenuOpen) buildMenu(),
+          if (highlightObject == null)
+            Positioned(
+              top: 0,
+              left: 0,
+              height: 48,
+              child: GestureDetector(
+                  onTap: () => {
+                        setState(() {
+                          _isMenuOpen = !_isMenuOpen;
+                        })
+                      }, //skyMap!.setMaxMagnitude(10)},
+                  child: const Icon(Icons.settings, size: 48.0)),
+            ),
+          Positioned(
+              top: 12,
+              left: 48,
+              //  right: 0,
+              child: Center(child: Text(astro!.getDateTimeString())))
+        ])))),
+        showDrawer: (highlightObject == null),
+        title: "skymap".tr());
   }
 }

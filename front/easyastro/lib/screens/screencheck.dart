@@ -12,13 +12,12 @@ class CheckScreen extends StatefulWidget {
   const CheckScreen({super.key});
 
   @override
-  _CheckScreen createState() => _CheckScreen();
+  State<CheckScreen> createState() => _CheckScreen();
 }
 
 class _CheckScreen extends State<CheckScreen> {
   Position? _locationData;
   bool _apiUpdated = false;
-  bool _catalogUpdated = false;
 
   Future<void> updateDescription() async {
     for (var element in ObjectSelection().selection) {
@@ -90,22 +89,8 @@ class _CheckScreen extends State<CheckScreen> {
       ObjectSelection().selection =
           await catalog.fetchCatalogList(0, 0, 0, null);
     }
-    setState(() {
-      _catalogUpdated = true;
-    });
-    //await Future.delayed(const Duration(seconds:3));
-    //ConfigManager().loadConfig().then(() => Navigator.pushNamed(context, '/home'));
-    /* await Future.delayed(const Duration(seconds:3)); // Attendre 3 secondes
-    print('#####"');
-    print(ConfigManager().configuration);
-    if (ConfigManager().configuration!=null) {
-      ConfigManager().configuration?["manageTelescope"];
-      print(ConfigManager().getKey());
-      print(ConfigManager().configuration!['manageTelescope']!.value);
-      ConfigManager().configuration!['manageTelescope']!.value = true;
-      ConfigManager().saveConfig();
-    }*/
-    Navigator.pushReplacementNamed(context, '/home');
+    setState(() {});
+    if (context.mounted) Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

@@ -97,7 +97,7 @@ class _ObjectBox extends State<ObjectBox> {
                 ServerInfo().connected
                     ? ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/capture',
+                          Navigator.pushReplacementNamed(context, '/capture',
                               arguments: {'object': widget.object.name});
                         },
                         child: const Icon(Icons.mode_standby, size: 48.0))

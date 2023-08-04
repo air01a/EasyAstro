@@ -10,13 +10,12 @@ import 'package:easyastro/components/forms/selectdate.dart';
 import 'package:easyastro/components/forms/searchbar.dart';
 import 'package:easyastro/components/forms/filterbar.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:easyastro/astro/astrocalc.dart';
 
 class ScreenObjectList extends StatefulWidget {
   const ScreenObjectList({super.key});
 
   @override
-  _ScreenObjectList createState() => _ScreenObjectList();
+  State<ScreenObjectList> createState() => _ScreenObjectList();
 }
 
 class _ScreenObjectList extends State<ScreenObjectList> {
@@ -91,7 +90,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
       _selectedDate = newDate['date'];
       _selectedTime = newDate['time'];
       _getNewCatalog();
-    
     }
   }
 
@@ -127,7 +125,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
         body: Container(
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(children: [
-                            Text(ObjectSelection().astro!.getDateTimeString()),
+              Text(ObjectSelection().astro!.getDateTimeString()),
               sf.buildSearchTextField(),
               ff.buildFilterTextField(ObjectSelection().selection.toList()),
               Expanded(
@@ -164,7 +162,6 @@ class _ScreenObjectList extends State<ScreenObjectList> {
                                   arguments: {'object': _catalog[index].name});
                             });
                       })),
-
             ])),
         bottom: bbar);
   }

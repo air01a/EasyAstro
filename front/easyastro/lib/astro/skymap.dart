@@ -3,11 +3,11 @@ import 'package:easyastro/models/stars.dart';
 import 'package:easyastro/models/skyobject.dart';
 
 class Astro {
-  static const double JD_J2000 = 2451545.0;
-  static const double JD_1970 = 2440587.5;
-  static const double YEARDAYS = 365.2422;
-  static const int EQtoECL = 1;
-  static const int ECLtoEQ = -1;
+  static const double jdJ2000 = 2451545.0;
+  static const double jd1970 = 2440587.5;
+  static const double yearDays = 365.2422;
+  static const int eqToEcl = 1;
+  static const int eclToEq = -1;
 
   static double range(double v, double r) {
     return v - r * (v / r).floor();
@@ -29,7 +29,7 @@ class Astro {
     return x * 3.819718634205488;
   }
 
-  static void aa_hadec(double lat, List<double> from, List<double> to) {
+  static void aaHadec(double lat, List<double> from, List<double> to) {
     final double slat = sin(lat);
     final double clat = cos(lat);
     final double sx = sin(from[0]);
@@ -41,7 +41,7 @@ class Astro {
     to[1] = asin(sy * slat + cy * clat * cx);
   }
 
-  static void ecl_eq(int sw, List<double> from, List<double> to) {
+  static void eclEq(int sw, List<double> from, List<double> to) {
     final double eps = degrad(23.45229444);
     final double seps = sin(eps);
     final double ceps = cos(eps);
@@ -59,54 +59,54 @@ class Astro {
   }
 
   static void precess(double jd1, double jd2, List<double> coord) {
-    double zeta_A, z_A, theta_A;
+    double zetaA, zA, thetaA;
     double T;
     double A, B, C;
     double alpha, delta;
-    double alpha_in, delta_in;
-    double from_equinox, to_equinox;
+    double alphaIn, deltaIn;
+    double fromEquinox, toEquinox;
     double alpha2000, delta2000;
 
-    from_equinox = (jd1 - Astro.JD_J2000) / Astro.YEARDAYS;
-    to_equinox = (jd2 - Astro.JD_J2000) / Astro.YEARDAYS;
-    alpha_in = coord[0];
-    delta_in = coord[1];
+    fromEquinox = (jd1 - Astro.jdJ2000) / Astro.yearDays;
+    toEquinox = (jd2 - Astro.jdJ2000) / Astro.yearDays;
+    alphaIn = coord[0];
+    deltaIn = coord[1];
 
-    // From from_equinox to 2000.0
-    if (from_equinox != 0.0) {
-      T = from_equinox / 100.0;
-      zeta_A = degrad(T * (0.6406161 + T * (8.39e-5 + T * 5.0e-6)));
-      z_A = degrad(T * (0.6406161 + T * (3.041e-4 + T * 5.1e-6)));
-      theta_A = degrad(T * (0.5567530 + T * (-1.185e-4 + T * 1.16e-5)));
+    // From fromEquinox to 2000.0
+    if (fromEquinox != 0.0) {
+      T = fromEquinox / 100.0;
+      zetaA = degrad(T * (0.6406161 + T * (8.39e-5 + T * 5.0e-6)));
+      zA = degrad(T * (0.6406161 + T * (3.041e-4 + T * 5.1e-6)));
+      thetaA = degrad(T * (0.5567530 + T * (-1.185e-4 + T * 1.16e-5)));
 
-      A = sin(alpha_in - z_A) * cos(delta_in);
-      B = cos(alpha_in - z_A) * cos(theta_A) * cos(delta_in) +
-          sin(theta_A) * sin(delta_in);
-      C = -cos(alpha_in - z_A) * sin(theta_A) * cos(delta_in) +
-          cos(theta_A) * sin(delta_in);
+      A = sin(alphaIn - zA) * cos(deltaIn);
+      B = cos(alphaIn - zA) * cos(thetaA) * cos(deltaIn) +
+          sin(thetaA) * sin(deltaIn);
+      C = -cos(alphaIn - zA) * sin(thetaA) * cos(deltaIn) +
+          cos(thetaA) * sin(deltaIn);
 
-      alpha2000 = atan2(A, B) - zeta_A;
+      alpha2000 = atan2(A, B) - zetaA;
       alpha2000 = range(alpha2000, 2 * pi);
       delta2000 = asin(C);
     } else {
-      alpha2000 = alpha_in;
-      delta2000 = delta_in;
+      alpha2000 = alphaIn;
+      delta2000 = deltaIn;
     }
 
-    // From 2000.0 to to_equinox
-    if (to_equinox != 0.0) {
-      T = to_equinox / 100.0;
-      zeta_A = degrad(T * (0.6406161 + T * (8.39e-5 + T * 5.0e-6)));
-      z_A = degrad(T * (0.6406161 + T * (3.041e-4 + T * 5.1e-6)));
-      theta_A = degrad(T * (0.5567530 + T * (-1.185e-4 + T * 1.16e-5)));
+    // From 2000.0 to toEquinox
+    if (toEquinox != 0.0) {
+      T = toEquinox / 100.0;
+      zetaA = degrad(T * (0.6406161 + T * (8.39e-5 + T * 5.0e-6)));
+      zA = degrad(T * (0.6406161 + T * (3.041e-4 + T * 5.1e-6)));
+      thetaA = degrad(T * (0.5567530 + T * (-1.185e-4 + T * 1.16e-5)));
 
-      A = sin(alpha2000 + zeta_A) * cos(delta2000);
-      B = cos(alpha2000 + zeta_A) * cos(theta_A) * cos(delta2000) -
-          sin(theta_A) * sin(delta2000);
-      C = cos(alpha2000 + zeta_A) * sin(theta_A) * cos(delta2000) +
-          cos(theta_A) * sin(delta2000);
+      A = sin(alpha2000 + zetaA) * cos(delta2000);
+      B = cos(alpha2000 + zetaA) * cos(thetaA) * cos(delta2000) -
+          sin(thetaA) * sin(delta2000);
+      C = cos(alpha2000 + zetaA) * sin(thetaA) * cos(delta2000) +
+          cos(thetaA) * sin(delta2000);
 
-      alpha = atan2(A, B) + z_A;
+      alpha = atan2(A, B) + zA;
       alpha = range(alpha, 2.0 * pi);
       delta = asin(C);
     } else {
@@ -128,7 +128,7 @@ class Observer {
   Observer() {
     final d = DateTime.now();
     final jan = DateTime(d.year, 1, 1);
-    jd = Astro.JD_1970 + d.millisecondsSinceEpoch / 86400000.0;
+    jd = Astro.jd1970 + d.millisecondsSinceEpoch / 86400000.0;
     longitude = Astro.degrad(-0.25 * jan.timeZoneOffset.inMinutes);
     latitude = Astro.degrad(40.0);
     initLST();
@@ -141,11 +141,11 @@ class Observer {
 
   DateTime getDate() {
     return DateTime.fromMillisecondsSinceEpoch(
-        ((jd - Astro.JD_1970) * 86400000.0).round());
+        ((jd - Astro.jd1970) * 86400000.0).round());
   }
 
   void setDate(DateTime date) {
-    jd = Astro.JD_1970 + date.millisecondsSinceEpoch / 86400000.0;
+    jd = Astro.jd1970 + date.millisecondsSinceEpoch / 86400000.0;
     initLST();
   }
 
@@ -176,12 +176,12 @@ class Observer {
     initLST();
   }
 
-  double jd_day() {
+  double jdDay() {
     return (jd - 0.5).floorToDouble() + 0.5;
   }
 
-  double jd_hour() {
-    return (jd - jd_day()) * 24.0;
+  double jdHour() {
+    return (jd - jdDay()) * 24.0;
   }
 
   void initLST() {
@@ -189,10 +189,10 @@ class Observer {
   }
 
   double gst() {
-    final t = (jd_day() - Astro.JD_J2000) / 36525;
+    final t = (jdDay() - Astro.jdJ2000) / 36525;
     final theta = 1.753368559146 +
         t * (628.331970688835 + t * (6.770708e-6 + t * -1.48e-6));
-    return Astro.range(theta + Astro.hrrad(jd_hour()), 2 * pi);
+    return Astro.range(theta + Astro.hrrad(jdHour()), 2 * pi);
   }
 }
 
@@ -223,9 +223,9 @@ class SkyPosition {
 class SkyMapTransform {
   void skyposTransform(SkyObject star, Observer now, int w, int h) {
     final List<double> coord = [star.pos["ra"] + 0.0, star.pos["dec"] + 0.0];
-    Astro.precess(Astro.JD_J2000, now.jd, coord);
+    Astro.precess(Astro.jdJ2000, now.jd, coord);
     coord[0] = now.lst - coord[0];
-    Astro.aa_hadec(now.latitude, coord, coord);
+    Astro.aaHadec(now.latitude, coord, coord);
 
     if (coord[1] < 0.15) {
       star.visible = false;

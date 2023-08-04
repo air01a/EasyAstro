@@ -20,7 +20,7 @@ class SkyMapCreator {
   List<Constellation> skyMapConstellationPositions = [];
   List<List<Map<String, dynamic>>> skyMapLines = [];
   //List<StarName> skyMapStarNames = [];
-  List<DSO> DSOPosition = [];
+  List<DSO> dsoPosition = [];
   Observer observer = Observer();
   List<Star> starsCatalog = [];
   List<List<int>> constellationsLines = [];
@@ -92,14 +92,14 @@ class SkyMapCreator {
   }
 
   void clearDSO() {
-    DSOPosition = [];
+    dsoPosition = [];
   }
 
   Future<void> loadDSO(List<DSO> dsos) async {
-    DSOPosition.clear();
+    dsoPosition.clear();
     for (final dso in dsos) {
       skyMapTransform.skyposTransform(dso, observer, 1, 1);
-      if (dso.visible) DSOPosition.add(dso);
+      if (dso.visible) dsoPosition.add(dso);
     }
   }
 
@@ -134,7 +134,7 @@ class SkyMapCreator {
   }
 
   List<DSO> getDSO() {
-    return DSOPosition;
+    return dsoPosition;
   }
 
   SkyMapCreator(this.callBack, this.maxMag, this.lon, this.lat, this.date);

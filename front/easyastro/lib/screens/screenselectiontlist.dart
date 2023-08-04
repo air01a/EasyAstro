@@ -16,7 +16,7 @@ class ScreenSelectionList extends StatefulWidget {
   const ScreenSelectionList({super.key});
 
   @override
-  _ScreenSelectionList createState() => _ScreenSelectionList();
+  State<ScreenSelectionList> createState() => _ScreenSelectionList();
 }
 
 class _ScreenSelectionList extends State<ScreenSelectionList> {

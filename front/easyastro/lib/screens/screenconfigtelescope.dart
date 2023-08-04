@@ -9,7 +9,7 @@ class ConfigTelescopeScreen extends StatefulWidget {
   const ConfigTelescopeScreen({super.key});
 
   @override
-  _ConfigTelescopeScreen createState() => _ConfigTelescopeScreen();
+  State<ConfigTelescopeScreen> createState() => _ConfigTelescopeScreen();
 }
 
 class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
@@ -19,7 +19,6 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
 
   Future<dynamic> update() async {
     dynamic progression = await checkHelper.getDarkProgession();
-    print(progression);
     if (progression == 100) {
       updateLibrary();
     }

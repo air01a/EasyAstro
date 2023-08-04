@@ -37,7 +37,6 @@ class ExpositionSelector {
         selectedTextStyle: const TextStyle(color: Colors.red),
         columnPadding: const EdgeInsets.all(8.0),
         onConfirm: (Picker picker, List value) {
-          print(picker.getSelectedValues());
           double exposition = 0;
           if (picker.getSelectedValues()[0] == 'AUTO') {
             exposition = -1;

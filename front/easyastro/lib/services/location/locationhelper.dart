@@ -28,10 +28,8 @@ class LocationHelper {
       // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
-    print("location enabled");
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      print("asking for permission");
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         // Permissions are denied, next time you could try

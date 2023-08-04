@@ -15,27 +15,29 @@ class SelectDate {
     );
 
     if (picked == null) return {'nopickup': true};
+    if (context.mounted) {
+      final TimeOfDay? picked2 = await showTimePicker(
+        context: context,
+        initialTime: currentTime,
+      );
 
-    final TimeOfDay? picked2 = await showTimePicker(
-      context: context,
-      initialTime: currentTime,
-    );
+      if (picked2 != null) {
+        String hour = picked2.hour.toString();
+        if (hour.length == 1) hour = "0$hour";
+        String min = picked2.minute.toString();
+        if (min.length == 1) min = "0$min";
 
-    if (picked2 != null) {
-      String hour = picked2.hour.toString();
-      if (hour.length == 1) hour = "0$hour";
-      String min = picked2.minute.toString();
-      if (min.length == 1) min = "0$min";
+        String newDate =
+            "${DateFormat("yyyy-MM-dd").format(picked)} $hour:$min";
+        await _locationHelper.updateTime(newDate);
 
-      String newDate = "${DateFormat("yyyy-MM-dd").format(picked)} $hour:$min";
-      await _locationHelper.updateTime(newDate);
-
-      return {
-        'nopickup': false,
-        'date': picked,
-        'time': picked2,
-        'str': newDate
-      };
+        return {
+          'nopickup': false,
+          'date': picked,
+          'time': picked2,
+          'str': newDate
+        };
+      }
     }
     return {'nopickup': true};
   }
