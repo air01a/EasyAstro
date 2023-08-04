@@ -107,6 +107,7 @@ class _ObjectPage extends State<ObjectPage> {
                                       textAlign: TextAlign.center,
                                       maxLines: 10,
                                     ).tr()),
+                                ratingBox,
                                 title("information"),
                                 if (widget.item.rise != widget.item.set)
                                   const Text('rise').tr(args: [
@@ -128,13 +129,24 @@ class _ObjectPage extends State<ObjectPage> {
                                         textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.magnitude.toString()
-                                ]), //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left),
+                                ]),
+                                const Text('azimuth', textAlign: TextAlign.left)
+                                    .tr(args: [
+                                  widget.item.azimuth.toInt().toString()
+                                ]),
                                 const Text('current_height',
                                         textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.height.toInt().toString()
                                 ]), //"Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left),
-                                ratingBox,
+                                const Text('ra', textAlign: TextAlign.left)
+                                    .tr(args: [
+                                  ConvertAngle.hourToString(widget.item.ra / 15)
+                                ]),
+                                const Text('dec', textAlign: TextAlign.left).tr(
+                                    args: [widget.item.dec.toStringAsFixed(2)]),
+                                //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left),
+
                                 if (locationImage != null) ...[
                                   title('location'),
                                   locationImage,
