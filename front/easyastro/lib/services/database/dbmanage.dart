@@ -8,13 +8,11 @@ import 'package:easyastro/services/database/globals.dart';
 double raToDouble(String ra) {
   double ret = 0.0;
   int divisor = 1;
-  int multiplicator = 15;
   ra.split(':').forEach((element) {
-    ret += double.parse(element) / divisor * multiplicator;
+    ret += double.parse(element) / divisor ;
     divisor *= 60;
-    multiplicator = 1;
   });
-  return ret;
+  return ret*15;
 }
 
 double decToDouble(String ra) {
@@ -52,7 +50,6 @@ Future<Map<String, String>> getDescription(String language) async {
 Future<List<Map<String, dynamic>>> openCatalog(
     double lon, double lat, double alt, String? time) async {
   AstroCalc astro = AstroCalc();
-
   astro.setPosition(lon, lat, alt);
   if (time != null) {
     final now = DateTime.parse(time);
@@ -65,7 +62,7 @@ Future<List<Map<String, dynamic>>> openCatalog(
   double st = astro.getSiderealTime();
 
   ObjectSelection().astro = astro;
-  //Map<String,String> descriptions = await getDescription('en');
+  //Map<String,String> descriptions = await getDscription('en');
   var result = await rootBundle.loadString(
     "assets/data/deepsky.lst",
   );
@@ -106,7 +103,6 @@ Future<List<Map<String, dynamic>>> openCatalog(
     data['azimuth'] = ephemeris.azimuth;
     data['height'] = ephemeris.height;
 
-    print("${data['NAME']}:${data['azimuth']}  / ${data['height']}");
     if (data['timeToMeridian'] < -12.0) data['timeToMeridian'] += 24;
 
     data['rise'] = ephemeris.rising;

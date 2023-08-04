@@ -202,7 +202,7 @@ class _ScreenHome extends State<ScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-    AstroCalc? astro = ObjectSelection().astro;
+   // AstroCalc? astro = ObjectSelection().astro;
     List<Widget> display = [];
     List<Widget> displaySun = [];
     List<Widget> displayLocation = [];
@@ -210,11 +210,11 @@ class _ScreenHome extends State<ScreenHome> {
 
     if (astro != null) {
       // Get moon card with all informations
-      List<int> moonPhase = astro.getMoonPhase();
+      List<int> moonPhase = astro!.getMoonPhase();
       List<Widget> displayMoon = [];
-      AstroCoordinates moon = astro.getObjectCoord(HeavenlyBody.SE_MOON);
+      AstroCoordinates moon = astro!.getObjectCoord(HeavenlyBody.SE_MOON);
       final ephemeris =
-          astro.calculateEphemeris(moon.ra, moon.dec, astro.getSiderealTime());
+          astro!.calculateEphemeris(moon.ra, moon.dec, astro!.getSiderealTime());
       display.add(getMoonImage(moonPhase[1]));
       displayMoon.add(const Text('illumination').tr(args: [
         moonPhase[0].toString()
@@ -234,9 +234,9 @@ class _ScreenHome extends State<ScreenHome> {
           ))));
 
       // Get Sun card with all informations
-      AstroCoordinates sun = astro.getObjectCoord(HeavenlyBody.SE_SUN);
+      AstroCoordinates sun = astro!.getObjectCoord(HeavenlyBody.SE_SUN);
       final ephemerisSun =
-          astro.calculateEphemeris(sun.ra, sun.dec, astro.getSiderealTime());
+          astro!.calculateEphemeris(sun.ra, sun.dec, astro!.getSiderealTime());
       displaySun.add(SizedBox(width: getSize(), child: getSunImage()));
       List<Widget> displaySunText = [];
       displaySunText.add(const Text('rise')
