@@ -16,8 +16,11 @@ class EphemerisParameters {
   final double culmination;
   final bool visible;
   final double height;
-  const EphemerisParameters(
-      this.rising, this.setting, this.culmination, this.visible, this.height);
+  final double ra;
+  final double dec;
+  final double azimuth;
+  const EphemerisParameters(this.rising, this.setting, this.culmination,
+      this.visible, this.azimuth, this.height, this.ra, this.dec);
 }
 
 class ConvertAngle {
@@ -29,7 +32,7 @@ class ConvertAngle {
     String m = ((hour - hour.floor()) * 60).floor().toString();
     if (m.length == 1) m = "0$m";
 
-    return "$h:$m";
+    return "${h}h${m}m";
   }
 
   static degToHour(double deg) {
@@ -48,6 +51,7 @@ class AstroCalc {
   int month = 0;
   int day = 0;
   double hour = 0;
+  int diffToUtc = 0;
 
   static Future<void> init() async {
     await Sweph.init(epheAssets: [
@@ -59,6 +63,11 @@ class AstroCalc {
 
   void setCurrentTime() {
     final now = DateTime.now();
+    int localHour = now.hour;
+    int utcHour = now.toUtc().hour;
+
+    diffToUtc = localHour - utcHour;
+
     day = now.day;
     month = now.month;
     year = now.year;
@@ -170,15 +179,45 @@ class AstroCalc {
     return cosH;
   }
 
+  // Get object height at a given hour
+  double getHeight(double dec, double h) {
+    double decRad = dec * pi / 180;
+    double latRad = latitude * pi / 180;
+    double hRad = normalizeH(h);
+
+    return asin(
+        sin(decRad) * sin(latRad) + cos(decRad) * cos(latRad) * cos(hRad));
+  }
+
+  double normalizeH(double h) {
+    double hRad = h * pi / 180;
+    if (hRad < 0) hRad += 2 * pi;
+    if (hRad > pi) hRad = hRad - 2 * pi;
+    return hRad;
+  }
+
+  double? getAzimuth(double ra, double dec, double h) {
+    double hRad = normalizeH(h);
+    double lat = latitude * pi / 180;
+    double azimuth = (180 / pi) *
+            atan2(sin(hRad),
+                (cos(hRad) * sin(lat) - tan(dec * pi / 180) * cos(lat))) -
+        180;
+
+    if (azimuth < 0) azimuth += 360;
+    return azimuth;
+  }
+
   // Calculate data for an object
   EphemerisParameters calculateEphemeris(double ra, double dec, siderealTime) {
     double? ha = calcHourAngle(dec); // Calculate hour angle H = ts - alpha
     double st = siderealTime * 15;
+
     double hRise;
     double hSet;
     double hCum = (hour + ((ra - st)) / 15 / 1.002737909) % 24;
     bool visible = false;
-
+    double azimuth = getAzimuth(ra, dec, (st - ra)) ?? -1;
     double height = getHeight(dec, (st - ra)) * 180 / pi;
 
     if (ha == null) {
@@ -199,7 +238,8 @@ class AstroCalc {
       }
     }
 
-    return EphemerisParameters(hRise, hSet, hCum, visible, height);
+    return EphemerisParameters(
+        hRise, hSet, hCum, visible, azimuth, height, ra, dec);
   }
 
   // Convert string name to HeaverlyBody object
@@ -219,15 +259,6 @@ class AstroCalc {
         return HeavenlyBody.SE_VENUS;
     }
     return null;
-  }
-
-  // Get object height at a given hour
-  double getHeight(double dec, double h) {
-    double decRad = dec * pi / 180;
-    double latRad = latitude * pi / 180;
-    double hRad = h * pi / 180;
-    return asin(
-        sin(decRad) * sin(latRad) + cos(decRad) * cos(latRad) * cos(hRad));
   }
 
   // Get height for an object at multiple hour, to draw an azimutal chart

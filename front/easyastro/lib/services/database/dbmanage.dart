@@ -103,7 +103,10 @@ Future<List<Map<String, dynamic>>> openCatalog(
     //print("${data['RA']} - ${data['RA deg']}/ ${data['DEC']} - ${data['DEC deg']}");
     data['meridian_time'] = ephemeris.culmination;
     data['timeToMeridian'] = ephemeris.culmination - astro.hour;
+    data['azimuth'] = ephemeris.azimuth;
     data['height'] = ephemeris.height;
+
+    print("${data['NAME']}:${data['azimuth']}  / ${data['height']}");
     if (data['timeToMeridian'] < -12.0) data['timeToMeridian'] += 24;
 
     data['rise'] = ephemeris.rising;

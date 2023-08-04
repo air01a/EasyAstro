@@ -45,6 +45,7 @@ class ObservableObject {
   double rise = 0;
   double set = 0;
   double height = 0;
+  double azimuth = -1;
   bool visible = false;
   String location = '';
 
@@ -82,5 +83,6 @@ class ObservableObject {
     height = json['height'];
     visible = json['visible'];
     location = json['Location'];
+    azimuth = json['azimuth'];
   }
 }
