@@ -120,13 +120,14 @@ class _ScreenHome extends State<ScreenHome> {
   void setNewLocation(GeoPoint p) {
     setState(
       () {
-        astro!.setPosition(p.longitude, p.latitude, 0);
+        ObjectSelection().astro!.setPosition(p.longitude, p.latitude, 0);
         CurrentLocation().longitude = p.longitude;
         CurrentLocation().latitude = p.latitude;
         CurrentLocation().altitude = 0;
         altitude = 0;
         longitude = p.longitude;
         latitude = p.latitude;
+        displayTimeText = getTimeText();
       },
     );
   }
@@ -171,11 +172,9 @@ class _ScreenHome extends State<ScreenHome> {
           DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
           changeDate: false);
     }
-    if (astro != null) {
-      latitude = astro!.latitude;
-      longitude = astro!.longitude;
-      altitude = astro!.altitude;
-    }
+      latitude = CurrentLocation().latitude!;
+      longitude = CurrentLocation().longitude!;
+      altitude = CurrentLocation().altitude!;
   }
 
   List<Widget> getWeather() {
