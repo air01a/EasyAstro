@@ -157,9 +157,7 @@ class AstroCalc {
 
   int getMaxAltAzExposureTime(double lat, double az, double height,
       double sensorDiag, double pixelSize) {
-    print("$lat $az $height $sensorDiag $pixelSize");
     final double constante = 0.03645 * sensorDiag / pixelSize;
-    print("constante : $constante");
     double pixelTraversed = (constante *
             cos(lat * pi / 180) *
             cos(az * pi / 180) /
