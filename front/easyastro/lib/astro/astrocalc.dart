@@ -155,6 +155,21 @@ class AstroCalc {
     return siderealTime % 360 / 15;
   }
 
+  int getMaxAltAzExposureTime(double lat, double az, double height,
+      double sensorDiag, double pixelSize) {
+    print("$lat $az $height $sensorDiag $pixelSize");
+    final double constante = 0.03645 * sensorDiag / pixelSize;
+    print("constante : $constante");
+    double pixelTraversed = (constante *
+            cos(lat * pi / 180) *
+            cos(az * pi / 180) /
+            cos(height * pi / 180))
+        .abs();
+
+    double expo = 4 / pixelTraversed;
+    return min(30, expo.toInt());
+  }
+
   // Calculate H0, always the same for a given object. Take into account parallax and refraction.
   double calcH0() {
     double refractionCoeff = 34 / 60 * pi / 180;

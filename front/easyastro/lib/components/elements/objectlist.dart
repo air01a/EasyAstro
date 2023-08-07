@@ -7,12 +7,14 @@ import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/graphics/azimutalgraph.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 
 //ignore: must_be_immutable
 class ObjectPage extends StatefulWidget {
   final ObservableObject item;
   final int index;
   final Function(int, bool) onValueChanged;
+
   bool initialValue;
   ObjectPage(
       {super.key,
@@ -27,12 +29,26 @@ class ObjectPage extends StatefulWidget {
 class _ObjectPage extends State<ObjectPage> {
   Map<double, double> azimuthalChart = {};
   late RatingBox ratingBox;
+  int maxAltAzExposureTime = 0;
+
   @override
   void initState() {
     super.initState();
     if (ObjectSelection().astro != null) {
       azimuthalChart = ObjectSelection().astro!.getAzimutalChart(widget.item.ra,
           widget.item.dec, ObjectSelection().astro!.getSiderealTime());
+      print(ConfigManager().configuration?["showAltAzMaxExpo"]?.value);
+      if (ConfigManager().configuration?["showAltAzMaxExpo"]?.value == true) {
+        maxAltAzExposureTime = ObjectSelection().astro?.getMaxAltAzExposureTime(
+                CurrentLocation().latitude!,
+                widget.item.azimuth,
+                widget.item.height,
+                double.parse(
+                    ConfigManager().configuration?["sensor_diag"]?.value),
+                double.parse(
+                    ConfigManager().configuration?["pixel_size"]?.value)) ??
+            0;
+      }
     }
     ratingBox = RatingBox(
         onValueChanged: widget.onValueChanged,
@@ -145,6 +161,12 @@ class _ObjectPage extends State<ObjectPage> {
                                 ]),
                                 const Text('dec', textAlign: TextAlign.left).tr(
                                     args: [widget.item.dec.toStringAsFixed(2)]),
+                                if (maxAltAzExposureTime != 0)
+                                  const Text('max_altaz_exposure_time',
+                                          textAlign: TextAlign.left)
+                                      .tr(args: [
+                                    maxAltAzExposureTime.toString()
+                                  ]),
                                 //"Magnitude : ${widget.item.magnitude.toString()}", textAlign: TextAlign.left),
 
                                 if (locationImage != null) ...[

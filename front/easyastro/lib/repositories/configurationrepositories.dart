@@ -18,7 +18,12 @@ class ConfigurationRepository {
     'mapShowStarNames':
         ConfigItem('mapShowLines', 'map_show_starname', 'checkbox', true, []),
     'mapShowLines':
-        ConfigItem('mapShowLines', 'map_show_lines', 'checkbox', true, [])
+        ConfigItem('mapShowLines', 'map_show_lines', 'checkbox', true, []),
+    'showAltAzMaxExpo': ConfigItem(
+        'showAltAzMaxExpo', 'show_alt_az_max_expo', 'checkbox', false, []),
+    'sensor_diag':
+        ConfigItem('Sensor diagonal', 'sensor_diag', 'input', "14.1", []),
+    'pixel_size': ConfigItem('Pixel size', 'pixel_size', 'input', "3.35", [])
   };
   final _ls = LocalStorage('Configuration');
 

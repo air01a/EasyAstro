@@ -9,10 +9,10 @@ double raToDouble(String ra) {
   double ret = 0.0;
   int divisor = 1;
   ra.split(':').forEach((element) {
-    ret += double.parse(element) / divisor ;
+    ret += double.parse(element) / divisor;
     divisor *= 60;
   });
-  return ret*15;
+  return ret * 15;
 }
 
 double decToDouble(String ra) {
@@ -62,7 +62,6 @@ Future<List<Map<String, dynamic>>> openCatalog(
   double st = astro.getSiderealTime();
 
   ObjectSelection().astro = astro;
-  //Map<String,String> descriptions = await getDscription('en');
   var result = await rootBundle.loadString(
     "assets/data/deepsky.lst",
   );
@@ -92,12 +91,9 @@ Future<List<Map<String, dynamic>>> openCatalog(
         data['DEC deg'] = 0;
       }
     }
-    //     if (!sunIsVisible || data['NAME']=='Moon') {
     EphemerisParameters ephemeris =
         astro.calculateEphemeris(data['RA deg'], data['DEC deg'], st);
-    //      if (ephemeris.visible) {
-    //print(data['NAME']);print("${ephemeris.rising} ${ephemeris.setting} ${ephemeris.culmination}");
-    //print("${data['RA']} - ${data['RA deg']}/ ${data['DEC']} - ${data['DEC deg']}");
+
     data['meridian_time'] = ephemeris.culmination;
     data['timeToMeridian'] = ephemeris.culmination - astro.hour;
     data['azimuth'] = ephemeris.azimuth;
@@ -107,7 +103,6 @@ Future<List<Map<String, dynamic>>> openCatalog(
 
     data['rise'] = ephemeris.rising;
     data['set'] = ephemeris.setting;
-    //data['description'] = descriptions[data['NAME']];
 
     data['visible'] = ephemeris.visible;
     if (sunIsVisible && data['NAME'] != 'Moon') data['visible'] = false;
@@ -116,10 +111,7 @@ Future<List<Map<String, dynamic>>> openCatalog(
     if (data['NAME'] == 'Sun' && ephemeris.visible) {
       sunIsVisible = true;
     }
-    //astro.getAzimutalChart(data['RA deg'], data['DEC deg'], st);
   }
-  //    }
-  //  }
 
   ObservableObjects.fromJson(jsonData).catalog;
   return jsonData;
