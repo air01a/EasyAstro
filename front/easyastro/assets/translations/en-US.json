@@ -7,7 +7,7 @@
     "wating_catalog" : "Waiting position to update catalog",
     "catalog_updated" : "Catalog updated",
     "position": "Position : {}, {}, {}",
-    "rise_set": "Rise : {} - Set : {}",
+    "rise_set": "Rise/Set : {} / {}",
     "culmination":"Culmination : {}", 
     "type":"Type: {}", 
     "magnitude":"Magnitude : {}", 
