@@ -13,7 +13,7 @@ class DisplaySolarSystemHelper {
 
   Image getMoonImage(int imageNumber) {
     Image currentImage;
-    imageNumber = (imageNumber * 24 / 28 % 24).toInt();
+    imageNumber = (imageNumber * 24 / 30 % 24).toInt();
 
     if (kIsWeb) {
       currentImage = Image.network("assets/appimages/moon$imageNumber.png",

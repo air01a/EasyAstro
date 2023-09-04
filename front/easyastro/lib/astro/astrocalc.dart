@@ -35,7 +35,6 @@ class ConvertAngle {
     return "${h}h${m}";
   }
 
-
   static raToString(double ra) {
     ra = ra % 24;
     String h = (ra.floor()).toString();
@@ -45,14 +44,12 @@ class ConvertAngle {
     String m = min.toString();
     if (m.length == 1) m = "0$m";
 
-    int sec = (((ra - ra.floor())*60-min)*60).floor();
+    int sec = (((ra - ra.floor()) * 60 - min) * 60).floor();
     String s = sec.toString();
     if (s.length == 1) s = "0$m";
 
-
     return "${h}h${m}m${s}s";
   }
-
 
   static degToHour(double deg) {
     double hour = deg / 15;
@@ -137,7 +134,8 @@ class AstroCalc {
     return AstroCoordinates(pos.longitude, pos.latitude, pos.distance);
   }
 
-  List<int> getMoonPhase() {
+  List<int> getMoonPhaseForDate(int year, int month, int day, double hour) {
+    asTime = Sweph.swe_julday(year, month, day, hour, CalendarType.SE_GREG_CAL);
     final ephemeride = Sweph.swe_pheno_ut(
         asTime, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_TRUEPOS);
 
@@ -152,6 +150,10 @@ class AstroCalc {
             lp;
     int phase2 = (phase / (24 * 3600)).floor() + 1;
     return [(ephemeride[1] * 100).toInt(), phase2];
+  }
+
+  List<int> getMoonPhase() {
+    return getMoonPhaseForDate(year, month, day, hour);
   }
 
   // Calculate local sidereal time given utc time and longitude
@@ -264,10 +266,8 @@ class AstroCalc {
       hSet = hour - tsSet / 1.002737909;
       if (hRise < 0) hRise += 24;
       if (hSet < 0) hSet += 24;
-      if (height>0) visible = true;
+      if (height > 0) visible = true;
     }
-
-
 
     return EphemerisParameters(
         hRise, hSet, hCum, visible, azimuth, height, ra, dec);

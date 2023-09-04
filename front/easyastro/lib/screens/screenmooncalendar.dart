@@ -4,6 +4,7 @@ import 'package:easyastro/services/database/globals.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/skymap/displaysolarsystemhelper.dart';
+import 'package:sweph/sweph.dart';
 
 class ScreenMoonCalendar extends StatelessWidget {
   AstroCalc? astro = ObjectSelection().astro;
@@ -11,42 +12,61 @@ class ScreenMoonCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    int currentDay = now.day; 
-    int currentMonth = now.month; 
+    DateTime pDate = DateTime.now();
+
     //int currentDayOfWeek = now.weekday;
-    
 
+    List<Widget> calendar = [];
 
-    List<Widget> forecast = [];
+    for (int i = 0; i < 29; i++) {
+      int currentDay = pDate.day;
+      int currentMonth = pDate.month;
+      int currentYear = pDate.year;
+      List<int> moonPhase =
+          astro!.getMoonPhaseForDate(currentYear, currentMonth, currentDay, 23);
+      solarSystemHelper.getMoonImage(moonPhase[1]);
 
-    /*
-    weather["list"].forEach((weatherItem) {
-      int time = weatherItem["dt"];
-      int condition = weatherItem["weather"][0]["id"];
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time * 1000);
-      String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
-      String formattedHour = DateFormat('HH:MM').format(dateTime);
-      forecast.add(Column(children: [
-        Text(formattedDate),
-        Text(formattedHour),
-        SizedBox(
-            width: 20,
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                    style: const TextStyle(fontSize: 20),
-                    lWeather!.getWeatherIcon(condition)))),
-      ]));
-    });*/
+      print("$pDate : ${moonPhase[1]}");
+      print(solarSystemHelper.getMoonImage(moonPhase[1]));
+      print("----------");
+      pDate = pDate.add(const Duration(days: 1));
+
+      String formattedDate = DateFormat('MM/dd'.tr()).format(pDate);
+      calendar.add(Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: Colors.grey), // Définir la couleur de la bordure
+          ),
+          child: Column(children: [
+            Text(formattedDate),
+            SizedBox(
+                width: 60,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: solarSystemHelper.getMoonImage(moonPhase[1]),
+                ))
+          ])));
+    }
+
     return PageStructure(
-        body: GridView.count(
-            primary: false,
-            padding: const EdgeInsets.all(20),
+        body: SingleChildScrollView(
+            child: IntrinsicHeight(
+                child: SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        direction: Axis.horizontal,
+                        spacing: 40,
+                        children: calendar)))),
+
+        /*GridView.count(
+            primary: true,
+            padding: const EdgeInsets.all(5),
             crossAxisSpacing: 1,
             mainAxisSpacing: 1,
             crossAxisCount: 4,
-            children: forecast),
+            children: calendar),*/
         showDrawer: false,
         title: "moon_calendar".tr());
   }
