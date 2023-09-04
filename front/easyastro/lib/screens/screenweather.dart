@@ -41,7 +41,7 @@ class _ScreenWeather extends State<ScreenWeather> {
       int time = weatherItem["dt"];
       int condition = weatherItem["weather"][0]["id"];
       DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time * 1000);
-      String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
+      String formattedDate = DateFormat('MM/dd'.tr()).format(dateTime);
       String formattedHour = DateFormat('HH:MM').format(dateTime);
       forecast.add(Column(children: [
         Text(formattedDate),

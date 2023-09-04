@@ -12,6 +12,8 @@ import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easyastro/services/location/locationhelper.dart';
 import 'package:easyastro/screens/screenweather.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/services/skymap/displaysolarsystemhelper.dart';
+import 'package:easyastro/screens/screenmooncalendar.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
@@ -29,40 +31,12 @@ class _ScreenHome extends State<ScreenHome> {
   double latitude = 0;
   double altitude = 0;
   List<Widget> displayTimeText = [];
-
+  DisplaySolarSystemHelper solarSystemHelper = DisplaySolarSystemHelper();
   double getSize() {
     if (kIsWeb) {
       return 200;
     }
     return 150;
-  }
-
-  Image getMoonImage(int imageNumber) {
-    Image currentImage;
-    imageNumber = (imageNumber * 24 / 28 % 24).toInt();
-
-    if (kIsWeb) {
-      currentImage = Image.network("assets/appimages/moon$imageNumber.png",
-          width: getSize());
-    } else {
-      currentImage = Image(
-          image: AssetImage("assets/appimages/moon$imageNumber.png"),
-          width: getSize());
-    }
-    return currentImage;
-  }
-
-  Image getSunImage() {
-    Image currentImage;
-    if (kIsWeb) {
-      currentImage =
-          Image.network("assets/appimages/Sun.jpg", width: getSize());
-    } else {
-      currentImage = Image(
-          image: const AssetImage("assets/appimages/Sun.jpg"),
-          width: getSize());
-    }
-    return currentImage;
   }
 
   Widget getCard(List<Widget> content, {Function()? onTap}) {
@@ -92,6 +66,15 @@ class _ScreenHome extends State<ScreenHome> {
       context,
       MaterialPageRoute(
         builder: (context) => const ScreenWeather(),
+      ),
+    );
+  }
+
+  void gotoMoonCalendar() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenMoonCalendar(),
       ),
     );
   }
@@ -172,9 +155,9 @@ class _ScreenHome extends State<ScreenHome> {
           DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
           changeDate: false);
     }
-      latitude = CurrentLocation().latitude!;
-      longitude = CurrentLocation().longitude!;
-      altitude = CurrentLocation().altitude!;
+    latitude = CurrentLocation().latitude!;
+    longitude = CurrentLocation().longitude!;
+    altitude = CurrentLocation().altitude!;
   }
 
   List<Widget> getWeather() {
@@ -201,7 +184,7 @@ class _ScreenHome extends State<ScreenHome> {
 
   @override
   Widget build(BuildContext context) {
-   // AstroCalc? astro = ObjectSelection().astro;
+    // AstroCalc? astro = ObjectSelection().astro;
     List<Widget> display = [];
     List<Widget> displaySun = [];
     List<Widget> displayLocation = [];
@@ -212,9 +195,10 @@ class _ScreenHome extends State<ScreenHome> {
       List<int> moonPhase = astro!.getMoonPhase();
       List<Widget> displayMoon = [];
       AstroCoordinates moon = astro!.getObjectCoord(HeavenlyBody.SE_MOON);
-      final ephemeris =
-          astro!.calculateEphemeris(moon.ra, moon.dec, astro!.getSiderealTime());
-      display.add(getMoonImage(moonPhase[1]));
+      final ephemeris = astro!
+          .calculateEphemeris(moon.ra, moon.dec, astro!.getSiderealTime());
+
+      display.add(solarSystemHelper.getMoonImage(moonPhase[1]));
       displayMoon.add(const Text('illumination').tr(args: [
         moonPhase[0].toString()
       ])); //"Illumination : ${moonPhase[0]} %"));
@@ -224,6 +208,8 @@ class _ScreenHome extends State<ScreenHome> {
           .tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
       displayMoon.add(const Text('culmination')
           .tr(args: [ConvertAngle.hourToString(ephemeris.culmination)]));
+      displayMoon.add(const Text("\n"));
+      displayMoon.add(const Text('see_moon_calendar').tr());
       display.add(SizedBox(
           width: 350 - getSize(),
           child: Center(
@@ -236,7 +222,8 @@ class _ScreenHome extends State<ScreenHome> {
       AstroCoordinates sun = astro!.getObjectCoord(HeavenlyBody.SE_SUN);
       final ephemerisSun =
           astro!.calculateEphemeris(sun.ra, sun.dec, astro!.getSiderealTime());
-      displaySun.add(SizedBox(width: getSize(), child: getSunImage()));
+      displaySun.add(
+          SizedBox(width: getSize(), child: solarSystemHelper.getSunImage()));
       List<Widget> displaySunText = [];
       displaySunText.add(const Text('rise')
           .tr(args: [ConvertAngle.hourToString(ephemerisSun.rising)]));
@@ -291,7 +278,7 @@ class _ScreenHome extends State<ScreenHome> {
                             spacing: 40,
                             children: [
                               getCard(displaySun),
-                              getCard(display),
+                              getCard(display, onTap: gotoMoonCalendar),
                               getCard(displayLocation, onTap: changeLocation),
                               getCard(displayTimeText, onTap: setNewDate),
                               if (weather != null)
