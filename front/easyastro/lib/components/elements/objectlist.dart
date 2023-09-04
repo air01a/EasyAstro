@@ -157,7 +157,7 @@ class _ObjectPage extends State<ObjectPage> {
                                 ]), //"Current Height : ${widget.item.height.toInt().toString()}°", textAlign: TextAlign.left),
                                 const Text('ra', textAlign: TextAlign.left)
                                     .tr(args: [
-                                  ConvertAngle.hourToString(widget.item.ra / 15)
+                                  ConvertAngle.raToString(widget.item.ra / 15)
                                 ]),
                                 const Text('dec', textAlign: TextAlign.left).tr(
                                     args: [widget.item.dec.toStringAsFixed(2)]),

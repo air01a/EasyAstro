@@ -32,8 +32,27 @@ class ConvertAngle {
     String m = ((hour - hour.floor()) * 60).floor().toString();
     if (m.length == 1) m = "0$m";
 
-    return "${h}h${m}m";
+    return "${h}h${m}";
   }
+
+
+  static raToString(double ra) {
+    ra = ra % 24;
+    String h = (ra.floor()).toString();
+    if (h.length == 1) h = "0$h";
+
+    int min = ((ra - ra.floor()) * 60).floor();
+    String m = min.toString();
+    if (m.length == 1) m = "0$m";
+
+    int sec = (((ra - ra.floor())*60-min)*60).floor();
+    String s = sec.toString();
+    if (s.length == 1) s = "0$m";
+
+
+    return "${h}h${m}m${s}s";
+  }
+
 
   static degToHour(double deg) {
     double hour = deg / 15;
@@ -232,7 +251,6 @@ class AstroCalc {
     bool visible = false;
     double azimuth = getAzimuth(ra, dec, (st - ra)) ?? -1;
     double height = getHeight(dec, (st - ra)) * 180 / pi;
-
     if (ha == null) {
       // Circumpolar
       hRise = 0;
@@ -246,10 +264,10 @@ class AstroCalc {
       hSet = hour - tsSet / 1.002737909;
       if (hRise < 0) hRise += 24;
       if (hSet < 0) hSet += 24;
-      if (hRise < hour && hSet > hour) {
-        visible = true;
-      }
+      if (height>0) visible = true;
     }
+
+
 
     return EphemerisParameters(
         hRise, hSet, hCum, visible, azimuth, height, ra, dec);
