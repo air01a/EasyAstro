@@ -41,28 +41,47 @@ class _ScreenWeather extends State<ScreenWeather> {
       int time = weatherItem["dt"];
       int condition = weatherItem["weather"][0]["id"];
       DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time * 1000);
-      String formattedDate = DateFormat('yyyy/MM/dd').format(dateTime);
+      String formattedDate = DateFormat('MM/dd'.tr()).format(dateTime);
       String formattedHour = DateFormat('HH:MM').format(dateTime);
-      forecast.add(Column(children: [
-        Text(formattedDate),
-        Text(formattedHour),
-        SizedBox(
-            width: 20,
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                    style: const TextStyle(fontSize: 20),
-                    lWeather!.getWeatherIcon(condition)))),
-      ]));
+      forecast.add(Container(
+          width: 60,
+          height: 100,
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: Colors.grey), // Définir la couleur de la bordure
+          ),
+          child: Column(children: [
+            Text(formattedDate),
+            Text(formattedHour),
+            const SizedBox(height: 10),
+            SizedBox(
+                width: 60,
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                        style: const TextStyle(fontSize: 30),
+                        lWeather!.getWeatherIcon(condition)))),
+          ])));
     });
     return PageStructure(
-        body: GridView.count(
+        body: SingleChildScrollView(
+            child: IntrinsicHeight(
+                child: SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        direction: Axis.horizontal,
+                        spacing: 0,
+                        children: forecast)))),
+
+        /*GridView.count(
             primary: false,
             padding: const EdgeInsets.all(20),
             crossAxisSpacing: 1,
             mainAxisSpacing: 1,
             crossAxisCount: 4,
-            children: forecast),
+            children: forecast),*/
         showDrawer: false,
         title: "weather_next_days".tr());
   }

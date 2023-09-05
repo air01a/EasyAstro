@@ -79,8 +79,10 @@ class _ConfigScreen extends State<ConfigScreen> {
   @override
   Widget build(BuildContext context) {
     return PageStructure(
-        body: Column(
+        body: SingleChildScrollView(
+          child: IntrinsicHeight(
+            child:Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: getConfigItems()));
+            children: getConfigItems()))));
   }
 }

@@ -32,7 +32,23 @@ class ConvertAngle {
     String m = ((hour - hour.floor()) * 60).floor().toString();
     if (m.length == 1) m = "0$m";
 
-    return "${h}h${m}m";
+    return "${h}h${m}";
+  }
+
+  static raToString(double ra) {
+    ra = ra % 24;
+    String h = (ra.floor()).toString();
+    if (h.length == 1) h = "0$h";
+
+    int min = ((ra - ra.floor()) * 60).floor();
+    String m = min.toString();
+    if (m.length == 1) m = "0$m";
+
+    int sec = (((ra - ra.floor()) * 60 - min) * 60).floor();
+    String s = sec.toString();
+    if (s.length == 1) s = "0$m";
+
+    return "${h}h${m}m${s}s";
   }
 
   static degToHour(double deg) {
@@ -118,7 +134,8 @@ class AstroCalc {
     return AstroCoordinates(pos.longitude, pos.latitude, pos.distance);
   }
 
-  List<int> getMoonPhase() {
+  List<int> getMoonPhaseForDate(int year, int month, int day, double hour) {
+    asTime = Sweph.swe_julday(year, month, day, hour, CalendarType.SE_GREG_CAL);
     final ephemeride = Sweph.swe_pheno_ut(
         asTime, HeavenlyBody.SE_MOON, SwephFlag.SEFLG_TRUEPOS);
 
@@ -133,6 +150,10 @@ class AstroCalc {
             lp;
     int phase2 = (phase / (24 * 3600)).floor() + 1;
     return [(ephemeride[1] * 100).toInt(), phase2];
+  }
+
+  List<int> getMoonPhase() {
+    return getMoonPhaseForDate(year, month, day, hour);
   }
 
   // Calculate local sidereal time given utc time and longitude
@@ -153,6 +174,19 @@ class AstroCalc {
 
     final siderealTime = meanSiderealTime + longitude;
     return siderealTime % 360 / 15;
+  }
+
+  int getMaxAltAzExposureTime(double lat, double az, double height,
+      double sensorDiag, double pixelSize) {
+    final double constante = 0.03645 * sensorDiag / pixelSize;
+    double pixelTraversed = (constante *
+            cos(lat * pi / 180) *
+            cos(az * pi / 180) /
+            cos(height * pi / 180))
+        .abs();
+
+    double expo = 4 / pixelTraversed;
+    return min(30, expo.toInt());
   }
 
   // Calculate H0, always the same for a given object. Take into account parallax and refraction.
@@ -219,7 +253,6 @@ class AstroCalc {
     bool visible = false;
     double azimuth = getAzimuth(ra, dec, (st - ra)) ?? -1;
     double height = getHeight(dec, (st - ra)) * 180 / pi;
-
     if (ha == null) {
       // Circumpolar
       hRise = 0;
@@ -233,9 +266,7 @@ class AstroCalc {
       hSet = hour - tsSet / 1.002737909;
       if (hRise < 0) hRise += 24;
       if (hSet < 0) hSet += 24;
-      if (hRise < hour && hSet > hour) {
-        visible = true;
-      }
+      if (height > 0) visible = true;
     }
 
     return EphemerisParameters(

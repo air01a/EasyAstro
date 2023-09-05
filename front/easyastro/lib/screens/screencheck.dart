@@ -59,7 +59,6 @@ class _CheckScreen extends State<CheckScreen> {
   Future<void> _getLocation() async {
     Position? locationData;
     LocationHelper locationHelper = LocationHelper();
-
     await AstroCalc.init();
     setState(() {
       _locationData = null; // Afficher le message d'attente
@@ -69,7 +68,6 @@ class _CheckScreen extends State<CheckScreen> {
     CurrentLocation().longitude = locationData.longitude;
     CurrentLocation().latitude = locationData.latitude;
     CurrentLocation().altitude = locationData.altitude;
-
     setState(() {
       _locationData = locationData; // Afficher la position GPS
     });
