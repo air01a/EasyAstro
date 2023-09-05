@@ -18,13 +18,11 @@ class ScreenMoonCalendar extends StatelessWidget {
     final days = "days".tr().split(";");
     List<Widget> calendar = [];
 
+    List<int> moonPhase =
+        astro!.getMoonPhaseForDate(pDate.year, pDate.month, pDate.day, 20);
+    int phase = moonPhase[1];
     for (int i = 0; i < 29; i++) {
-      int currentDay = pDate.day;
-      int currentMonth = pDate.month;
-      int currentYear = pDate.year;
       int day = pDate.weekday;
-      List<int> moonPhase =
-          astro!.getMoonPhaseForDate(currentYear, currentMonth, currentDay, 20);
 
       String formattedDate = DateFormat('MM/dd'.tr()).format(pDate);
       if (days.length == 7) {
@@ -47,10 +45,11 @@ class ScreenMoonCalendar extends StatelessWidget {
                 width: 80,
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: solarSystemHelper.getMoonImage(moonPhase[1]),
+                  child: solarSystemHelper.getMoonImage(phase),
                 ))
           ])));
       pDate = pDate.add(const Duration(days: 1));
+      phase = (phase + 1) % 30;
     }
 
     return PageStructure(
