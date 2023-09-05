@@ -36,7 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  http: ^0.13.5
+  http: ^1.1.0
   flutter_riverpod: ^2.3.4
   universal_io: ^2.0.5
   flutter_localizations:
@@ -48,16 +48,16 @@ dependencies:
     git: http://github.com/yangyxd/flutter_picker.git
   shared_preferences: ^2.1.1
   sweph: ^2.10.3+11
-  fl_chart: ^0.62.0
+  fl_chart: ^0.63.0
   localstore: ^1.3.5
-  flutter_osm_plugin: ^0.55.1+1 
+  flutter_osm_plugin: ^0.60.4 
   pointer_interceptor: ^0.9.3+4
   geopoint: ^1.0.0
   easy_localization: ^3.0.2
   flutter_xlider: ^3.5.0
   image: ^4.0.17
-  extended_image: ^8.0.2
-  geolocator: ^9.0.2
+  extended_image: ^8.1.0
+  geolocator: ^10.0.0
   package_info_plus: ^4.0.2
   url_launcher: ^6.1.12
   syncfusion_flutter_gauges: ^22.1.39
