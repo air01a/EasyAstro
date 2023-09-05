@@ -44,6 +44,8 @@ class _ScreenWeather extends State<ScreenWeather> {
       String formattedDate = DateFormat('MM/dd'.tr()).format(dateTime);
       String formattedHour = DateFormat('HH:MM').format(dateTime);
       forecast.add(Container(
+          width: 60,
+          height: 100,
           decoration: BoxDecoration(
             border: Border.all(
                 color: Colors.grey), // Définir la couleur de la bordure
@@ -51,6 +53,7 @@ class _ScreenWeather extends State<ScreenWeather> {
           child: Column(children: [
             Text(formattedDate),
             Text(formattedHour),
+            const SizedBox(height: 10),
             SizedBox(
                 width: 60,
                 child: Align(
@@ -69,7 +72,7 @@ class _ScreenWeather extends State<ScreenWeather> {
                         alignment: WrapAlignment.center,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         direction: Axis.horizontal,
-                        spacing: 40,
+                        spacing: 0,
                         children: forecast)))),
 
         /*GridView.count(

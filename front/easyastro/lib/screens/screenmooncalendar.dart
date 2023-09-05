@@ -15,37 +15,42 @@ class ScreenMoonCalendar extends StatelessWidget {
     DateTime pDate = DateTime.now();
 
     //int currentDayOfWeek = now.weekday;
-
+    final days = "days".tr().split(";");
     List<Widget> calendar = [];
 
     for (int i = 0; i < 29; i++) {
       int currentDay = pDate.day;
       int currentMonth = pDate.month;
       int currentYear = pDate.year;
+      int day = pDate.weekday;
       List<int> moonPhase =
-          astro!.getMoonPhaseForDate(currentYear, currentMonth, currentDay, 23);
-      solarSystemHelper.getMoonImage(moonPhase[1]);
-
-      print("$pDate : ${moonPhase[1]}");
-      print(solarSystemHelper.getMoonImage(moonPhase[1]));
-      print("----------");
-      pDate = pDate.add(const Duration(days: 1));
+          astro!.getMoonPhaseForDate(currentYear, currentMonth, currentDay, 20);
 
       String formattedDate = DateFormat('MM/dd'.tr()).format(pDate);
+      if (days.length == 7) {
+        formattedDate = "$formattedDate\n${days[day - 1]}";
+      }
       calendar.add(Container(
+          width: 80,
+          height: 150,
           decoration: BoxDecoration(
             border: Border.all(
                 color: Colors.grey), // Définir la couleur de la bordure
           ),
           child: Column(children: [
-            Text(formattedDate),
+            Text(
+              formattedDate,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
             SizedBox(
-                width: 60,
+                width: 80,
                 child: Align(
-                  alignment: Alignment.center,
+                  alignment: Alignment.bottomCenter,
                   child: solarSystemHelper.getMoonImage(moonPhase[1]),
                 ))
           ])));
+      pDate = pDate.add(const Duration(days: 1));
     }
 
     return PageStructure(
@@ -57,7 +62,7 @@ class ScreenMoonCalendar extends StatelessWidget {
                         alignment: WrapAlignment.center,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         direction: Axis.horizontal,
-                        spacing: 40,
+                        spacing: 0,
                         children: calendar)))),
 
         /*GridView.count(
