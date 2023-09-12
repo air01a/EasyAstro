@@ -126,7 +126,7 @@ class _LocationSearchPageState extends State<LocationSearchPage> {
         ),
       ),
       pickerConfig: const CustomPickerLocationConfig(
-        initZoom: 8,
+        //initZoom: 8,
       ),
     );
   }
