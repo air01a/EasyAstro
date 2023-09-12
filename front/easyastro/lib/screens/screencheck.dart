@@ -29,21 +29,21 @@ class _CheckScreen extends State<CheckScreen> {
     switch (value) {
       case ('FR'):
         {
-          await context.setLocale(const Locale('fr', 'FR'));
+          await context.setLocale(const Locale('fr', ''));
         }
         break;
       case ('EN'):
         {
-          await context.setLocale(const Locale('en', 'US'));
+          await context.setLocale(const Locale('en', ''));
         }
         break;
       default:
         {
-          await context.resetLocale();
-          await updateDescription();
+          await context.setLocale(const Locale('en', ''));
         }
         break;
     }
+    await updateDescription();
   }
 
   @override

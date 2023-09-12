@@ -14,10 +14,12 @@ void main() async {
   ConfigManager();
 
   runApp(EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('fr', 'FR')],
+      supportedLocales: const [Locale('en', ''), Locale('fr', '')],
       path:
           'assets/translations', // <-- change the path of the translation files
-      fallbackLocale: const Locale('en', 'US'),
+      fallbackLocale: const Locale('en', ''),
+      useOnlyLangCode: true,
+      useFallbackTranslations: true,
       child: const MyApp()));
 }
 
