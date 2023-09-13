@@ -37,7 +37,6 @@ class _ObjectPage extends State<ObjectPage> {
     if (ObjectSelection().astro != null) {
       azimuthalChart = ObjectSelection().astro!.getAzimutalChart(widget.item.ra,
           widget.item.dec, ObjectSelection().astro!.getSiderealTime());
-      print(ConfigManager().configuration?["showAltAzMaxExpo"]?.value);
       if (ConfigManager().configuration?["showAltAzMaxExpo"]?.value == true) {
         maxAltAzExposureTime = ObjectSelection().astro?.getMaxAltAzExposureTime(
                 CurrentLocation().latitude!,

@@ -32,7 +32,7 @@ class ConvertAngle {
     String m = ((hour - hour.floor()) * 60).floor().toString();
     if (m.length == 1) m = "0$m";
 
-    return "${h}h${m}";
+    return "${h}h$m";
   }
 
   static raToString(double ra) {
