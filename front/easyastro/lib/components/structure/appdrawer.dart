@@ -50,6 +50,15 @@ class AppDrawer extends Drawer {
           ),
           ListTile(
             leading: const Icon(
+              Icons.explore,
+            ),
+            title: const Text('sidereal_hour').tr(),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/sidereal');
+            },
+          ),
+          ListTile(
+            leading: const Icon(
               Icons.map,
             ),
             title: const Text('map').tr(),

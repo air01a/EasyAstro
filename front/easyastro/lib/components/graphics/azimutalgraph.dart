@@ -124,9 +124,9 @@ class _AzimutalGraph extends State<AzimutalGraph> {
               (LineChartBarData barData, List<int> indicators) {
             return indicators.map(
               (int index) {
-                final line = FlLine(
+                const line = FlLine(
                     color: Colors.grey, strokeWidth: 1, dashArray: [2, 4]);
-                return TouchedSpotIndicatorData(
+                return const TouchedSpotIndicatorData(
                   line,
                   FlDotData(show: false),
                 );
@@ -150,19 +150,19 @@ class _AzimutalGraph extends State<AzimutalGraph> {
         getDrawingHorizontalLine: (value) {
           if (value == 0) {
             // Style de la ligne y = 0
-            return FlLine(
+            return const FlLine(
               color: Colors.red,
               strokeWidth: 2.0,
             );
           }
 
-          return FlLine(
+          return const FlLine(
             color: Colors.white10,
             strokeWidth: 0.1,
           );
         },
         getDrawingVerticalLine: (value) {
-          return FlLine(
+          return const FlLine(
             color: Colors.white10,
             strokeWidth: 1,
           );
@@ -170,10 +170,10 @@ class _AzimutalGraph extends State<AzimutalGraph> {
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         bottomTitles: AxisTitles(
@@ -210,7 +210,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           ),
           barWidth: 5,
           isStrokeCapRound: true,
-          dotData: FlDotData(
+          dotData: const FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(
@@ -228,21 +228,21 @@ class _AzimutalGraph extends State<AzimutalGraph> {
 
   LineChartData avgData() {
     return LineChartData(
-      lineTouchData: LineTouchData(enabled: false),
+      lineTouchData: const LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
         verticalInterval: 1,
         horizontalInterval: 1,
         getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
+          return const FlLine(
+            color: Color(0xff37434d),
             strokeWidth: 1,
           );
         },
         getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
+          return const FlLine(
+            color: Color(0xff37434d),
             strokeWidth: 1,
           );
         },
@@ -265,10 +265,10 @@ class _AzimutalGraph extends State<AzimutalGraph> {
             interval: 1,
           ),
         ),
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
       ),
@@ -302,7 +302,7 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           ),
           barWidth: 5,
           isStrokeCapRound: true,
-          dotData: FlDotData(
+          dotData: const FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(

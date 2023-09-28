@@ -74,7 +74,7 @@ class _ScreenHome extends State<ScreenHome> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScreenMoonCalendar(),
+        builder: (context) => const ScreenMoonCalendar(),
       ),
     );
   }
@@ -182,6 +182,10 @@ class _ScreenHome extends State<ScreenHome> {
     ];
   }
 
+  void gotoSun() {
+    Navigator.pushReplacementNamed(context, '/plan');
+  }
+
   @override
   Widget build(BuildContext context) {
     // AstroCalc? astro = ObjectSelection().astro;
@@ -277,7 +281,7 @@ class _ScreenHome extends State<ScreenHome> {
                             direction: Axis.horizontal,
                             spacing: 40,
                             children: [
-                              getCard(displaySun),
+                              getCard(displaySun, onTap: gotoSun),
                               getCard(display, onTap: gotoMoonCalendar),
                               getCard(displayLocation, onTap: changeLocation),
                               getCard(displayTimeText, onTap: setNewDate),

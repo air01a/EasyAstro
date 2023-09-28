@@ -218,7 +218,7 @@ class _ScreenProcessingImage extends State<ScreenProcessingImage> {
       BarChartData(
         groupsSpace: 8,
         barTouchData: BarTouchData(enabled: false),
-        titlesData: FlTitlesData(show: false),
+        titlesData: const FlTitlesData(show: false),
         borderData: FlBorderData(show: false),
         barGroups: blueBarChartGroups,
       ),
