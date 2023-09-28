@@ -26,20 +26,29 @@ class _CheckScreen extends State<CheckScreen> {
   }
 
   void updateLocale(String key, dynamic value) async {
+    if (value == "system") {
+      value = Intl.systemLocale.toLocale().languageCode.toUpperCase();
+    }
     switch (value) {
       case ('FR'):
         {
-          if (context.mounted) await context.setLocale(const Locale('fr', ''));
+          if (context.mounted)
+            await EasyLocalization.of(context)!
+                .setLocale(const Locale('fr', ''));
         }
         break;
       case ('EN'):
         {
-          if (context.mounted) await context.setLocale(const Locale('en', ''));
+          if (context.mounted)
+            await EasyLocalization.of(context)!
+                .setLocale(const Locale('en', ''));
         }
         break;
       default:
         {
-          if (context.mounted) await context.setLocale(const Locale('en', ''));
+          if (context.mounted)
+            await EasyLocalization.of(context)!
+                .setLocale(const Locale('en', ''));
         }
         break;
     }
