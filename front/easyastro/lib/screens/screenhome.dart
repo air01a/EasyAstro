@@ -186,6 +186,16 @@ class _ScreenHome extends State<ScreenHome> {
     Navigator.pushReplacementNamed(context, '/plan');
   }
 
+  Future<void> _handleRefresh() async {
+    // Mettez ici le code de rafraîchissement de votre contenu
+    // Par exemple, une requête réseau, une mise à jour de données, etc.
+    await Future.delayed(Duration(seconds: 2));
+    // Arrêtez le rafraîchissement
+    setState(() {
+      // Mettez à jour vos données ici
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // AstroCalc? astro = ObjectSelection().astro;
@@ -271,22 +281,25 @@ class _ScreenHome extends State<ScreenHome> {
 
     return PageStructure(
         body: Center(
-            child: SingleChildScrollView(
-                child: IntrinsicHeight(
-                    child: SizedBox(
-                        width: double.infinity,
-                        child: Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            direction: Axis.horizontal,
-                            spacing: 40,
-                            children: [
-                              getCard(displaySun, onTap: gotoSun),
-                              getCard(display, onTap: gotoMoonCalendar),
-                              getCard(displayLocation, onTap: changeLocation),
-                              getCard(displayTimeText, onTap: setNewDate),
-                              if (weather != null)
-                                getCard(weatherMap, onTap: gotoWeather)
-                            ]))))));
+            child: RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: SingleChildScrollView(
+                    child: IntrinsicHeight(
+                        child: SizedBox(
+                            width: double.infinity,
+                            child: Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                direction: Axis.horizontal,
+                                spacing: 40,
+                                children: [
+                                  getCard(displaySun, onTap: gotoSun),
+                                  getCard(display, onTap: gotoMoonCalendar),
+                                  getCard(displayLocation,
+                                      onTap: changeLocation),
+                                  getCard(displayTimeText, onTap: setNewDate),
+                                  if (weather != null)
+                                    getCard(weatherMap, onTap: gotoWeather)
+                                ])))))));
   }
 }
