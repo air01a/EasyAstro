@@ -272,6 +272,7 @@ class _ScreenMap extends State<ScreenMap> {
     _transformationController.value.setEntry(2, 2, zoomFactor);
     _transformationController.value.setEntry(0, 3, xTranslate);
     _transformationController.value.setEntry(1, 3, yTranslate);
+    _transformationController.value = Matrix4.rotationZ(45);
   }
 
   @override
