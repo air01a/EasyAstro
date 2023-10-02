@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/components/elements/skymap.dart';
@@ -28,6 +30,8 @@ class _ScreenMap extends State<ScreenMap> {
   late bool showConstellation;
   double skyMapSize = 1400;
   String? highlightObject;
+  double _rotation = 0;
+  final GlobalKey _viewerKey = GlobalKey();
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -141,6 +145,41 @@ class _ScreenMap extends State<ScreenMap> {
     skyMap!.showStarsNames(showStarsName);
   }
 
+  void changeRotation(double rotation) {
+    /*final ctx = _viewerKey.currentContext;
+    
+    if (ctx != null) {
+      final RenderBox? renderBox = ctx.findRenderObject() as RenderBox;
+    } else {}*/
+
+    double zoom = _transformationController.value.getMaxScaleOnAxis();
+    final translation = _transformationController.value.getTranslation();
+    double currentTranslationX = translation.x;
+    double currentTranslationY = translation.y;
+    print("$currentTranslationX $currentTranslationY");
+    double dx = skyMapSize / 2;
+    double dy = dx;
+    Matrix4 matrix = Matrix4.identity()..scale(zoom);
+    print(matrix);
+    //..rotateZ(rotation * pi / 180)
+    //..translate(-translation.x, -translation.y)
+    matrix..translate(dx, dy);
+    matrix.rotateZ(rotation * pi / 180);
+    matrix..translate(-dx, -dy);
+
+    /* matrix
+      ..add(Matrix4.identity()
+        ..translate(currentTranslationX, currentTranslationX)
+        ..rotateZ(-rotation * pi / 180));*/
+    //..translate(dx, dy)
+    //skyMapSize * sin(rotation * pi / 180), 0)
+
+    setState(() {
+      // _transformationController.value = Matrix4.identity();
+      _transformationController.value = matrix;
+    });
+  }
+
   Widget buildMenu() {
     return Positioned(
       top: 100, // Ajustez cette valeur pour positionner le menu correctement
@@ -218,6 +257,28 @@ class _ScreenMap extends State<ScreenMap> {
               },
               title: const Text('only_selected').tr(),
             ),
+            const Text('rotation').tr(),
+            SfLinearGauge(
+              maximum: 359,
+              minimum: 0,
+              orientation: LinearGaugeOrientation.horizontal,
+              markerPointers: [
+                LinearShapePointer(
+                  value: _rotation,
+                  height: 25,
+                  width: 25,
+                  shapeType: LinearShapePointerType.invertedTriangle,
+                  dragBehavior: LinearMarkerDragBehavior.free,
+                  onChangeEnd: (value) => {changeRotation(_rotation)},
+                  onChanged: (double newValue) {
+                    setState(() {
+                      _rotation = newValue;
+                    });
+                  },
+                ),
+              ],
+              barPointers: [LinearBarPointer(value: maxMag)],
+            ),
           ],
         ),
       ),
@@ -270,9 +331,11 @@ class _ScreenMap extends State<ScreenMap> {
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);
     _transformationController.value.setEntry(2, 2, zoomFactor);
-    _transformationController.value.setEntry(0, 3, xTranslate);
-    _transformationController.value.setEntry(1, 3, yTranslate);
-    _transformationController.value = Matrix4.rotationZ(45);
+    //_transformationController.value.setEntry(0, 3, xTranslate);
+    //_transformationController.value.setEntry(1, 3, yTranslate);
+    _transformationController.value.setEntry(0, 3, zoomFactor * skyMapSize / 2);
+    _transformationController.value.setEntry(1, 3, zoomFactor * skyMapSize / 2);
+    changeRotation(_rotation);
   }
 
   @override
@@ -283,6 +346,7 @@ class _ScreenMap extends State<ScreenMap> {
                 body: Center(
                     child: Stack(children: [
           InteractiveViewer(
+              key: _viewerKey,
               transformationController: _transformationController,
               boundaryMargin: const EdgeInsets.all(
                   double.infinity), // Marge autour de l'image
