@@ -5,6 +5,10 @@ import 'package:geolocator/geolocator.dart';
 class LocationHelper {
   static Position? locationData;
 
+  Future<bool> isRealTime() async {
+    return !CurrentLocation().timeChanged;
+  }
+
   Future<void> updateTime(String time, {bool changeDate = true}) async {
     //await helper.post("/planning/time",{"time": time});
     ObservableRepository catalog = ObservableRepository();

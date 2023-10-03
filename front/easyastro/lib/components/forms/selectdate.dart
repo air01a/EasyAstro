@@ -41,4 +41,17 @@ class SelectDate {
     }
     return {'nopickup': true};
   }
+
+  static updateDate(String date) async {
+    await _locationHelper.updateTime(date);
+  }
+
+  static currentDate() async {
+    String date = DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now());
+    await _locationHelper.updateTime(date, changeDate: false);
+  }
+
+  static Future<bool> isRealTime() async {
+    return await _locationHelper.isRealTime();
+  }
 }

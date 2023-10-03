@@ -10,6 +10,7 @@ import 'package:easyastro/components/forms/selectdate.dart';
 import 'package:easyastro/components/forms/searchbar.dart';
 import 'package:easyastro/components/forms/filterbar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'dart:async';
 
 class ScreenObjectList extends StatefulWidget {
   const ScreenObjectList({super.key});
@@ -29,6 +30,7 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   bool onlyVisible = true;
   Map<String, GlobalKey<RatingBoxState>> mappingRatingBox = {};
   final bbar = BottomBar();
+  late Timer timer;
 
   void _getNewCatalog() {
     List<ObservableObject> temp = ObjectSelection().selection.toList();
@@ -93,6 +95,11 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     }
   }
 
+  Future<void> _currentDate(BuildContext context) async {
+    await SelectDate.currentDate();
+    _getNewCatalog();
+  }
+
   void update(int index, bool value) {
     String objectName = _catalog[index].name;
     ObjectSelection()
@@ -105,6 +112,14 @@ class _ScreenObjectList extends State<ScreenObjectList> {
     });
   }
 
+  void refreshPage() async {
+    if (!mounted) return;
+    if (await SelectDate.isRealTime()) {
+      await SelectDate.currentDate();
+      _getNewCatalog();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -115,8 +130,13 @@ class _ScreenObjectList extends State<ScreenObjectList> {
 
     mappingRatingBox.clear();
     bbar.addItem(const Icon(Icons.schedule), 'change_date'.tr(), _selectDate);
+    bbar.addItem(const Icon(Icons.restore), 'hour_title'.tr(), _currentDate);
     bbar.addItem(const Icon(Icons.filter_alt), 'filter'.tr(), _filter);
     bbar.addItem(const Icon(Icons.search), 'search'.tr(), _search);
+
+    timer = Timer.periodic(const Duration(seconds: 60), (timer) {
+      refreshPage();
+    });
   }
 
   @override

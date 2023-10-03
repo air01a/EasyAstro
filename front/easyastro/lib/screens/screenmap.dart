@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 import 'package:easyastro/components/elements/skymap.dart';
@@ -28,6 +30,8 @@ class _ScreenMap extends State<ScreenMap> {
   late bool showConstellation;
   double skyMapSize = 1400;
   String? highlightObject;
+  double _rotation = 0;
+  final GlobalKey _viewerKey = GlobalKey();
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -141,6 +145,30 @@ class _ScreenMap extends State<ScreenMap> {
     skyMap!.showStarsNames(showStarsName);
   }
 
+  void changeRotation(double rotation) {
+    double rad = rotation * pi / 180;
+
+    var array =
+        _transformationController.value.applyToVector3Array([0, 0, 0, 1, 0, 0]);
+    Offset delta = Offset(array[3] - array[0], array[4] - array[1]);
+    double current_rotation = delta.direction;
+    if (current_rotation < 0) current_rotation = 2 * pi + current_rotation;
+    rad = rad - current_rotation;
+    var c = cos(rad);
+    var s = sin(rad);
+
+    double focalPointX = skyMapSize / 2;
+    double focalPointY = skyMapSize / 2;
+    var dx = (1 - c) * focalPointX + s * focalPointY;
+    var dy = (1 - c) * focalPointY - s * focalPointX;
+
+    Matrix4 matrix = Matrix4(c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, dx, dy, 0, 1);
+
+    setState(() {
+      _transformationController.value *= matrix;
+    });
+  }
+
   Widget buildMenu() {
     return Positioned(
       top: 100, // Ajustez cette valeur pour positionner le menu correctement
@@ -218,6 +246,28 @@ class _ScreenMap extends State<ScreenMap> {
               },
               title: const Text('only_selected').tr(),
             ),
+            const Text('rotation').tr(),
+            SfLinearGauge(
+              maximum: 359,
+              minimum: 0,
+              orientation: LinearGaugeOrientation.horizontal,
+              markerPointers: [
+                LinearShapePointer(
+                  value: _rotation,
+                  height: 25,
+                  width: 25,
+                  shapeType: LinearShapePointerType.invertedTriangle,
+                  dragBehavior: LinearMarkerDragBehavior.free,
+                  onChangeEnd: (value) => {changeRotation(_rotation)},
+                  onChanged: (double newValue) {
+                    setState(() {
+                      _rotation = newValue;
+                    });
+                  },
+                ),
+              ],
+              barPointers: [LinearBarPointer(value: maxMag)],
+            ),
           ],
         ),
       ),
@@ -270,8 +320,11 @@ class _ScreenMap extends State<ScreenMap> {
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);
     _transformationController.value.setEntry(2, 2, zoomFactor);
-    _transformationController.value.setEntry(0, 3, xTranslate);
-    _transformationController.value.setEntry(1, 3, yTranslate);
+    //_transformationController.value.setEntry(0, 3, xTranslate);
+    //_transformationController.value.setEntry(1, 3, yTranslate);
+    //_transformationController.value.setEntry(0, 3, zoomFactor * skyMapSize / 2);
+    //_transformationController.value.setEntry(1, 3, zoomFactor * skyMapSize / 2);
+    changeRotation(_rotation);
   }
 
   @override
@@ -282,6 +335,7 @@ class _ScreenMap extends State<ScreenMap> {
                 body: Center(
                     child: Stack(children: [
           InteractiveViewer(
+              key: _viewerKey,
               transformationController: _transformationController,
               boundaryMargin: const EdgeInsets.all(
                   double.infinity), // Marge autour de l'image
