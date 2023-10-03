@@ -6,6 +6,7 @@ import 'package:easyastro/models/dso.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'dart:typed_data';
+import 'package:easy_localization/easy_localization.dart';
 
 //ignore: must_be_immutable
 class SkyMap extends StatefulWidget {
@@ -232,7 +233,7 @@ class SkyMapPainter extends CustomPainter {
       fontSize: fontSize,
     ))
           ..pushStyle(textStyle)
-          ..addText(text);
+          ..addText(text.tr());
 
     final ui.Paragraph paragraph = paragraphBuilder.build()
       ..layout(ui.ParagraphConstraints(width: size.width));
