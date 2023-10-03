@@ -146,37 +146,26 @@ class _ScreenMap extends State<ScreenMap> {
   }
 
   void changeRotation(double rotation) {
-    /*final ctx = _viewerKey.currentContext;
-    
-    if (ctx != null) {
-      final RenderBox? renderBox = ctx.findRenderObject() as RenderBox;
-    } else {}*/
+    double rad = rotation * pi / 180;
 
-    double zoom = _transformationController.value.getMaxScaleOnAxis();
-    final translation = _transformationController.value.getTranslation();
-    double currentTranslationX = translation.x;
-    double currentTranslationY = translation.y;
-    print("$currentTranslationX $currentTranslationY");
-    double dx = skyMapSize / 2;
-    double dy = dx;
-    Matrix4 matrix = Matrix4.identity()..scale(zoom);
-    print(matrix);
-    //..rotateZ(rotation * pi / 180)
-    //..translate(-translation.x, -translation.y)
-    matrix..translate(dx, dy);
-    matrix.rotateZ(rotation * pi / 180);
-    matrix..translate(-dx, -dy);
+    var array =
+        _transformationController.value.applyToVector3Array([0, 0, 0, 1, 0, 0]);
+    Offset delta = Offset(array[3] - array[0], array[4] - array[1]);
+    double current_rotation = delta.direction;
+    if (current_rotation < 0) current_rotation = 2 * pi + current_rotation;
+    rad = rad - current_rotation;
+    var c = cos(rad);
+    var s = sin(rad);
 
-    /* matrix
-      ..add(Matrix4.identity()
-        ..translate(currentTranslationX, currentTranslationX)
-        ..rotateZ(-rotation * pi / 180));*/
-    //..translate(dx, dy)
-    //skyMapSize * sin(rotation * pi / 180), 0)
+    double focalPointX = skyMapSize / 2;
+    double focalPointY = skyMapSize / 2;
+    var dx = (1 - c) * focalPointX + s * focalPointY;
+    var dy = (1 - c) * focalPointY - s * focalPointX;
+
+    Matrix4 matrix = Matrix4(c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, dx, dy, 0, 1);
 
     setState(() {
-      // _transformationController.value = Matrix4.identity();
-      _transformationController.value = matrix;
+      _transformationController.value *= matrix;
     });
   }
 
@@ -333,8 +322,8 @@ class _ScreenMap extends State<ScreenMap> {
     _transformationController.value.setEntry(2, 2, zoomFactor);
     //_transformationController.value.setEntry(0, 3, xTranslate);
     //_transformationController.value.setEntry(1, 3, yTranslate);
-    _transformationController.value.setEntry(0, 3, zoomFactor * skyMapSize / 2);
-    _transformationController.value.setEntry(1, 3, zoomFactor * skyMapSize / 2);
+    //_transformationController.value.setEntry(0, 3, zoomFactor * skyMapSize / 2);
+    //_transformationController.value.setEntry(1, 3, zoomFactor * skyMapSize / 2);
     changeRotation(_rotation);
   }
 
