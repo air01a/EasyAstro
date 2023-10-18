@@ -32,23 +32,26 @@ class _CheckScreen extends State<CheckScreen> {
     switch (value) {
       case ('FR'):
         {
-          if (context.mounted)
+          if (context.mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('fr', ''));
+          }
         }
         break;
       case ('EN'):
         {
-          if (context.mounted)
+          if (context.mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('en', ''));
+          }
         }
         break;
       default:
         {
-          if (context.mounted)
+          if (context.mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('en', ''));
+          }
         }
         break;
     }
