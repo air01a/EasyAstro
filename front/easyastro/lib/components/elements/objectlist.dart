@@ -74,7 +74,6 @@ class _ObjectPage extends State<ObjectPage> {
       }
     } else {
       currentImage = Image(image: AssetImage(widget.item.image));
-      print(widget.item.location);
       if (widget.item.location != '' && widget.item.location != '-') {
         locationImage = Image(image: AssetImage(widget.item.location));
       }
