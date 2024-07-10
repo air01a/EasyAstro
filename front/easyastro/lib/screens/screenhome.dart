@@ -189,7 +189,7 @@ class _ScreenHome extends State<ScreenHome> {
   Future<void> _handleRefresh() async {
     // Mettez ici le code de rafraîchissement de votre contenu
     // Par exemple, une requête réseau, une mise à jour de données, etc.
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     // Arrêtez le rafraîchissement
     setState(() {
       // Mettez à jour vos données ici
