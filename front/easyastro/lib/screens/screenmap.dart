@@ -151,9 +151,9 @@ class _ScreenMap extends State<ScreenMap> {
     var array =
         _transformationController.value.applyToVector3Array([0, 0, 0, 1, 0, 0]);
     Offset delta = Offset(array[3] - array[0], array[4] - array[1]);
-    double current_rotation = delta.direction;
-    if (current_rotation < 0) current_rotation = 2 * pi + current_rotation;
-    rad = rad - current_rotation;
+    double currentRotation = delta.direction;
+    if (currentRotation < 0) currentRotation = 2 * pi + currentRotation;
+    rad = rad - currentRotation;
     var c = cos(rad);
     var s = sin(rad);
 
@@ -313,9 +313,9 @@ class _ScreenMap extends State<ScreenMap> {
       minSize = size.height;
     }
     final zoomFactor = minSize / skyMapSize;
-    final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
+    //final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
 
-    final yTranslate = (size.height - zoomFactor * skyMapSize) /
+    //final yTranslate = (size.height - zoomFactor * skyMapSize) /
         2; //-(size.height * zoomFactor) / 2;
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);

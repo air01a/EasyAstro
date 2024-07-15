@@ -11,9 +11,3 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
-*.lock
-*.bin
-android/.gradle/file-system.probe
-*.java
-*.h
-web/manifest.json

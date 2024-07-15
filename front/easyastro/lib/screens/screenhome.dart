@@ -88,7 +88,7 @@ class _ScreenHome extends State<ScreenHome> {
     display.add(const Text('sidereal').tr(args: [
       ConvertAngle.hourToString(ObjectSelection().astro!.getSiderealTime())
     ]));
-    display.add(const Text("\n"));
+   // display.add(const Text("\n"));
     display.add(const Text('click_to_change').tr());
     return [
       SizedBox(
@@ -189,7 +189,7 @@ class _ScreenHome extends State<ScreenHome> {
   Future<void> _handleRefresh() async {
     // Mettez ici le code de rafraîchissement de votre contenu
     // Par exemple, une requête réseau, une mise à jour de données, etc.
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     // Arrêtez le rafraîchissement
     setState(() {
       // Mettez à jour vos données ici
@@ -222,7 +222,7 @@ class _ScreenHome extends State<ScreenHome> {
           .tr(args: [ConvertAngle.hourToString(ephemeris.setting)]));
       displayMoon.add(const Text('culmination')
           .tr(args: [ConvertAngle.hourToString(ephemeris.culmination)]));
-      displayMoon.add(const Text("\n"));
+      //displayMoon.add(const Text("\n"));
       displayMoon.add(const Text('see_moon_calendar').tr());
       display.add(SizedBox(
           width: 350 - getSize(),
@@ -264,7 +264,7 @@ class _ScreenHome extends State<ScreenHome> {
           .add(const Text('latitude').tr(args: [latitude.toStringAsFixed(5)]));
       displayLocationText
           .add(const Text('altitude').tr(args: [altitude.toStringAsFixed(0)]));
-      displayLocationText.add(const Text("\n"));
+      //displayLocationText.add(const Text("\n"));
       displayLocationText.add(const Text('click_to_change').tr());
       displayLocation.add(SizedBox(
           width: 350 - getSize(),

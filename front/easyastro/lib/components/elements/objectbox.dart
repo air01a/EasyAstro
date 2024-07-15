@@ -5,6 +5,7 @@ import 'package:easyastro/services/database/globals.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/services/database/configmanager.dart';
 
 class ObjectBox extends StatefulWidget {
   // final Function() onValueChanged;
@@ -17,12 +18,28 @@ class ObjectBox extends StatefulWidget {
 }
 
 class _ObjectBox extends State<ObjectBox> {
-  Color getColor(bool isVisible, double height) {
+
+  late List<bool> azimuth;
+  late int minHeight;
+
+  Color getColor(bool isVisible, double height, double az) {
     if (!isVisible) return Colors.red.shade800;
-    if (height < 20) return Colors.orange.shade200;
+    if (height < minHeight) return Colors.orange.shade200;
+    if (!azimuth[(az/10).toInt()]) return Colors.pink.shade200;
     return Colors.green.shade900; //Theme.of(context).primaryColor;
   }
+  @override
+  void initState() {
 
+    super.initState();
+    azimuth = List<bool>.from(ConfigManager().configuration?["azimuth"]?.value);
+    int ?_minHeight = int.tryParse(ConfigManager().configuration?["minHeight"]?.value);
+    if (_minHeight==null) {
+      minHeight=20;
+    } else {
+      minHeight=_minHeight;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Image currentImage;
@@ -43,7 +60,7 @@ class _ObjectBox extends State<ObjectBox> {
         child: Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: getColor(widget.object.visible, widget.object.height),
+              color: getColor(widget.object.visible, widget.object.height, widget.object.azimuth),
             ),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
           ),

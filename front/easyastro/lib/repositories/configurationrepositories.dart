@@ -5,6 +5,8 @@ class ConfigurationRepository {
   Map<String, ConfigItem> defaultConfig = {
     'manageTelescope': ConfigItem(
         'manageTelescope', 'manage_telescope', 'checkbox', false, []),
+    'minHeight':
+        ConfigItem('minHeight', 'min_height', 'input', "30", []),
     'openWeatherKey':
         ConfigItem('openWeatherKey', 'ow_api_key', 'input', "", []),
     'imageRatio':
@@ -23,7 +25,8 @@ class ConfigurationRepository {
         'showAltAzMaxExpo', 'show_alt_az_max_expo', 'checkbox', false, []),
     'sensor_diag':
         ConfigItem('Sensor diagonal', 'sensor_diag', 'input', "14.1", []),
-    'pixel_size': ConfigItem('Pixel size', 'pixel_size', 'input', "3.35", [])
+    'pixel_size': ConfigItem('Pixel size', 'pixel_size', 'input', "3.35", []),
+    'azimuth': ConfigItem('azimuth', 'azimuth_selector', 'azimuth', List.generate(36, (index) => true), [])
   };
   final _ls = LocalStorage('Configuration');
 

@@ -99,7 +99,8 @@ class _AzimutalGraph extends State<AzimutalGraph> {
           touchCallback:
               (FlTouchEvent event, LineTouchResponse? touchResponse) {},
           touchTooltipData: LineTouchTooltipData(
-            tooltipBgColor: Colors.blue,
+            
+            //tooltipBgColor: Colors.blue,
             tooltipRoundedRadius: 20.0,
             showOnTopOfTheChartBoxArea: true,
             fitInsideHorizontally: true,

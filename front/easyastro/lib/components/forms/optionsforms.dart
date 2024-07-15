@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easyastro/models/configmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/components/forms/azimuthselector.dart';
 
 class ConfigForms {
   List<Widget> getForms(
@@ -76,10 +77,28 @@ class ConfigForms {
         ]));
       }
 
+      if (ci.type == 'azimuth') {
+
+        configReturn.add(Expanded(
+              flex: 5,
+              child: Container(
+                  margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  alignment: Alignment.centerLeft,
+                  child: Text(ci.description).tr())));
+              CircularButtonSelection azSelector = CircularButtonSelection(selectedButtons:List<bool>.from(ci.value), name:ci.name, callBack: callBack,);
+
+              configReturn.add(
+                        Container(height: 350,
+                            alignment: Alignment.center,
+                            child: azSelector ));
+              configReturn.add(Container(height: 10));
+      }
+
       configReturn.add(const Divider(height: 3));
     });
 
-    configReturn.add(Container(height: 10));
+
+    
 
     return configReturn;
   }

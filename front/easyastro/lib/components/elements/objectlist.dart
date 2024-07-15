@@ -30,10 +30,12 @@ class _ObjectPage extends State<ObjectPage> {
   Map<double, double> azimuthalChart = {};
   late RatingBox ratingBox;
   int maxAltAzExposureTime = 0;
+  late List<bool> azimuth;
 
   @override
   void initState() {
     super.initState();
+    azimuth = List<bool>.from(ConfigManager().configuration?["azimuth"]?.value);
     if (ObjectSelection().astro != null) {
       azimuthalChart = ObjectSelection().astro!.getAzimutalChart(widget.item.ra,
           widget.item.dec, ObjectSelection().astro!.getSiderealTime());
@@ -67,6 +69,7 @@ class _ObjectPage extends State<ObjectPage> {
   Widget build(BuildContext context) {
     Image currentImage;
     Image? locationImage;
+    String masked="";
     if (kIsWeb) {
       currentImage = Image.network(widget.item.image);
       if (widget.item.location != '') {
@@ -79,6 +82,9 @@ class _ObjectPage extends State<ObjectPage> {
       }
     }
 
+    if (!azimuth[(widget.item.azimuth/10).toInt()]) {
+      masked="not_visible_position".tr();
+    }
     final mediaQueryData = MediaQuery.of(context);
 
     // Récupère la taille de l'écran en pixels
@@ -147,7 +153,7 @@ class _ObjectPage extends State<ObjectPage> {
                                 ]),
                                 const Text('azimuth', textAlign: TextAlign.left)
                                     .tr(args: [
-                                  widget.item.azimuth.toInt().toString()
+                                  widget.item.azimuth.toInt().toString(),masked
                                 ]),
                                 const Text('current_height',
                                         textAlign: TextAlign.left)

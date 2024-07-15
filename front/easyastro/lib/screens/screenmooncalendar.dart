@@ -74,7 +74,7 @@ class _ScreenMoonCalendar extends State<ScreenMoonCalendar> {
                       TextButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
+                              WidgetStateProperty.all<Color>(Colors.blue),
                         ),
                         onPressed: () {
                           setState(() {
