@@ -72,12 +72,12 @@ class _ObjectPage extends State<ObjectPage> {
     String masked="";
     if (kIsWeb) {
       currentImage = Image.network(widget.item.image);
-      if (widget.item.location != '') {
+      if (widget.item.location != '' && widget.item.location != '-') {
         locationImage = Image.network(widget.item.location);
       }
     } else {
       currentImage = Image(image: AssetImage(widget.item.image));
-      if (widget.item.location != '') {
+      if (widget.item.location != '' && widget.item.location != '-') {
         locationImage = Image(image: AssetImage(widget.item.location));
       }
     }

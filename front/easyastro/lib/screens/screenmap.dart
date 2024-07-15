@@ -315,8 +315,8 @@ class _ScreenMap extends State<ScreenMap> {
     final zoomFactor = minSize / skyMapSize;
     //final xTranslate = size.width / 2 - zoomFactor * skyMapSize / 2;
 
-    //final yTranslate = (size.height - zoomFactor * skyMapSize) /
-        2; //-(size.height * zoomFactor) / 2;
+    //final yTranslate = (size.height - zoomFactor * skyMapSize) /2; //-(size.height * zoomFactor) / 2;
+
     _transformationController.value.setEntry(0, 0, zoomFactor);
     _transformationController.value.setEntry(1, 1, zoomFactor);
     _transformationController.value.setEntry(2, 2, zoomFactor);

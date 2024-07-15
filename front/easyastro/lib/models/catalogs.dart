@@ -63,7 +63,6 @@ class ObservableObject {
 
   ObservableObject.fromJson(Map<String, dynamic> json) {
     name = json['NAME'] ?? 'N/A';
-
     ra = json['RA deg'] ?? 0;
     dec = json['DEC deg'] ?? 0;
     description = tr("_$name");
@@ -82,7 +81,7 @@ class ObservableObject {
     timeToMeridian = json['timeToMeridian'] ?? 0;
     height = json['height'];
     visible = json['visible'];
-    location = json['Location'];
+    location = json['Location'] ?? "";
     azimuth = json['azimuth'];
   }
 }
