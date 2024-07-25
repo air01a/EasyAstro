@@ -7,6 +7,7 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easyastro/components/elements/customcard.dart';
+
 class ObjectBox extends StatefulWidget {
   // final Function() onValueChanged;
   final RatingBox rating;
@@ -58,10 +59,15 @@ class _ObjectBox extends State<ObjectBox> {
     double imageSize;
     if (kIsWeb) {
       currentImage = Image.network(widget.object.image);
+      imageSize=140;
     } else {
       currentImage = Image(image: AssetImage(widget.object.image));
+      imageSize=MediaQuery.of(context).size.width*0.2;
+          if (imageSize>150) {
+      imageSize = 150;
     }
-    imageSize = 140;
+    }
+
 
     Color blockColor = getColor(widget.object.visible, widget.object.height, widget.object.azimuth, widget.object.perturbedByMoon);
     String comment = getComment(widget.object.visible, widget.object.height, widget.object.azimuth, widget.object.perturbedByMoon).tr();

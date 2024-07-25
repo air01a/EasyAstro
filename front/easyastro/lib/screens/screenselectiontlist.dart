@@ -31,10 +31,6 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
     if (value == false) _catalog.removeAt(index);
     setState(() {
       _catalog.length;
-      //_catalog[index].selected = value;
-
-      //_catalog  = ObjectSelect;ion().selection.where((line) => line.selected == true).toList();
-      //_catalog.sort((a, b) => a.timeToMeridian.compareTo(b.timeToMeridian));
     });
   }
 
@@ -53,7 +49,7 @@ class _ScreenSelectionList extends State<ScreenSelectionList> {
   void callback(Map<String, dynamic> selection) {
     setState(() {
       String newDate =
-          "${selection['date'].toString()} ${ConvertAngle.hourToString(selection['hour'])}";
+          "${selection['date'].toString()} ${ConvertAngle.hourToStringWithSeconds(selection['hour'])}";
       service.updateTime(newDate).then((value) {
         List<dynamic> selected = selection["selected"];
         for (var element in selected) {

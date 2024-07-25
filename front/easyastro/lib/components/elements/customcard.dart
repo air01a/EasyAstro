@@ -96,17 +96,11 @@ class CardWithTitle extends StatelessWidget {
             borderColor: blockColor,
             borderRadius: 12.0,
           ),
-          child: Container(
-            width: double.infinity,
-            height: 160, // Ajustez la hauteur selon vos besoins
-          ),
-        ),
-       
-              Card(
+          child: Card(
                 color: color,
-                child: child,
-                )
-            ]
-          );
+                child: child),
+      )]);
+    
+          //);
   }
 }

@@ -123,7 +123,6 @@ class _ScreenHome extends State<ScreenHome> {
       ),
     );
 
-    //print(" ---  $p  ----");
     if (p != null) setNewLocation(p as GeoPoint);
   }
 
