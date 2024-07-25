@@ -63,6 +63,16 @@ class ConvertAngle {
     double hour = deg / 15;
     return hourToString(hour);
   }
+
+
+  static  double radians(double degrees) {
+    return degrees * pi / 180.0;
+  }
+
+  // Conversion de radians en degrés
+  static double degrees(double radians) {
+    return radians * 180.0 / pi;
+  }
 }
 
 // Main class
@@ -322,5 +332,39 @@ class AstroCalc {
     }
 
     return coord;
+  }
+
+
+    // Fonction pour calculer la distance angulaire entre deux objets célestes
+  double calculateAngularDistance(double azimuth1, double height1, double azimuth2, double height2) {
+    double azimuthDiff = (azimuth1 - azimuth2).abs();
+    if (azimuthDiff > 180) {
+      azimuthDiff = 360 - azimuthDiff;
+    }
+    azimuthDiff = ConvertAngle.radians(azimuthDiff);
+    height1 = ConvertAngle.radians(height1);
+    height2 = ConvertAngle.radians(height2);
+
+    double cosTheta = sin(height1) * sin(height2) + cos(height1) * cos(height2) * cos(azimuthDiff);
+    return ConvertAngle.degrees(acos(cosTheta));
+  }
+
+  // Fonction pour vérifier si un objet est perturbé par la Lune
+  bool isObjectPerturbedByMoon(double angularDistance, int moonIllumination) {
+    //double angularDistance = calculateAngularDistance(objectAzimuth, objectHeight, moonAzimuth, moonHeight);
+
+    // Définir le seuil de perturbation en fonction de l'éclairement de la Lune
+    double perturbationThreshold;
+    if (moonIllumination > 75) {
+      perturbationThreshold = 10.0; // Seuil pour Lune très éclairée
+    } else if (moonIllumination > 50) {
+      perturbationThreshold = 7.5;
+    } else if (moonIllumination > 25) {
+      perturbationThreshold = 5.0;
+    } else {
+      perturbationThreshold = 2.5; // Seuil pour Lune peu éclairée
+    }
+
+    return angularDistance <= perturbationThreshold;
   }
 }

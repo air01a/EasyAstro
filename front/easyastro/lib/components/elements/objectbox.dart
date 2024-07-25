@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/database/configmanager.dart';
-
+import 'package:easyastro/components/elements/customcard.dart';
 class ObjectBox extends StatefulWidget {
   // final Function() onValueChanged;
   final RatingBox rating;
@@ -22,12 +22,24 @@ class _ObjectBox extends State<ObjectBox> {
   late List<bool> azimuth;
   late int minHeight;
 
-  Color getColor(bool isVisible, double height, double az) {
+  Color getColor(bool isVisible, double height, double az, bool perturbedByMoon) {
     if (!isVisible) return Colors.red.shade800;
-    if (height < minHeight) return Colors.orange.shade200;
+    
     if (!azimuth[(az/10).toInt()]) return Colors.pink.shade200;
+    if (perturbedByMoon) return Colors.pink.shade200;
+    if (height < minHeight) return Colors.orange.shade200;
     return Colors.green.shade900; //Theme.of(context).primaryColor;
   }
+
+  String getComment(bool isVisible, double height, double az, bool perturbedByMoon) {
+    if (!isVisible) return "not_visible";
+    
+    if (!azimuth[(az/10).toInt()]) return "not_visible_from_location";
+    if (perturbedByMoon) return "perturbed_by_moon";
+    if (height < minHeight) return "low_on_horizon";
+    return "visible"; 
+  }
+
   @override
   void initState() {
 
@@ -46,21 +58,22 @@ class _ObjectBox extends State<ObjectBox> {
     double imageSize;
     if (kIsWeb) {
       currentImage = Image.network(widget.object.image);
-      //  imageSize=200;
     } else {
       currentImage = Image(image: AssetImage(widget.object.image));
-      //   imageSize=MediaQuery.of(context).size.width*0.15;
-      //imageSize=120;
     }
-    imageSize = MediaQuery.of(context).size.width * 0.20;
-    if (imageSize > 200) imageSize = 200;
-    //final rbox = RatingBox(onValueChanged: onValueChanged, index: widget.item, initialValue: ObjectSelection().selection[widget.item].selected);
+    imageSize = 140;
+
+    Color blockColor = getColor(widget.object.visible, widget.object.height, widget.object.azimuth, widget.object.perturbedByMoon);
+    String comment = getComment(widget.object.visible, widget.object.height, widget.object.azimuth, widget.object.perturbedByMoon).tr();
+
     return Container(
-        padding: const EdgeInsets.all(2),
-        child: Card(
+        padding: const EdgeInsets.all(8),
+        child: CardWithTitle(
+          blockColor: blockColor,
+          title: comment,
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: getColor(widget.object.visible, widget.object.height, widget.object.azimuth),
+              color: blockColor,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
           ),

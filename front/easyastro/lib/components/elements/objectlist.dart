@@ -70,6 +70,7 @@ class _ObjectPage extends State<ObjectPage> {
     Image currentImage;
     Image? locationImage;
     String masked="";
+    String moonTooClose="";
     if (kIsWeb) {
       currentImage = Image.network(widget.item.image);
       if (widget.item.location != '' && widget.item.location != '-') {
@@ -84,6 +85,10 @@ class _ObjectPage extends State<ObjectPage> {
 
     if (!azimuth[(widget.item.azimuth/10).toInt()]) {
       masked="not_visible_position".tr();
+    }
+
+    if (widget.item.perturbedByMoon==true) {
+      moonTooClose="too_close".tr();
     }
     final mediaQueryData = MediaQuery.of(context);
 
@@ -166,6 +171,8 @@ class _ObjectPage extends State<ObjectPage> {
                                 ]),
                                 const Text('dec', textAlign: TextAlign.left).tr(
                                     args: [widget.item.dec.toStringAsFixed(2)]),
+                                const Text('moon_angular_dist', textAlign: TextAlign.left).tr(
+                                    args: [widget.item.moonDistance.toStringAsFixed(0),moonTooClose]),
                                 if (maxAltAzExposureTime != 0)
                                   const Text('max_altaz_exposure_time',
                                           textAlign: TextAlign.left)

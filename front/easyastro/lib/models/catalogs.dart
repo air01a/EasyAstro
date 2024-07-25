@@ -46,6 +46,9 @@ class ObservableObject {
   double set = 0;
   double height = 0;
   double azimuth = -1;
+  double moonDistance=100;
+  bool perturbedByMoon=false;
+
   bool visible = false;
   String location = '';
 
@@ -57,6 +60,8 @@ class ObservableObject {
       required this.magnitude,
       required this.ra,
       required this.dec,
+      required this.moonDistance,
+      required this.perturbedByMoon, 
       required this.description,
       required this.image,
       required this.location});
@@ -83,5 +88,7 @@ class ObservableObject {
     visible = json['visible'];
     location = json['Location'] ?? "";
     azimuth = json['azimuth'];
+    moonDistance = json['moonDistance'];
+    perturbedByMoon = json['perturbedByMoon'];
   }
 }
