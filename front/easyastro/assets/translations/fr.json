@@ -36,7 +36,7 @@
     "perturbed_by_moon":"Masqué par la Lune",
     "low_on_horizon":"Bas sur l'horizon",
     "visible":"Visible",
-    "minHeight":"Hauteur minimale pour être visible (degré)",
+    "min_height":"Hauteur minimale pour être visible (degré)",
     "date":"Date : {}",
     "hour":"Heure : {}",
     "hour_title":"Heure actuelle",

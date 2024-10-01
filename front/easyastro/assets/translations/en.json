@@ -36,7 +36,7 @@
     "low_on_horizon":"Low on horizon",
     "visible":"Visible",
     "not_visible_position":"(not visible from your position)",
-    "minHeight":"Minimal height to be visible (degree)",
+    "min_height":"Minimal height to be visible (degree)",
     "date":"Date : {}",
     "hour":"Hour : {}",
     "sidereal":"Sidereal : {}",

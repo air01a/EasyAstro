@@ -176,10 +176,10 @@ class _ScreenMap extends State<ScreenMap> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 2500),
         width: 200, // Ajustez cette valeur pour régler la largeur du menu
-        height: 400, // Ajustez cette valeur pour régler la hauteur du menu
+        height: 600, // Ajustez cette valeur pour régler la hauteur du menu
         color: Colors.blue,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start ,
           children: [
             const Text('mag').tr(),
             SfLinearGauge(
