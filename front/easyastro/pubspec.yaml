@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 
-version: 1.5.1+46
+version: 1.5.2+47
 
 
 environment:
@@ -63,6 +63,7 @@ dependencies:
   package_info_plus: ^8.0.0
   url_launcher: ^6.3.0
   syncfusion_flutter_gauges: ^26.1.41
+  path_provider: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -116,11 +117,11 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   assets: 
-  #  - web/assets/appimages/
+    - web/assets/appimages/
     - assets/appimages/
-    - assets/appimages/location/
-    - assets/data/deepsky.lst
-    - assets/data/description_en
+#    - assets/appimages/location/
+#    - assets/data/deepsky.lst
+#    - assets/data/description_en
     - assets/translations/
     - assets/astro/
 

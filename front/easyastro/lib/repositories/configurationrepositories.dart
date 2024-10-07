@@ -26,7 +26,8 @@ class ConfigurationRepository {
     'sensor_diag':
         ConfigItem('Sensor diagonal', 'sensor_diag', 'input', "14.1", []),
     'pixel_size': ConfigItem('Pixel size', 'pixel_size', 'input', "3.35", []),
-    'azimuth': ConfigItem('azimuth', 'azimuth_selector', 'azimuth', List.generate(36, (index) => true), [])
+    'azimuth': ConfigItem('azimuth', 'azimuth_selector', 'azimuth', List.generate(36, (index) => true), []),
+    'remoteCatalog': ConfigItem('remoteCatalog','remote_catalog', 'input', 'https://www.easyastro.net/application/catalog/',[]),
   };
   final _ls = LocalStorage('Configuration');
 

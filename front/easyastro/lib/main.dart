@@ -5,6 +5,7 @@ import 'package:easyastro/theme/theme.dart' as my_theme;
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/screens/screencheck.dart';
+import 'package:easyastro/services/localization/customloader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +15,9 @@ void main() async {
   ConfigManager();
 
   runApp(EasyLocalization(
+      path:'assets/translations',
       supportedLocales: const [Locale('en', ''), Locale('fr', '')],
-      path:
-          'assets/translations', // <-- change the path of the translation files
+      assetLoader:CustomAssetLoader(),
       fallbackLocale: const Locale('en', ''),
       useOnlyLangCode: true,
       useFallbackTranslations: true,

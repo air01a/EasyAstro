@@ -4,6 +4,8 @@ import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/services/database/globals.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 double raToDouble(String ra) {
   double ret = 0.0;
@@ -30,6 +32,7 @@ double decToDouble(String ra) {
 
 Future<Map<String, String>> getDescription(String language) async {
   Map<String, String> dataMap = {};
+  
   var description = await rootBundle.loadString(
     "assets/data/description_en",
   );
@@ -64,9 +67,11 @@ Future<List<Map<String, dynamic>>> openCatalog(
         double st = astro.getSiderealTime();
 
         ObjectSelection().astro = astro;
-        var result = await rootBundle.loadString(
-          "assets/data/deepsky.lst",
-        );
+        String directory = (await getApplicationCacheDirectory()).path;
+
+        final file = File("$directory/deepsky.lst");
+
+        var result = await file.readAsString();
 
         List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter()
             .convert(result, fieldDelimiter: ";", eol: "\n", textDelimiter: '"');
@@ -79,6 +84,8 @@ Future<List<Map<String, dynamic>>> openCatalog(
           for (var i = 0; i < columnNames.length; i++) {
             data[columnNames[i]] = row[i];
           }
+
+          data['Image']="$directory/${data['Image']}";
           if (data['TYPE'] == 0) {
             data['RA deg'] = raToDouble(data['RA']);
             data['DEC deg'] = decToDouble(data['DEC']);

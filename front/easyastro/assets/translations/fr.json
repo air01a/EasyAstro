@@ -1,5 +1,6 @@
 {
     "welcome":"Bienvenue",
+    "remote_catalog":"Adresse du catalogue",
     "ra":"Ascension droite : {}",
     "dec":"Declinaison : {} °",
     "waiting_position" : "En attente du GPS",
@@ -99,6 +100,7 @@
     "max_altaz_exposure_time":"Temps d'exposition max (altaz) : {} s",
     "azimut_graph":"Graphique heure/altitude",
     "skymap":"Carte du ciel",
+    "catalog_updater":"Mise à jour du catalogue",
     "map_show_dso" : "Montrer les planètes et les objets du ciel profond dans la carte",
     "map_show_only_selected" : "Ne montrer que les objets sélectionnés dans la carte",
     "map_show_lines" : "Montrer les constellations",

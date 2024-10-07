@@ -8,6 +8,7 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/graphics/azimutalgraph.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/database/configmanager.dart';
+import 'dart:io';
 
 //ignore: must_be_immutable
 class ObjectPage extends StatefulWidget {
@@ -77,7 +78,8 @@ class _ObjectPage extends State<ObjectPage> {
         locationImage = Image.network(widget.item.location);
       }
     } else {
-      currentImage = Image(image: AssetImage(widget.item.image));
+      //currentImage = Image(image: AssetImage(widget.item.image));
+      currentImage = Image.file(File(widget.item.image));
       if (widget.item.location != '' && widget.item.location != '-') {
         locationImage = Image(image: AssetImage(widget.item.location));
       }

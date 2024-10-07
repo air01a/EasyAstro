@@ -7,6 +7,8 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:easyastro/services/catalog/catalogupdater.dart';
+
 
 class CheckScreen extends StatefulWidget {
   const CheckScreen({super.key});
@@ -18,6 +20,7 @@ class CheckScreen extends StatefulWidget {
 class _CheckScreen extends State<CheckScreen> {
   Position? _locationData;
   bool _apiUpdated = false;
+  double catalogUpdateProgress=0;
 
   Future<void> updateDescription() async {
     for (var element in ObjectSelection().selection) {
@@ -25,6 +28,14 @@ class _CheckScreen extends State<CheckScreen> {
     }
   }
 
+
+  void loadingCatalogProgess(double percent) {
+    setState(() {
+      catalogUpdateProgress=percent;
+    });
+    
+
+  }
   void updateLocale(String key, dynamic value) async {
     if (value == "system") {
       value = Intl.systemLocale.toLocale().languageCode.toUpperCase();
@@ -34,6 +45,8 @@ class _CheckScreen extends State<CheckScreen> {
         {
           if (context.mounted) {
             await EasyLocalization.of(context)!
+                .setLocale(const Locale('en', ''));
+            await EasyLocalization.of(context)!
                 .setLocale(const Locale('fr', ''));
           }
         }
@@ -42,6 +55,8 @@ class _CheckScreen extends State<CheckScreen> {
         {
           if (context.mounted) {
             await EasyLocalization.of(context)!
+                .setLocale(const Locale('fr', ''));
+            await EasyLocalization.of(context)!
                 .setLocale(const Locale('en', ''));
           }
         }
@@ -49,6 +64,8 @@ class _CheckScreen extends State<CheckScreen> {
       default:
         {
           if (context.mounted) {
+            await EasyLocalization.of(context)!
+                .setLocale(const Locale('fr', ''));
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('en', ''));
           }
@@ -61,10 +78,15 @@ class _CheckScreen extends State<CheckScreen> {
   @override
   void initState() {
     super.initState();
+
     ConfigManager().loadConfig().then((value) {
-      ConfigManager().addCallBack("language", updateLocale);
-      updateLocale("", ConfigManager().configuration!['language']!.value);
-      _getLocation();
+      CatalogUpdater updater = CatalogUpdater(ConfigManager().configuration!['remoteCatalog']!.value,loadingCatalogProgess);
+      updater.checkAndUpdateVersion().then((result) {
+        catalogUpdateProgress=1.0;
+        ConfigManager().addCallBack("language", updateLocale);
+        updateLocale("", ConfigManager().configuration!['language']!.value);
+        _getLocation();
+      });
     });
   }
 
@@ -104,12 +126,25 @@ class _CheckScreen extends State<CheckScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     return PageStructure(
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
           const Center(child: CircularProgressIndicator()),
+          Center(
+            child:Center(child:Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                  Text("catalog_updater").tr(),
+                  SizedBox(width: 5),
+                  Container(
+                      width: 100,
+                      child: LinearProgressIndicator(
+                          value: catalogUpdateProgress, // Valeur de la progression
+                        )
+                   )
+              ]))),
           Center(
               child: _locationData != null &&
                       _locationData?.latitude != null &&

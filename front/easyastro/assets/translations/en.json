@@ -1,5 +1,6 @@
 {
     "welcome":"Welcome",
+    "remote_catalog":"Remote catalog URL",
     "ra":"Right ascension {}",
     "dec":"Declination {} °",
     "waiting_position" : "Waiting GPS",
@@ -98,6 +99,7 @@
     "max_altaz_exposure_time":"Max exposure time (altaz) : {} s",
     "azimut_graph":"Altitude graph",
     "skymap":"SkyMap",
+    "catalog_updater":"Updating catalog",
     "map_show_dso" : "Show DSO & planets in skymap",
     "map_show_only_selected" : "Only show selected objects in skymap",
     "map_show_lines" : "Show Constellation",
