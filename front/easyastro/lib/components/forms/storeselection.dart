@@ -4,7 +4,7 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/components/structure/pagestructure.dart';
 
 class LoadSelection extends StatefulWidget {
-  const LoadSelection({Key? key, this.title, required this.callback}) : super(key: key);
+  const LoadSelection({super.key, this.title, required this.callback});
   final Function(Map<String,dynamic>) callback;
   final String? title;
 

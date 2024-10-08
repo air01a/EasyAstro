@@ -5,5 +5,5 @@ class DSO extends SkyObject {
   int type;
   int phase;
   int color;
-  DSO(pos, this.name, this.type, this.phase, this.color) : super(pos);
+  DSO(super.pos, this.name, this.type, this.phase, this.color);
 }

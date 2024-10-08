@@ -12,7 +12,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ScreenMap extends StatefulWidget {
-  const ScreenMap({key}) : super(key: key);
+  const ScreenMap({super.key});
   @override
   State<ScreenMap> createState() => _ScreenMap();
 }

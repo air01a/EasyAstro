@@ -9,7 +9,8 @@ class CircularButton extends StatelessWidget {
   final VoidCallback onTap;
   final String label;
 
-  CircularButton({
+  const CircularButton({
+    super.key,
     required this.isSelected,
     required this.onTap,
     required this.label,
@@ -31,7 +32,7 @@ class CircularButton extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style: TextStyle(color: Colors.white, fontSize: 10),
+            style: const TextStyle(color: Colors.white, fontSize: 10),
           ),
         ),
       ),
@@ -49,9 +50,9 @@ class CircularButtonSelection extends StatefulWidget {
   const CircularButtonSelection(
       {super.key, required this.selectedButtons, required this.name, required this.callBack});
 
+
   @override
-  _CircularButtonSelectionState createState() =>
-      _CircularButtonSelectionState();
+  State<CircularButtonSelection> createState() => _CircularButtonSelectionState();
 }
 
 class _CircularButtonSelectionState extends State<CircularButtonSelection> {
@@ -80,7 +81,7 @@ class _CircularButtonSelectionState extends State<CircularButtonSelection> {
     return Scaffold(
 
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 350,
           height: 350,
           child: Stack(

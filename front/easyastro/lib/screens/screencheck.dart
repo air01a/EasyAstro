@@ -43,31 +43,39 @@ class _CheckScreen extends State<CheckScreen> {
     switch (value) {
       case ('FR'):
         {
-          if (context.mounted) {
+          if (mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('en', ''));
-            await EasyLocalization.of(context)!
-                .setLocale(const Locale('fr', ''));
+                // Only to remove warning from flutter
+                if (mounted) {
+                  await EasyLocalization.of(context)!
+                      .setLocale(const Locale('fr', ''));
+                }
           }
         }
         break;
       case ('EN'):
         {
-          if (context.mounted) {
+          if (mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('fr', ''));
-            await EasyLocalization.of(context)!
-                .setLocale(const Locale('en', ''));
+                // Only to remove warning from flutter
+                if (mounted) {
+                  await EasyLocalization.of(context)!
+                      .setLocale(const Locale('en', ''));
+                }
           }
         }
         break;
       default:
         {
-          if (context.mounted) {
+          if (mounted) {
             await EasyLocalization.of(context)!
                 .setLocale(const Locale('fr', ''));
-            await EasyLocalization.of(context)!
-                .setLocale(const Locale('en', ''));
+                if(mounted) {
+                    await EasyLocalization.of(context)!
+                        .setLocale(const Locale('en', ''));
+                }
           }
         }
         break;
@@ -122,7 +130,7 @@ class _CheckScreen extends State<CheckScreen> {
           await catalog.fetchCatalogList(0, 0, 0, null);
     }
     setState(() {});
-    if (context.mounted) Navigator.pushReplacementNamed(context, '/home');
+    if (mounted) Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
@@ -136,9 +144,9 @@ Widget build(BuildContext context) {
             child:Center(child:Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                  Text("catalog_updater").tr(),
-                  SizedBox(width: 5),
-                  Container(
+                  const Text("catalog_updater").tr(),
+                  const SizedBox(width: 5),
+                  SizedBox(
                       width: 100,
                       child: LinearProgressIndicator(
                           value: catalogUpdateProgress, // Valeur de la progression

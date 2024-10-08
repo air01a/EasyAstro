@@ -11,10 +11,8 @@ class CustomAssetLoader extends AssetLoader {
       var directory = await getApplicationCacheDirectory();
       final file = File('${directory.path}/${locale.languageCode}.json');
       if (await file.exists()) {
-        print("+++++++++localization using cache");
         return jsonDecode(await file.readAsString());
       } else {
-          print("+++++++++++++localization using asset");
           return jsonDecode(await rootBundle.loadString('assets/translations/${locale.languageCode}.json'));
       }
   }

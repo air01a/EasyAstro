@@ -22,8 +22,8 @@ class LoadingIndicatorDialog {
         builder: (BuildContext context) {
           _context = context;
           isDisplayed = true;
-          return WillPopScope(
-            onWillPop: () async => false,
+          return PopScope(
+            canPop: false,
             child: SimpleDialog(
               backgroundColor: Colors.white,
               children: [

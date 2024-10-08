@@ -35,8 +35,7 @@ class SkyMap extends StatefulWidget {
       this.showLines = true,
       this.showStarNames = false,
       this.size = 1400,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   Future<Uint8List> widgetToImage() async {
     if (captureWidgetHandler != null) return await captureWidgetHandler!();

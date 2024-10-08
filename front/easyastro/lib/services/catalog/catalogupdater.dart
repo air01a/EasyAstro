@@ -6,12 +6,11 @@ import 'package:csv/csv.dart';
 
 
 class CatalogUpdater  {
-  String content = 'Téléchargement en cours...';
   String localVersion = '0';
   String remoteVersion = '0';
   String remoteUrl;
   final Function(double) onValueChanged;
-  late final directory;
+  late Directory directory;
  
 
   CatalogUpdater(this.remoteUrl, this.onValueChanged);
@@ -20,13 +19,13 @@ class CatalogUpdater  {
       List<List<dynamic>> csvData = const CsvToListConverter(fieldDelimiter: ';').convert(input);
       
       if (csvData.isNotEmpty) {
-        csvData.removeAt(0); // Supprimer la première ligne (l'en-tête)
+        csvData.removeAt(0); // Remove header
       }
 
       return csvData;
   }
 
-  // Méthode pour télécharger la version distante
+  // Download remote version
   Future<String> fetchRemoteVersion(String fileName) async {
     final response = await http.get(Uri.parse('$remoteUrl/$fileName'));
     if (response.statusCode == 200) {
@@ -37,20 +36,18 @@ class CatalogUpdater  {
   }
 
 
-  // Lire la version locale
+  // Read local version
   Future<String> readLocalVersion(String fileName) async {
     
     final file = File('${directory.path}/$fileName');
     if (await file.exists()) {
-      print("local file exists");
       return file.readAsString();
     } else {
-      print("No local file");
       return '0'; // Si le fichier n'existe pas encore
     }
   }
 
-  // Comparer les versions et télécharger si nécessaire
+  // Compare version and start update
   Future<bool> checkAndUpdateVersion() async {
     try {
       directory = await getApplicationCacheDirectory();
@@ -84,7 +81,7 @@ class CatalogUpdater  {
 
   }
 
-  // Méthode pour télécharger le nouveau fichier
+  // Update all files
   Future<bool> downloadNewVersion() async {
     onValueChanged(0);
     final directory = await getApplicationCacheDirectory();
@@ -128,6 +125,6 @@ class CatalogUpdater  {
 
 
   String getCacheDirectory() {
-    return directory;
+    return directory.path;
   }
 }

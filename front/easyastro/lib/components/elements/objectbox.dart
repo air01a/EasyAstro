@@ -46,11 +46,11 @@ class _ObjectBox extends State<ObjectBox> {
 
     super.initState();
     azimuth = List<bool>.from(ConfigManager().configuration?["azimuth"]?.value);
-    int ?_minHeight = int.tryParse(ConfigManager().configuration?["minHeight"]?.value);
-    if (_minHeight==null) {
+    int ?tminHeight = int.tryParse(ConfigManager().configuration?["minHeight"]?.value);
+    if (tminHeight==null) {
       minHeight=20;
     } else {
-      minHeight=_minHeight;
+      minHeight=tminHeight;
     }
   }
   @override

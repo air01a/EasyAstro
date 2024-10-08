@@ -72,6 +72,7 @@ class CardWithTitle extends StatelessWidget {
   final Color color;
 
   const CardWithTitle({
+    super.key, 
     required this.title,
     required this.color,
     required this.shape, 
