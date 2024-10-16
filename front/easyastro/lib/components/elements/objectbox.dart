@@ -125,7 +125,9 @@ class _ObjectBox extends State<ObjectBox> {
                             ]), //"Type: ${widget.object.type}"),
                             const Text("magnitude").tr(args: [
                               widget.object.magnitude.toString()
-                            ]), //"Magnitude: ${widget.object.magnitude.toString()}"),
+                            ]),
+                            const Text("azalt").tr(args:[widget.object.azimuth.toInt().toString(), widget.object.height.toInt().toString()])
+                           
                           ],
                         ))),
                 Container(
