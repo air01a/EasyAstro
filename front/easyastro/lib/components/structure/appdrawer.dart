@@ -41,7 +41,7 @@ class AppDrawer extends Drawer {
           ),
           ListTile(
             leading: const Icon(
-              Icons.explore,
+              Icons.star,
             ),
             title: const Text('selected').tr(),
             onTap: () {
@@ -50,11 +50,20 @@ class AppDrawer extends Drawer {
           ),
           ListTile(
             leading: const Icon(
-              Icons.explore,
+              Icons.more_time,
             ),
             title: const Text('sidereal_hour').tr(),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/sidereal');
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.explore,
+            ),
+            title: const Text('compass').tr(),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/compass');
             },
           ),
           ListTile(
