@@ -150,14 +150,16 @@ class _ScreenMap extends State<ScreenMap> {
   }
 
   void changeRotation(double rotation) {
-    double rad = rotation * pi / 180;
+    double rad = -rotation * pi / 180;
 
     var array =
         _transformationController.value.applyToVector3Array([0, 0, 0, 1, 0, 0]);
     Offset delta = Offset(array[3] - array[0], array[4] - array[1]);
     double currentRotation = delta.direction;
-    if (currentRotation < 0) currentRotation = 2 * pi + currentRotation;
-    rad = rad - currentRotation;
+    if (currentRotation < 0) { 
+      currentRotation = 2 * pi + currentRotation;
+    }
+    rad =  rad - currentRotation;
     var c = cos(rad);
     var s = sin(rad);
 
@@ -344,8 +346,8 @@ class _ScreenMap extends State<ScreenMap> {
 
   Future<void> compassChangeRotation(int rotation) async {
     if((rotation-_rotation).abs()>3) {
-      changeRotation(rotation.toDouble()+90);
-      _rotation=rotation.toDouble()+90;
+      changeRotation(rotation.toDouble());
+      _rotation=rotation.toDouble();
     }
   }
 
