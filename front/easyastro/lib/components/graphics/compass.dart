@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:flutter_compass/flutter_compass.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
-
+import 'package:easyastro/services/localization/compassmanager.dart';
 
 class Compass extends StatefulWidget {
   const Compass({super.key});
@@ -14,13 +13,16 @@ class Compass extends StatefulWidget {
 
 class _Compass extends State<Compass> {
   bool _hasPermissions = false;
-  CompassEvent? _lastRead;
+  late CompassManager compass;
+  int direction=0;
 
   @override
   void initState() {
     _fetchPermissionStatus();
+    compass = CompassManager(updateCompassValues);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return  Builder(builder: (context) {
@@ -43,8 +45,7 @@ class _Compass extends State<Compass> {
 
   Widget _buildValues() {
 
-    int heading;
-    heading = _lastRead?.heading?.toInt() ?? 0;
+    int heading=direction;
     if ( heading<0) {
       heading += 360;
     }
@@ -72,7 +73,7 @@ class _Compass extends State<Compass> {
   }
 
   Widget _buildCompass() {
-    return StreamBuilder<CompassEvent>(
+   /* return StreamBuilder<CompassEvent>(
       stream: FlutterCompass.events,
       builder: (context, snapshot) {
         updateCompassValues();
@@ -92,8 +93,8 @@ class _Compass extends State<Compass> {
           return const Center(
             child: Text("Device does not have sensors !"),
           );
-        }
-
+        }*/
+      
         return Material(
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
@@ -111,15 +112,16 @@ class _Compass extends State<Compass> {
             ),
           ),
         );
-      },
-    );
-  }
+      }
+  
 
-  void updateCompassValues() async {
-    final CompassEvent tmp = await FlutterCompass.events!.first;
-    setState(() {
-      _lastRead = tmp;
-    });
+  void updateCompassValues(int heading) async {
+    //final CompassEvent tmp = await FlutterCompass.events!.first;
+    if ((heading-direction).abs()>1) {
+      setState(() {  
+          direction = heading;
+      });
+    }
   }
 
   Widget _buildPermissionSheet() {
@@ -148,4 +150,12 @@ class _Compass extends State<Compass> {
       }
     });
   }
+
+ @override
+  void dispose() {
+    // Libérer le contrôleur lorsque le widget est détruit
+    compass.quit();
+    super.dispose();
+  }
+
 }

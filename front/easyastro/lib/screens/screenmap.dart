@@ -10,6 +10,7 @@ import 'package:easyastro/astro/astrocalc.dart';
 import 'package:easyastro/services/database/configmanager.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:easyastro/services/localization/compassmanager.dart';
 
 class ScreenMap extends StatefulWidget {
   const ScreenMap({super.key});
@@ -25,6 +26,7 @@ class _ScreenMap extends State<ScreenMap> {
   late bool showDso;
   late bool showOnlySelected;
   late bool showStarsName;
+  bool useCompass = false;
   bool _isMenuOpen = false;
   late double maxMag;
   late bool showConstellation;
@@ -32,6 +34,8 @@ class _ScreenMap extends State<ScreenMap> {
   String? highlightObject;
   double _rotation = 0;
   final GlobalKey _viewerKey = GlobalKey();
+  CompassManager? compass;
+
 
   int getPlanetColor(String name) {
     switch (name) {
@@ -176,16 +180,16 @@ class _ScreenMap extends State<ScreenMap> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 2500),
         width: 200, // Ajustez cette valeur pour régler la largeur du menu
-        height: 600, // Ajustez cette valeur pour régler la hauteur du menu
+        height: MediaQuery.of(context).size.height-250, // Ajustez cette valeur pour régler la hauteur du menu
         color: Colors.blue,
-        child: Column(
+        child: SingleChildScrollView(child : Column(
           mainAxisAlignment: MainAxisAlignment.start ,
           children: [
             const Text('mag').tr(),
             SfLinearGauge(
               maximum: 8,
               minimum: 0,
-              orientation: LinearGaugeOrientation.horizontal,
+              orientation: LinearGaugeOrientation.horizontal, 
               markerPointers: [
                 LinearShapePointer(
                   value: maxMag,
@@ -246,6 +250,16 @@ class _ScreenMap extends State<ScreenMap> {
               },
               title: const Text('only_selected').tr(),
             ),
+            CheckboxListTile(
+              value: useCompass,
+              onChanged: (bool? value) {
+                setState(() {
+                  useCompass = value!;
+                  setCompass(value);
+                });
+              },
+              title: const Text('use_compass').tr(),
+            ),
             const Text('rotation').tr(),
             SfLinearGauge(
               maximum: 359,
@@ -270,7 +284,7 @@ class _ScreenMap extends State<ScreenMap> {
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 
@@ -325,6 +339,32 @@ class _ScreenMap extends State<ScreenMap> {
     //_transformationController.value.setEntry(0, 3, zoomFactor * skyMapSize / 2);
     //_transformationController.value.setEntry(1, 3, zoomFactor * skyMapSize / 2);
     changeRotation(_rotation);
+
+  }
+
+  Future<void> compassChangeRotation(int rotation) async {
+    if((rotation-_rotation).abs()>3) {
+      changeRotation(rotation.toDouble()+90);
+      _rotation=rotation.toDouble()+90;
+    }
+  }
+
+  void setCompass(bool activate) {
+    if (activate && compass==null) {
+      compass = CompassManager(compassChangeRotation);
+    } else {
+      if (!activate && compass!=null) {
+        compass!.quit();
+      }
+      compass=null;
+    }
+  }
+
+  @override
+  void dispose() {
+    // Libérer le contrôleur lorsque le widget est détruit
+    compass?.quit();
+    super.dispose();
   }
 
   @override
@@ -366,4 +406,6 @@ class _ScreenMap extends State<ScreenMap> {
         showDrawer: (highlightObject == null),
         title: "skymap".tr());
   }
+
+ 
 }
