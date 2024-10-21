@@ -29,6 +29,7 @@ class ObjectSelection {
 
 class CurrentLocation {
   static final CurrentLocation _singleton = CurrentLocation._internal();
+  bool isSetup=false;
   double? longitude=0;
   double? latitude=0;
   double? altitude=0;

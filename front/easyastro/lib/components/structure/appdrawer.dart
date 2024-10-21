@@ -6,6 +6,15 @@ import 'package:easy_localization/easy_localization.dart';
 class AppDrawer extends Drawer {
   const AppDrawer({super.key});
 
+  void pushChange(BuildContext context, String page) {
+    if (CurrentLocation().isSetup) {
+      Navigator.pushReplacementNamed(context, page);
+    } else {
+      Navigator.pushReplacementNamed(context, '/check');
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -26,7 +35,7 @@ class AppDrawer extends Drawer {
             title: const Text('home').tr(),
             onTap: () {
               //Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/home');
+              pushChange(context, '/home');
             },
           ),
           ListTile(
@@ -36,7 +45,7 @@ class AppDrawer extends Drawer {
             title: const Text('plan').tr(),
             onTap: () {
               //Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/plan');
+              pushChange(context, '/plan');
             },
           ),
           ListTile(
@@ -45,7 +54,7 @@ class AppDrawer extends Drawer {
             ),
             title: const Text('selected').tr(),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/selection');
+              pushChange(context, '/selection');
             },
           ),
           ListTile(
@@ -73,7 +82,7 @@ class AppDrawer extends Drawer {
             title: const Text('map').tr(),
             onTap: () {
               //Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/map');
+              pushChange(context, '/map');
             },
           ),
           if (ConfigManager().configuration?["manageTelescope"]?.value == true)

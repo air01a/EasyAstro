@@ -83,6 +83,28 @@ class _CheckScreen extends State<CheckScreen> {
     await updateDescription();
   }
 
+  void _displayError(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("error").tr(),
+          content: Text(message).tr(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                              
+                              
+                  Navigator.pushReplacementNamed(context, '/config');
+                
+              },
+              child: Text("configure").tr(),
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   void initState() {
     super.initState();
@@ -90,10 +112,14 @@ class _CheckScreen extends State<CheckScreen> {
     ConfigManager().loadConfig().then((value) {
       CatalogUpdater updater = CatalogUpdater(ConfigManager().configuration!['remoteCatalog']!.value,loadingCatalogProgess);
       updater.checkAndUpdateVersion().then((result) {
-        catalogUpdateProgress=1.0;
-        ConfigManager().addCallBack("language", updateLocale);
-        updateLocale("", ConfigManager().configuration!['language']!.value);
-        _getLocation();
+        if (!updater.validateCatalog()) {
+          _displayError("catalog_failed");
+        } else {
+          catalogUpdateProgress=1.0;
+          ConfigManager().addCallBack("language", updateLocale);
+          updateLocale("", ConfigManager().configuration!['language']!.value);
+          _getLocation();
+        }
       });
     });
   }
@@ -110,6 +136,7 @@ class _CheckScreen extends State<CheckScreen> {
     CurrentLocation().longitude = locationData.longitude;
     CurrentLocation().latitude = locationData.latitude;
     CurrentLocation().altitude = locationData.altitude;
+    CurrentLocation().isSetup = true;
     setState(() {
       _locationData = locationData; // Afficher la position GPS
     });

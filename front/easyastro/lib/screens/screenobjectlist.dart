@@ -123,7 +123,9 @@ class _ScreenObjectList extends State<ScreenObjectList> {
   @override
   void initState() {
     super.initState();
-
+    if (!CurrentLocation().isSetup) {
+      Navigator.pushReplacementNamed(context, '/check');
+    }
     sf.setCallBack(search);
     ff.setCallBack(filter);
     _getNewCatalog();

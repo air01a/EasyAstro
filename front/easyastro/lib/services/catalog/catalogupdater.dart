@@ -36,6 +36,23 @@ class CatalogUpdater  {
   }
 
 
+  Future<bool> fileExists(String filename) async{
+      File file=File(filename);
+      if (await file.exists()) {
+        return true;
+      }
+      return false;
+  }
+
+
+  bool fileExistsSync(String filename) {
+      File file=File(filename);
+      if (file.existsSync()) {
+        return true;
+      }
+      return false;
+  }
+
   // Read local version
   Future<String> readLocalVersion(String fileName) async {
     
@@ -55,13 +72,13 @@ class CatalogUpdater  {
       remoteVersion = await fetchRemoteVersion("version.txt");
 
       if (localVersion != remoteVersion) {
-        return await downloadNewVersion();
+        return await downloadNewVersion(false);
  
       } else {
-        File file=File("$directory/deepsky.lst");
-        if (!await file.exists()) {
-           return await downloadNewVersion();
+        if (!await fileExists("${directory.path}/deepsky.lst")) {
+           return await downloadNewVersion(false);
         }
+        await downloadNewVersion(true);
         return true;
       }
     } catch (e) {
@@ -82,18 +99,31 @@ class CatalogUpdater  {
   }
 
   // Update all files
-  Future<bool> downloadNewVersion() async {
+  Future<bool> downloadNewVersion(bool onlyRefresh) async {
     onValueChanged(0);
     final directory = await getApplicationCacheDirectory();
-    var  response = await http.get(Uri.parse('$remoteUrl/deepsky.lst'));
     String content;
-    if (response.statusCode == 200) {
-      content=response.body;
+
+    if (!onlyRefresh) {
+      var  response = await http.get(Uri.parse('$remoteUrl/deepsky.lst'));
+      if (response.statusCode == 200) {
+        content=response.body;
+
+      } else {
+        return false;
+      }
+      final file = File('${directory.path}/deepsky.lst');
+      await file.writeAsString(content);
+      downloadAndSave('en.json');
+      downloadAndSave('fr.json');
+      content = response.body;
 
     } else {
-      return false;
-    }
-    var catalog = await readCsvFile(response.body);
+      content = await readLocalVersion("deepsky.lst");
+    } 
+
+
+    var catalog = await readCsvFile(content);
     int i=0;
      for (var row in catalog) {
         String imageName = row[13];
@@ -108,23 +138,33 @@ class CatalogUpdater  {
                 i+=1;
                 onValueChanged(i/catalog.length);
               } else {
-                return false;
+                i+=1;
               }
             } catch (e) {
-              return false;
+              i+=1;
+
             }
         }
      }
-    downloadAndSave('en.json');
-    downloadAndSave('fr.json');
-    final file = File('${directory.path}/deepsky.lst');
-    await file.writeAsString(content);
-    downloadAndSave('version.txt');
+    if (!onlyRefresh) {
+      downloadAndSave('version.txt');
+    }
     return true;
   }
 
+  bool validateCatalog() {
+    List<String> requiredFiles= ['deepsky.lst', 'en.json','fr.json'];
+    for (var requiredFile in requiredFiles) {
+      if (!fileExistsSync("${directory.path}/$requiredFile")) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   String getCacheDirectory() {
     return directory.path;
   }
+
+
 }

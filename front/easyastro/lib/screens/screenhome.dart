@@ -14,6 +14,7 @@ import 'package:easyastro/screens/screenweather.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/skymap/displaysolarsystemhelper.dart';
 import 'package:easyastro/screens/screenmooncalendar.dart';
+import 'package:easyastro/services/catalog/catalogupdater.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
@@ -139,7 +140,7 @@ class _ScreenHome extends State<ScreenHome> {
   @override
   void initState() {
     super.initState();
-
+ 
     String? openWeatherKey =
         ConfigManager().configuration?["openWeatherKey"]?.value;
     if (openWeatherKey != null && openWeatherKey.isNotEmpty) {
@@ -148,15 +149,17 @@ class _ScreenHome extends State<ScreenHome> {
           .getLocationWeather(astro!.longitude, astro!.latitude)
           .then((value) => setState(() => weather = value));
     }
+    if (!CurrentLocation().isSetup) {
 
-    if (CurrentLocation().timeChanged == false) {
-      locationHelper.updateTime(
-          DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-          changeDate: false);
+      if (CurrentLocation().timeChanged == false) {
+        locationHelper.updateTime(
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+            changeDate: false);
+      }
+      latitude = CurrentLocation().latitude!;
+      longitude = CurrentLocation().longitude!;
+      altitude = CurrentLocation().altitude!;
     }
-    latitude = CurrentLocation().latitude!;
-    longitude = CurrentLocation().longitude!;
-    altitude = CurrentLocation().altitude!;
   }
 
   List<Widget> getWeather() {
@@ -198,6 +201,10 @@ class _ScreenHome extends State<ScreenHome> {
   @override
   Widget build(BuildContext context) {
     // AstroCalc? astro = ObjectSelection().astro;
+    if (!CurrentLocation().isSetup) {
+        Navigator.pushReplacementNamed(context, '/check');
+
+    }
     List<Widget> display = [];
     List<Widget> displaySun = [];
     List<Widget> displayLocation = [];
