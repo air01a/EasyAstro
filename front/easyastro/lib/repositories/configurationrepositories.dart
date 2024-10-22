@@ -13,6 +13,12 @@ class ConfigurationRepository {
         ConfigItem('Image ratio when edit', 'image_ratio', 'input', "0.5", []),
     'language': ConfigItem(
         'Language', 'language', 'select', 'system', ['system', 'FR', 'EN']),
+    'showMag': ConfigItem(
+        'showMag', 'show_mag', 'checkbox', true, []),
+    'showAzAlt': ConfigItem(
+        'showAzAlt', 'show_azalt', 'checkbox', true, []),    
+    'showType': ConfigItem(
+        'showType', 'show_type', 'checkbox', true, []), 
     'mapShowDSO':
         ConfigItem('mapShowDSO', 'map_show_dso', 'checkbox', true, []),
     'mapShowOnlySelected': ConfigItem(

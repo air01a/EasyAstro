@@ -120,13 +120,19 @@ class _ObjectBox extends State<ObjectBox> {
                             const Text("culmination").tr(args: [
                               ConvertAngle.hourToString(widget.object.meridian)
                             ]), //"Culmination : ${ConvertAngle.hourToString(widget.object.meridian)}"),
-                            const Text("type").tr(args: [
-                              widget.object.type.tr()
-                            ]), //"Type: ${widget.object.type}"),
-                            const Text("magnitude").tr(args: [
-                              widget.object.magnitude.toString()
-                            ]),
-                            const Text("azalt").tr(args:[widget.object.azimuth.toInt().toString(), widget.object.height.toInt().toString()])
+                            ConfigManager().configuration?["showType"]?.value  
+                                  ? const Text("type").tr(args: [
+                                        widget.object.type.tr()
+                                      ])
+                                  : Container(), //"Type: ${widget.object.type}"),
+                            ConfigManager().configuration?["showMag"]?.value  
+                                  ? const Text("magnitude").tr(args: [
+                                        widget.object.magnitude.toString()
+                                      ])
+                                  : Container(),
+                            ConfigManager().configuration?["showAzAlt"]?.value  
+                                  ? const Text("azalt").tr(args:[widget.object.azimuth.toInt().toString(), widget.object.height.toInt().toString()])
+                                  : Container()
                            
                           ],
                         ))),

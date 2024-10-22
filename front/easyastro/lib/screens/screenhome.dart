@@ -14,7 +14,6 @@ import 'package:easyastro/screens/screenweather.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/services/skymap/displaysolarsystemhelper.dart';
 import 'package:easyastro/screens/screenmooncalendar.dart';
-import 'package:easyastro/services/catalog/catalogupdater.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});

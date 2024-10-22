@@ -6,7 +6,6 @@ import 'package:easyastro/services/database/configmanager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easyastro/screens/screencheck.dart';
 import 'package:easyastro/services/localization/customloader.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

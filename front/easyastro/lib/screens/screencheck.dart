@@ -88,7 +88,7 @@ class _CheckScreen extends State<CheckScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("error").tr(),
+          title: const Text("error").tr(),
           content: Text(message).tr(),
           actions: [
             TextButton(
@@ -98,7 +98,7 @@ class _CheckScreen extends State<CheckScreen> {
                   Navigator.pushReplacementNamed(context, '/config');
                 
               },
-              child: Text("configure").tr(),
+              child: const Text("configure").tr(),
             ),
           ],
         );

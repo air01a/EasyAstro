@@ -153,11 +153,11 @@ class _ObjectPage extends State<ObjectPage> {
                                   ConvertAngle.hourToString(
                                       widget.item.meridian)
                                 ]), //"Culmination : ${ConvertAngle.hourToString(widget.item.meridian)}"),
-                                const Text('magnitude',
-                                        textAlign: TextAlign.left)
-                                    .tr(args: [
-                                  widget.item.magnitude.toString()
-                                ]),
+                                 const Text('magnitude',
+                                                    textAlign: TextAlign.left)
+                                                .tr(args: [
+                                              widget.item.magnitude.toString()
+                                            ]),
                                 const Text('azimuth', textAlign: TextAlign.left)
                                     .tr(args: [
                                   widget.item.azimuth.toInt().toString(),masked

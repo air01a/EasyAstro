@@ -78,7 +78,9 @@ class CatalogUpdater  {
         if (!await fileExists("${directory.path}/deepsky.lst")) {
            return await downloadNewVersion(false);
         }
-        await downloadNewVersion(true);
+        if (!await fileExists('${directory.path}/noerror')) {
+          await downloadNewVersion(true);
+        }
         return true;
       }
     } catch (e) {
@@ -101,10 +103,20 @@ class CatalogUpdater  {
   // Update all files
   Future<bool> downloadNewVersion(bool onlyRefresh) async {
     onValueChanged(0);
-    final directory = await getApplicationCacheDirectory();
     String content;
+    bool hasError=false;
+
+    if (onlyRefresh && await fileExists('${directory.path}/noerror')) {
+      return true;
+    }
+
 
     if (!onlyRefresh) {
+      final fileLock = File('${directory.path}/noerror');
+      if (await fileLock.exists()) {
+        fileLock.delete();
+      }
+
       var  response = await http.get(Uri.parse('$remoteUrl/deepsky.lst'));
       if (response.statusCode == 200) {
         content=response.body;
@@ -122,14 +134,13 @@ class CatalogUpdater  {
       content = await readLocalVersion("deepsky.lst");
     } 
 
-
     var catalog = await readCsvFile(content);
     int i=0;
      for (var row in catalog) {
         String imageName = row[13];
         if (imageName.isNotEmpty && !await File('${directory.path}/$imageName').exists()) {
-
           try {
+
               var response = await http.get(Uri.parse("$remoteUrl/$imageName"));
               if (response.statusCode == 200) {
                 // Enregistrer l'image dans le cache local
@@ -138,14 +149,20 @@ class CatalogUpdater  {
                 i+=1;
                 onValueChanged(i/catalog.length);
               } else {
-                i+=1;
+                hasError=true;
               }
             } catch (e) {
               i+=1;
+              hasError=true;
 
             }
         }
      }
+
+    if (!hasError && !await fileExists('${directory.path}/noerror')) {
+      var f = File('${directory.path}/noerror');
+      f.create();
+    }
     if (!onlyRefresh) {
       downloadAndSave('version.txt');
     }
