@@ -19,6 +19,7 @@ class ObjectSelection {
   static final ObjectSelection _singleton = ObjectSelection._internal();
   List<ObservableObject> selection =<ObservableObject>[];
   AstroCalc? astro;
+  String? version; 
 
   factory ObjectSelection() {
     return _singleton;

@@ -116,6 +116,7 @@ class _CheckScreen extends State<CheckScreen> {
           _displayError("catalog_failed");
         } else {
           catalogUpdateProgress=1.0;
+          ObjectSelection().version = updater.localVersion.trim();
           ConfigManager().addCallBack("language", updateLocale);
           updateLocale("", ConfigManager().configuration!['language']!.value);
           _getLocation();

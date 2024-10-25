@@ -72,7 +72,7 @@ class _ConfigScreen extends State<ConfigScreen> {
             child: const Text("save").tr())));
     configReturn.add(const SizedBox(height: 20));
     configReturn
-        .add(Center(child: Text('Version : ${_packageInfo.version} (2024)')));
+        .add(Center(child: Text('Version : ${_packageInfo.version} (2024) / cat ${ObjectSelection().version}')));
 
     
     
