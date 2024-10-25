@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
+import 'package:restart_app/restart_app.dart';
 
 
 
@@ -16,7 +17,7 @@ class CatalogUpdater  {
   CatalogUpdater(this.remoteUrl, this.onValueChanged);
 
   Future<List<List<dynamic>>> readCsvFile(input) async {
-      List<List<dynamic>> csvData = const CsvToListConverter(fieldDelimiter: ';').convert(input);
+      List<List<dynamic>> csvData = const CsvToListConverter(fieldDelimiter: ";", eol: "\n", textDelimiter: '"').convert(input);
       
       if (csvData.isNotEmpty) {
         csvData.removeAt(0); // Remove header
@@ -29,7 +30,7 @@ class CatalogUpdater  {
   Future<String> fetchRemoteVersion(String fileName) async {
     final response = await http.get(Uri.parse('$remoteUrl/$fileName'));
     if (response.statusCode == 200) {
-        return response.body.trim();
+        return response.body;
     } else {
       throw Exception('Erreur lors du téléchargement de la version distante ${response.statusCode}' );
     }
@@ -71,6 +72,7 @@ class CatalogUpdater  {
       localVersion = await readLocalVersion("version.txt");
       remoteVersion = await fetchRemoteVersion("version.txt");
 
+
       if (localVersion != remoteVersion) {
         return await downloadNewVersion(false);
  
@@ -89,15 +91,15 @@ class CatalogUpdater  {
   }
 
 
-  Future<void> downloadAndSave(String fileName) async {
+  Future<bool> downloadAndSave(String fileName) async {
     var response = await http.get(Uri.parse('$remoteUrl/$fileName'));
     if (response.statusCode == 200) {
       final file = File('${directory.path}/$fileName');
       await file.writeAsBytes(response.bodyBytes);
+      return true;
     } else {
-      throw Exception('Erreur lors du téléchargement du fichier ${response.statusCode}');
+      return false;
     }
-
   }
 
   // Update all files
@@ -105,6 +107,7 @@ class CatalogUpdater  {
     onValueChanged(0);
     String content;
     bool hasError=false;
+    bool languageUpdated=false;
 
     if (onlyRefresh && await fileExists('${directory.path}/noerror')) {
       return true;
@@ -114,7 +117,7 @@ class CatalogUpdater  {
     if (!onlyRefresh) {
       final fileLock = File('${directory.path}/noerror');
       if (await fileLock.exists()) {
-        fileLock.delete();
+        await fileLock.delete();
       }
 
       var  response = await http.get(Uri.parse('$remoteUrl/deepsky.lst'));
@@ -126,10 +129,9 @@ class CatalogUpdater  {
       }
       final file = File('${directory.path}/deepsky.lst');
       await file.writeAsString(content);
-      downloadAndSave('en.json');
-      downloadAndSave('fr.json');
-      content = response.body;
-
+      await downloadAndSave('en.json');
+      await downloadAndSave('fr.json');
+      languageUpdated=true;
     } else {
       content = await readLocalVersion("deepsky.lst");
     } 
@@ -139,7 +141,7 @@ class CatalogUpdater  {
      for (var row in catalog) {
         String imageName = row[13];
         if (imageName.isNotEmpty && !await File('${directory.path}/$imageName').exists()) {
-          try {
+          try { 
 
               var response = await http.get(Uri.parse("$remoteUrl/$imageName"));
               if (response.statusCode == 200) {
@@ -159,12 +161,18 @@ class CatalogUpdater  {
         }
      }
 
+
     if (!hasError && !await fileExists('${directory.path}/noerror')) {
       var f = File('${directory.path}/noerror');
-      f.create();
+      await f.create();
     }
     if (!onlyRefresh) {
-      downloadAndSave('version.txt');
+      bool version=await downloadAndSave('version.txt');
+      if (version && languageUpdated) {
+         Restart.restartApp(
+
+            );
+      }
     }
     return true;
   }

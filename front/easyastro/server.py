@@ -52,7 +52,7 @@ def download_file(filename):
     if not os.path.isfile(os.path.join(path, filename)):
         abort(404)  # Renvoie une erreur 404 si le fichier n'existe pas
 
-    return send_from_directory(path, filename,  as_attachment=True)
+    return send_from_directory(path, filename,  as_attachment=False)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
