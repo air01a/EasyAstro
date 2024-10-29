@@ -1,11 +1,12 @@
 import 'package:csv/csv.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:easyastro/models/catalogs.dart';
 import 'package:easyastro/astro/astrocalc.dart';
 import 'package:sweph/sweph.dart';
 import 'package:easyastro/services/database/globals.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import "package:easyastro/services/utils/filereader.dart";
 
 double raToDouble(String ra) {
   double ret = 0.0;
@@ -67,11 +68,9 @@ Future<List<Map<String, dynamic>>> openCatalog(
         double st = astro.getSiderealTime();
 
         ObjectSelection().astro = astro;
-        String directory = (await getApplicationCacheDirectory()).path;
 
-        final file = File("$directory/deepsky.lst");
-
-        var result = await file.readAsString();
+        var result = await readFile("deepsky.lst");
+        var directory = await readFileSource();
 
         List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter()
             .convert(result, fieldDelimiter: ";", eol: "\n", textDelimiter: '"');

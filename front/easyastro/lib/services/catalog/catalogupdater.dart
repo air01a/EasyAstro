@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 
@@ -68,6 +69,12 @@ class CatalogUpdater  {
   // Compare version and start update
   Future<bool> checkAndUpdateVersion() async {
     try {
+
+      if (kIsWeb) {
+
+        return true;
+      }
+
       directory = await getApplicationCacheDirectory();
       localVersion = await readLocalVersion("version.txt");
       remoteVersion = await fetchRemoteVersion("version.txt");
@@ -178,6 +185,9 @@ class CatalogUpdater  {
   }
 
   bool validateCatalog() {
+    if (kIsWeb) {
+      return true;
+    }
     List<String> requiredFiles= ['deepsky.lst', 'en.json','fr.json'];
     for (var requiredFile in requiredFiles) {
       if (!fileExistsSync("${directory.path}/$requiredFile")) {
