@@ -148,7 +148,7 @@ class _ScreenHome extends State<ScreenHome> {
           .getLocationWeather(astro!.longitude, astro!.latitude)
           .then((value) => setState(() => weather = value));
     }
-    if (!CurrentLocation().isSetup) {
+    if (CurrentLocation().isSetup) {
 
       if (CurrentLocation().timeChanged == false) {
         locationHelper.updateTime(
@@ -264,9 +264,9 @@ class _ScreenHome extends State<ScreenHome> {
           child: Icon(Icons.location_on, size: getSize() / 2)));
       List<Widget> displayLocationText = [];
       displayLocationText.add(
-          const Text('longitude').tr(args: [longitude.toStringAsFixed(5)]));
+          const Text('longitude').tr(args: [longitude.toStringAsFixed(2)]));
       displayLocationText
-          .add(const Text('latitude').tr(args: [latitude.toStringAsFixed(5)]));
+          .add(const Text('latitude').tr(args: [latitude.toStringAsFixed(2)]));
       displayLocationText
           .add(const Text('altitude').tr(args: [altitude.toStringAsFixed(0)]));
       //displayLocationText.add(const Text("\n"));

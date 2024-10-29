@@ -22,7 +22,7 @@ class _ConfigTelescopeScreen extends State<ConfigTelescopeScreen> {
     if (progression == 100) {
       updateLibrary();
     }
-    return progression;
+    return progression; 
   }
 
   void updateLibrary() {
