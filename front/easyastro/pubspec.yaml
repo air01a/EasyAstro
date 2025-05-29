@@ -42,7 +42,7 @@ dependencies:
   http: ^1.2.1
   flutter_riverpod: ^2.5.1
   universal_io: ^2.2.2
-  flutter_localizations:
+  flutter_localizations: 
     sdk: flutter
   intl: any
   web_socket_channel: ^3.0.0
@@ -53,7 +53,7 @@ dependencies:
   sweph: ^2.10.3+17
   fl_chart: ^0.68.0
   localstore: ^1.4.0
-  flutter_osm_plugin: ^0.70.4 
+  flutter_osm_plugin: ^1.3.8
   pointer_interceptor: ^0.10.1+1
   geopoint: ^1.0.0
   easy_localization: ^3.0.7
@@ -63,7 +63,7 @@ dependencies:
   geolocator: ^12.0.0
   package_info_plus: ^8.0.0
   url_launcher: ^6.3.0
-  syncfusion_flutter_gauges: ^26.1.41
+  syncfusion_flutter_gauges: ^28.1.38
   path_provider: ^2.0.1
   permission_handler: ^11.3.1
   restart_app: ^1.2.1
